@@ -2,6 +2,8 @@
 
 A small collection of zero-dependency, dev-friendly React utilities focused on one thing: helping you understand and control component renders.
 
+**[Live demo →](https://react-render-kit.vercel.app/)**
+
 ## Packages
 
 | Package                                           | Status     | What it does                                                                            |
@@ -23,8 +25,8 @@ pnpm -r test       # run every package's tests
 To work on a single package:
 
 ```bash
-pnpm --filter why-render dev    # tsup --watch
-pnpm --filter why-render test
+pnpm --filter @sapanmozammel/why-render dev    # tsup --watch
+pnpm --filter @sapanmozammel/why-render test
 ```
 
 ## Folder layout

@@ -2,6 +2,8 @@
 
 A tiny React + TypeScript hook that tells you **why** a component re-rendered by diffing its previous and current props. Dev-only, zero runtime cost in production builds.
 
+**[Live demo →](https://react-render-kit.vercel.app/why-render)**
+
 ## Install
 
 ```bash
