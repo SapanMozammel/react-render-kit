@@ -1,34 +1,38 @@
 {
 	"name": "why-render",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"description": "Debug why your React component re-renders",
-	"main": "dist/index.js",
-	"module": "dist/index.mjs",
-	"types": "dist/index.d.ts",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.mjs",
-			"require": "./dist/index.js"
+			"require": "./dist/index.cjs"
 		}
 	},
 	"files": [
-		"dist"
+		"dist",
+		"README.md"
 	],
 	"sideEffects": false,
 	"scripts": {
 		"build": "tsup",
 		"dev": "tsup --watch",
 		"test": "vitest run",
-		"test:watch": "vitest"
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage"
 	},
 	"peerDependencies": {
 		"react": ">=18"
 	},
 	"devDependencies": {
 		"@testing-library/react": "^16.1.0",
+		"@testing-library/user-event": "^14.6.1",
 		"@types/react": "^19.2.0",
 		"@types/react-dom": "^19.2.0",
+		"@vitest/coverage-v8": "^4.1.8",
 		"jsdom": "^25.0.1",
 		"react": "^19.2.0",
 		"react-dom": "^19.2.0",

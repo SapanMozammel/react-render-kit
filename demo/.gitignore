@@ -1,0 +1,10 @@
+# Next.js
+.next/
+out/
+
+# TypeScript incremental compilation
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Vercel
+.vercel

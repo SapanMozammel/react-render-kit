@@ -1,8 +1,2 @@
-export { useWhyDidYouRender } from './useWhyDidYouRender';
-export { diffProps } from './diffProps';
-export type {
-	DiffResult,
-	EqualityFn,
-	PropChange,
-	WhyDidYouRenderOptions,
-} from './types';
+export { useWhyRender } from './hook/use-why-render';
+export type { WhyRenderOptions } from './types';

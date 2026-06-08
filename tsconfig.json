@@ -6,10 +6,12 @@
 		"declaration": true,
 		"jsx": "react-jsx",
 		"strict": true,
+		"exactOptionalPropertyTypes": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"isolatedModules": true,
 		"resolveJsonModule": true,
 		"ignoreDeprecations": "6.0"
-	}
+	},
+	"exclude": ["apps/**", "demo/**", "node_modules", "**/dist/**", "**/.next/**"]
 }

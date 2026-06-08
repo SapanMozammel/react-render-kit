@@ -4,11 +4,11 @@ A small collection of zero-dependency, dev-friendly React utilities focused on o
 
 ## Packages
 
-| Package                                                     | Status     | What it does                                                                 |
-| ----------------------------------------------------------- | ---------- | ---------------------------------------------------------------------------- |
-| [`why-render`](packages/why-render)                         | ✅ shipped | A hook that logs **why** a component re-rendered by diffing previous vs. current props. |
-| [`react-props-guard`](packages/react-props-guard)           | 🚧 planned | Runtime guards for prop contracts in development.                            |
-| [`react-safe-render`](packages/react-safe-render)           | 🚧 planned | Safer render boundaries with structured error reporting.                     |
+| Package                                           | Status     | What it does                                                                            |
+| ------------------------------------------------- | ---------- | --------------------------------------------------------------------------------------- |
+| [`why-render`](packages/why-render)               | ✅ shipped | A hook that logs **why** a component re-rendered by diffing previous vs. current props. |
+| [`react-props-guard`](packages/react-props-guard) | 🚧 planned | Runtime guards for prop contracts in development.                                       |
+| [`react-safe-render`](packages/react-safe-render) | 🚧 planned | Safer render boundaries with structured error reporting.                                |
 
 ## Getting started
 
