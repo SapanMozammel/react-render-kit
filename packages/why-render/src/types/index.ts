@@ -7,8 +7,3 @@ export type PropChange =
 	| { kind: 'reference-changed'; key: string; refType: 'object' | 'function' }
 	| { kind: 'added'; key: string; next: unknown }
 	| { kind: 'removed'; key: string; prev: unknown };
-
-export type DiffResult = {
-	changes: PropChange[];
-	unchanged: string[];
-};

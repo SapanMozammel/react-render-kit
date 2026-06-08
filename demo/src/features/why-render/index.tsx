@@ -54,7 +54,7 @@ const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
 				key={s.id}
 				role="tab"
 				className={`scenario-tab scenario-tab--${s.badge}`}
-				aria-current={active === s.id ? 'true' : undefined}
+				aria-selected={active === s.id}
 				onClick={() => onChange(s.id)}
 			>
 				<span className={`scenario-tab__indicator scenario-tab__indicator--${s.badge}`}>
