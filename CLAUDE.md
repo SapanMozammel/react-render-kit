@@ -18,9 +18,9 @@ TypeScript strict · React 18/19 peerDependency · Vitest + React Testing Librar
 ### `packages/why-render` (library)
 ```
 src/
-  diff/diffProps.ts   # pure diff algorithm
-  hook/useWhyRender.ts
-  logger/consoleLogger.ts
+  diff/diff-props.ts   # pure diff algorithm
+  hook/use-why-render.ts
+  logger/console-logger.ts
   types/index.ts
   index.ts            # public re-export
 tests/

@@ -2,6 +2,17 @@
 	"name": "why-render",
 	"version": "1.0.0",
 	"description": "Debug why your React component re-renders",
+	"license": "MIT",
+	"keywords": ["react", "hooks", "debug", "re-render", "performance", "devtools"],
+	"homepage": "https://github.com/SapanMozammel/react-render-kit#readme",
+	"bugs": {
+		"url": "https://github.com/SapanMozammel/react-render-kit/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SapanMozammel/react-render-kit.git",
+		"directory": "packages/why-render"
+	},
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
@@ -18,6 +29,7 @@
 	],
 	"sideEffects": false,
 	"scripts": {
+		"prepublishOnly": "tsup",
 		"build": "tsup",
 		"dev": "tsup --watch",
 		"test": "vitest run",
