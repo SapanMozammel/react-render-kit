@@ -1,0 +1,23 @@
+# Generated from FORMATTER_CONFIG.md
+
+# Dependencies and build output
+node_modules/
+packages/*/node_modules/
+packages/*/dist/
+dist/
+
+# Generated and lock files
+*.min.js
+*.min.css
+*.log
+coverage/
+.cache/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Misc
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp

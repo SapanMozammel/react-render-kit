@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { DiffResult, PropChange } from './types';
 
 const formatValue = (v: unknown): string => {
@@ -24,15 +25,11 @@ const formatChange = (change: PropChange): string => {
 	}
 };
 
-export interface LogOptions {
-	logUnchanged?: boolean;
-}
+export type LogOptions = {
+	logUnchanged?: boolean | undefined;
+};
 
-export function logChanges(
-	componentName: string,
-	diff: DiffResult,
-	options: LogOptions = {},
-): void {
+export const logChanges = (componentName: string, diff: DiffResult, options: LogOptions = {}): void => {
 	if (diff.changes.length === 0 && !options.logUnchanged) return;
 
 	console.groupCollapsed(`[${componentName}] re-rendered because:`);
@@ -41,4 +38,4 @@ export function logChanges(
 		console.log(`- unchanged: ${diff.unchanged.join(', ')}`);
 	}
 	console.groupEnd();
-}
+};

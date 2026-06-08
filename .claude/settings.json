@@ -1,0 +1,120 @@
+{
+	"permissions": {
+		"allow": [
+			"Bash(pnpm *)",
+			"Bash(pnpm exec playwright *)",
+			"Bash(pnpm exec vitest*)",
+			"Bash(pnpm exec tsc*)",
+			"Bash(pnpm exec prettier*)",
+			"Bash(pnpm dlx *)",
+			"Bash(pnpm next *)",
+			"Bash(pnpm test *)",
+			"Bash(tsc *)",
+			"Bash(git status*)",
+			"Bash(git log*)",
+			"Bash(git diff*)",
+			"Bash(git branch*)",
+			"Bash(git checkout*)",
+			"Bash(git add *)",
+			"Bash(git commit*)",
+			"Bash(git stash*)",
+			"Bash(git merge*)",
+			"Bash(git pull*)",
+			"Bash(git fetch*)",
+			"Bash(git push *)",
+			"Bash(git rev-parse*)",
+			"Bash(git remote*)",
+			"Bash(git mv *)",
+			"Bash(gh pr *)",
+			"Bash(gh issue *)",
+			"Bash(gh api *)",
+			"Bash(ls *)",
+			"Bash(cat *)",
+			"Bash(find *)",
+			"Bash(grep *)",
+			"Bash(head *)",
+			"Bash(tail *)",
+			"Bash(wc *)",
+			"Bash(node *)",
+			"WebSearch",
+			"WebFetch(domain:*)",
+			"Read(.env.example)",
+			"Write(.env.example)",
+			"Read",
+			"Write",
+			"Edit",
+			"Glob",
+			"Grep"
+		],
+		"deny": [
+			"Bash(rm -rf *)",
+			"Bash(npm publish *)",
+			"Bash(git push --force *)",
+			"Bash(git push --force *main*)",
+			"Bash(git push --force *master*)",
+			"Bash(git reset --hard*)",
+			"Bash(git clean *)",
+			"Bash(git config *)",
+			"Read(.env)",
+			"Read(.env.production)",
+			"Read(.env.staging)",
+			"Read(.env.development)",
+			"Read(.env.test)",
+			"Read(.env.local)",
+			"Read(.env.secret)",
+			"Write(.env)",
+			"Write(.env.production)",
+			"Write(.env.staging)",
+			"Write(.env.development)",
+			"Write(.env.test)",
+			"Write(.env.local)",
+			"Write(.env.secret)",
+			"Write(node_modules/*)",
+			"Write(.next/*)"
+		]
+	},
+	"hooks": {
+		"PostToolUse": [
+			{
+				"matcher": "Write(*.tsx)",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "pnpm exec prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true",
+						"timeout": 30
+					}
+				]
+			},
+			{
+				"matcher": "Write(*.ts)",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "pnpm exec prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true",
+						"timeout": 30
+					}
+				]
+			},
+			{
+				"matcher": "Write(*.scss)",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "pnpm exec prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true",
+						"timeout": 30
+					}
+				]
+			},
+			{
+				"matcher": "Write(*.json)",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "pnpm exec prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null || true",
+						"timeout": 30
+					}
+				]
+			}
+		]
+	}
+}

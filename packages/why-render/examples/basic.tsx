@@ -29,11 +29,7 @@ export default function App() {
 	// `count` change → triggers "value-changed: N → N+1"
 	return (
 		<>
-			<Profile
-				value={count}
-				user={{ id: 1, name: 'Ada' }}
-				onClick={() => setCount((c) => c + 1)}
-			/>
+			<Profile value={count} user={{ id: 1, name: 'Ada' }} onClick={() => setCount((c) => c + 1)} />
 			<button onClick={() => setCount((c) => c + 1)}>increment</button>
 		</>
 	);

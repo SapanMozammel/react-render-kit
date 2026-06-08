@@ -18,8 +18,8 @@ Peer dependency: `react >= 18`.
 import { useWhyDidYouRender } from 'why-render';
 
 function Profile(props) {
-	useWhyDidYouRender('Profile', props);
-	return <div>{props.user.name}</div>;
+  useWhyDidYouRender('Profile', props);
+  return <div>{props.user.name}</div>;
 }
 ```
 
@@ -43,10 +43,10 @@ useWhyDidYouRender(
 
 ### Options
 
-| Option         | Type                                  | Default     | Description                                                  |
-| -------------- | ------------------------------------- | ----------- | ------------------------------------------------------------ |
+| Option         | Type                                  | Default     | Description                                                                        |
+| -------------- | ------------------------------------- | ----------- | ---------------------------------------------------------------------------------- |
 | `isEqual`      | `(a: unknown, b: unknown) => boolean` | `Object.is` | Custom comparator. Pass a deep-equal to ignore shape-stable object identity flips. |
-| `logUnchanged` | `boolean`                             | `false`     | Also list the props that did not change.                     |
+| `logUnchanged` | `boolean`                             | `false`     | Also list the props that did not change.                                           |
 
 ## Behavior
 
@@ -58,7 +58,8 @@ useWhyDidYouRender(
 
 ## Why distinguish reference vs. value?
 
-`onClick={() => ...}` and `user={{ id: 1 }}` create a new function/object every render. They look "the same" to humans but are different to React. Calling those out as `reference changed` (vs. a printable `value changed: A → B`) tells you to wrap them in `useMemo` / `useCallback` or lift them to a stable scope.
+`onClick={() => ...}` and `user={{ id: 1 }}` create a new function/object every render. They look "the same" to humans but are different to React. Calling those out as `reference changed` (vs. a printable
+`value changed: A → B`) tells you to wrap them in `useMemo` / `useCallback` or lift them to a stable scope.
 
 ## Recipes
 
