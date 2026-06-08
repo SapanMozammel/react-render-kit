@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import type { DiffResult, PropChange } from '../types';
+import type { DiffResult } from '../types';
 
 const formatValue = (v: unknown): string => {
 	if (v === null) return 'null';

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { diffProps } from '../src/diff/diffProps';
+import { diffProps } from '../src/diff/diff-props';
 
 describe('diffProps', () => {
 	it('returns no changes for identical primitive props', () => {

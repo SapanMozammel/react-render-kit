@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useWhyRender } from '../src/hook/useWhyRender';
+import { useWhyRender } from '../src/hook/use-why-render';
 
 vi.mock('../src/env', () => ({ isDev: false }));
 

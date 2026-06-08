@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useWhyRender } from '../src/hook/useWhyRender';
+import { useWhyRender } from '../src/hook/use-why-render';
 
 describe('useWhyRender', () => {
 	beforeEach(() => {
@@ -86,10 +86,7 @@ describe('useWhyRender', () => {
 
 	it('resumes logging when options.enabled switches from false to true', () => {
 		type Props = { name: string; enabled: boolean };
-		const { rerender } = renderHook(
-			({ name, enabled }: Props) => useWhyRender('MyComponent', { name }, { enabled }),
-			{ initialProps: { name: 'Alice', enabled: true } },
-		);
+		const { rerender } = renderHook(({ name, enabled }: Props) => useWhyRender('MyComponent', { name }, { enabled }), { initialProps: { name: 'Alice', enabled: true } });
 		rerender({ name: 'Bob', enabled: false });
 		expect(console.groupCollapsed).not.toHaveBeenCalled();
 		rerender({ name: 'Charlie', enabled: true });
