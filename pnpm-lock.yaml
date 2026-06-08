@@ -59,6 +59,9 @@ importers:
 
   demo:
     dependencies:
+      '@sapanmozammel/why-render':
+        specifier: workspace:*
+        version: link:../packages/why-render
       next:
         specifier: ^15.0.0
         version: 15.5.19(@playwright/test@1.60.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -68,9 +71,6 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.2.6(react@19.2.6)
-      why-render:
-        specifier: workspace:*
-        version: link:../packages/why-render
     devDependencies:
       '@types/node':
         specifier: ^22.0.0

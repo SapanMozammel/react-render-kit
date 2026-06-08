@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { useWhyRender } from 'why-render';
+import { useWhyRender } from '@sapanmozammel/why-render';
 import ConsolePanel from '@/components/console-panel';
 import { usePropLog } from '@/hooks/use-prop-log';
 import { SCENARIOS, type Scenario, type ScenarioId } from './scenarios';
@@ -253,7 +253,7 @@ export const WhyRenderDemo = () => {
 			<details className="code-hint code-hint--usage">
 				<summary>How to add this to your component</summary>
 				<div className="code-hint__body">
-					<pre className="code-hint__pre">{`import { useWhyRender } from 'why-render';
+					<pre className="code-hint__pre">{`import { useWhyRender } from '@sapanmozammel/why-render';
 
 const UserCard = (props: UserCardProps) => {
   useWhyRender('UserCard', props);

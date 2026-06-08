@@ -1,5 +1,5 @@
 {
-	"name": "why-render",
+	"name": "@sapanmozammel/why-render",
 	"version": "1.0.0",
 	"description": "Debug why your React component re-renders",
 	"license": "MIT",
@@ -27,6 +27,9 @@
 		"dist",
 		"README.md"
 	],
+	"publishConfig": {
+		"access": "public"
+	},
 	"sideEffects": false,
 	"scripts": {
 		"prepublishOnly": "tsup",

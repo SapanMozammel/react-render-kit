@@ -1,13 +1,13 @@
-# why-render
+# @sapanmozammel/why-render
 
 A tiny React + TypeScript hook that tells you **why** a component re-rendered by diffing its previous and current props. Dev-only, zero runtime cost in production builds.
 
 ## Install
 
 ```bash
-pnpm add why-render
+pnpm add @sapanmozammel/why-render
 # or
-npm i why-render
+npm i @sapanmozammel/why-render
 ```
 
 Peer dependency: `react >= 18`.
@@ -15,7 +15,7 @@ Peer dependency: `react >= 18`.
 ## Usage
 
 ```tsx
-import { useWhyRender } from 'why-render';
+import { useWhyRender } from '@sapanmozammel/why-render';
 
 const Profile = (props: ProfileProps) => {
   useWhyRender('Profile', props);
@@ -119,7 +119,7 @@ Arrays are compared by reference — a new array literal on each render appears 
 The package ships full `.d.ts` declarations. All types are exported:
 
 ```ts
-import type { WhyRenderOptions } from 'why-render';
+import type { WhyRenderOptions } from '@sapanmozammel/why-render';
 ```
 
 ## License

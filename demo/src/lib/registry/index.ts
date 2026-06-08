@@ -19,7 +19,7 @@ export const TOOLS: readonly ToolMeta[] = [
 		slug: 'why-render',
 		description:
 			'Debug why React components re-render by diffing props between renders. Logs primitive changes, object reference churn, and added/removed props.',
-		packageName: 'why-render',
+		packageName: '@sapanmozammel/why-render',
 		version: '1.0.0',
 		tags: ['debugging', 'performance', 'hooks'],
 		status: 'stable',
