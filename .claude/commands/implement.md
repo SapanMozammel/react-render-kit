@@ -63,5 +63,6 @@ l. **Report:** files created, files modified, type check result, test result, ve
 - **No `any`.** TypeScript strict mode + `exactOptionalPropertyTypes` are on.
 - **Never commit `.env`, secrets, or files containing API keys.** Stage files explicitly — never `git add -A` / `git add .`.
 - **Never auto-stage during implementation work.** For renames, use plain `mv` (NOT `git mv`). For single-file deletes, use `rm` (NOT `git rm`). For directory deletes, ask the user. The user manages staging via `/commit-staged` or manual `git add`.
+- **Never commit, push, or open PRs** unless the user explicitly runs `/commit`, `/commit-staged`, `/push`, or `/pr`. Do not do any of these proactively, even after a successful quality gate.
 - **Never bypass git hooks** (`--no-verify`, `--no-gpg-sign`).
 - **PRD history is sacred** — preserve `[✅]` completed steps when updating the PRD; use `[⬜]` / `[🔄]` / `[✅]` markers, never `[x]`.
