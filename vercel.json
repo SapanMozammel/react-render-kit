@@ -1,5 +1,5 @@
 {
-	"buildCommand": "pnpm run build",
+	"buildCommand": "pnpm --filter why-render build && pnpm --filter demo build",
 	"outputDirectory": "demo/.next",
 	"installCommand": "pnpm install --frozen-lockfile",
 	"framework": "nextjs"
