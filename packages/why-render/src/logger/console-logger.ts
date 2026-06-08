@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
-import type { DiffResult } from '../types';
+import type { PropChange } from '../types';
 
 const formatValue = (v: unknown): string => {
 	if (v === null) return 'null';
 	if (v === undefined) return 'undefined';
 	if (typeof v === 'symbol') return v.toString();
 	if (typeof v === 'function') return `[Function: ${v.name || 'anonymous'}]`;
-	if (typeof v === 'string') return v;
+	if (typeof v === 'string') return `"${v}"`;
 	try {
 		return JSON.stringify(v);
 	} catch {
@@ -14,27 +14,30 @@ const formatValue = (v: unknown): string => {
 	}
 };
 
-export const logChanges = (componentName: string, diff: DiffResult): void => {
-	if (diff.changes.length === 0) return;
+export const logChanges = (componentName: string, changes: PropChange[]): void => {
+	if (changes.length === 0) return;
+
+	const maxKeyLen = Math.max(...changes.map((c) => c.key.length));
+	const pad = maxKeyLen + 2;
 
 	const valueLines: string[] = [];
 	const referenceLines: string[] = [];
 	const addedLines: string[] = [];
 	const removedLines: string[] = [];
 
-	for (const change of diff.changes) {
+	for (const change of changes) {
 		switch (change.kind) {
 			case 'value-changed':
-				valueLines.push(`  ${change.key.padEnd(10)}  ${formatValue(change.prev)} → ${formatValue(change.next)}`);
+				valueLines.push(`  ${change.key.padEnd(pad)}  ${formatValue(change.prev)} → ${formatValue(change.next)}`);
 				break;
 			case 'reference-changed':
-				referenceLines.push(`  ${change.key.padEnd(10)}  ${change.refType} reference changed`);
+				referenceLines.push(`  ${change.key.padEnd(pad)}  ${change.refType} reference changed`);
 				break;
 			case 'added':
-				addedLines.push(`  ${change.key}`);
+				addedLines.push(`  ${change.key.padEnd(pad)}  ${formatValue(change.next)}`);
 				break;
 			case 'removed':
-				removedLines.push(`  ${change.key}`);
+				removedLines.push(`  ${change.key.padEnd(pad)}  was ${formatValue(change.prev)}`);
 				break;
 		}
 	}

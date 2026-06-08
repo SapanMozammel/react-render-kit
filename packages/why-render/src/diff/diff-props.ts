@@ -1,4 +1,4 @@
-import type { DiffResult, PropChange } from '../types';
+import type { PropChange } from '../types';
 
 const classifyChange = (key: string, prev: unknown, curr: unknown): PropChange => {
 	if (typeof curr === 'function') {
@@ -10,10 +10,9 @@ const classifyChange = (key: string, prev: unknown, curr: unknown): PropChange =
 	return { kind: 'value-changed', key, prev, next: curr };
 };
 
-export const diffProps = (prev: Record<string, unknown>, curr: Record<string, unknown>): DiffResult => {
+export const diffProps = (prev: Record<string, unknown>, curr: Record<string, unknown>): PropChange[] => {
 	const allKeys = new Set([...Object.keys(prev), ...Object.keys(curr)]);
 	const changes: PropChange[] = [];
-	const unchanged: string[] = [];
 
 	for (const key of allKeys) {
 		const hasPrev = Object.prototype.hasOwnProperty.call(prev, key);
@@ -23,12 +22,10 @@ export const diffProps = (prev: Record<string, unknown>, curr: Record<string, un
 			changes.push({ kind: 'added', key, next: curr[key] });
 		} else if (hasPrev && !hasCurr) {
 			changes.push({ kind: 'removed', key, prev: prev[key] });
-		} else if (Object.is(prev[key], curr[key])) {
-			unchanged.push(key);
-		} else {
+		} else if (!Object.is(prev[key], curr[key])) {
 			changes.push(classifyChange(key, prev[key], curr[key]));
 		}
 	}
 
-	return { changes, unchanged };
+	return changes;
 };

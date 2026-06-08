@@ -30,7 +30,7 @@ When props change you'll see a grouped, sectioned output in the console:
 
   Primitive Changes
   -----------------
-    name      Alice → Bob
+    name      "Alice" → "Bob"
 
   Reference Changes
   -----------------
@@ -84,19 +84,21 @@ useWhyRender('Profile', props, { enabled: process.env.NEXT_PUBLIC_DEBUG === '1' 
 
 Defaults to `true`.
 
+When `enabled` is `false`, the hook neither diffs props nor advances its internal reference snapshot. Re-enabling shows all changes that accumulated while disabled.
+
 ## Production safety
 
-The hook checks `process.env.NODE_ENV === 'development'` via an internal `isDev` constant. When `isDev` is `false`:
+The hook checks `process.env.NODE_ENV !== 'development'` inline. When in production:
 
 - The hook returns immediately after `useRef` (the one unconditional call required by Rules of Hooks)
 - No props are diffed, no console methods are called
-- Bundlers (Vite, webpack, Rollup) can dead-code-eliminate all downstream logic when `NODE_ENV` is statically set to `'production'`
+- Bundlers (Vite, webpack, Rollup) statically evaluate the `NODE_ENV` check and dead-code-eliminate all downstream logic — minimal overhead (one `useRef` call per render)
 
 **The hook is silent in `NODE_ENV=test` by design.** Diagnostics should not appear in automated test output.
 
 ## React Strict Mode
 
-The hook is safe under React Strict Mode. Strict Mode may invoke component logic multiple times during development, which can produce duplicate diagnostic logs. This is acceptable for v1 and does not indicate a bug.
+The hook is Strict Mode safe. When React double-invokes component logic, `prevRef` advances on the first invocation; the second invocation diffs the prop snapshot against itself and produces no output.
 
 ## Change classification
 
