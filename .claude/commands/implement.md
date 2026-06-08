@@ -28,15 +28,7 @@ Invoke each via the **Skill** tool before reading the PRD. **Project rules in `C
 
 a. **Read the PRD** at `.claude/plans/$ARGUMENTS/prd.md` plus root `CLAUDE.md`. Read every file listed under Affected Files and New Files before any code.
 
-b. **Branch** off the default branch dynamically:
-
-   ```bash
-   BASE=$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null | sed 's@^origin/@@')
-   BASE=${BASE:-main}
-   git checkout "$BASE" && git pull && git checkout -b "feature/$ARGUMENTS"
-   ```
-
-   Never commit to `$BASE` directly.
+b. **Do not create or switch branches.** Implement on whichever branch is currently checked out. Never run `git checkout -b`, `git checkout <branch>`, or `git switch` without explicit user instruction. If you believe a branch switch is needed, ask the user first.
 
 c. **Execute each PRD step in order.** Before starting a step, mark it `[🔄]` in the PRD; mark `[✅]` when done. **Never overwrite or remove completed `[✅]` steps** (project rule: PRD history is sacred). Use `[⬜]` / `[🔄]` / `[✅]` markers — never `[x]`.
 
