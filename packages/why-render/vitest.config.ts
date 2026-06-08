@@ -5,6 +5,9 @@ export default defineConfig({
 		environment: 'jsdom',
 		globals: false,
 		include: ['tests/**/*.{test,spec}.{ts,tsx}'],
+		env: {
+			NODE_ENV: 'development',
+		},
 		coverage: {
 			provider: 'v8',
 			reporter: ['text', 'html'],

@@ -12,5 +12,6 @@
 		"isolatedModules": true,
 		"resolveJsonModule": true,
 		"ignoreDeprecations": "6.0"
-	}
+	},
+	"exclude": ["apps/**", "node_modules", "**/dist/**", "**/.next/**"]
 }

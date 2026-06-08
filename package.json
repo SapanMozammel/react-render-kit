@@ -3,11 +3,12 @@
 	"private": true,
 	"version": "0.0.0",
 	"workspaces": [
-		"packages/*"
+		"packages/*",
+		"demo"
 	],
 	"scripts": {
-		"build": "pnpm -r build",
-		"dev": "pnpm -r dev",
+		"build": "pnpm --filter why-render build && pnpm --filter demo build",
+		"dev": "pnpm --filter why-render build && pnpm --filter demo dev",
 		"test": "pnpm -r test",
 		"test:watch": "pnpm -r test:watch",
 		"test:coverage": "pnpm -r test:coverage",

@@ -15,13 +15,30 @@ TypeScript strict · React 18/19 peerDependency · Vitest + React Testing Librar
 
 ## Project Structure
 
+### `packages/why-render` (library)
 ```
 src/
-  use-why-render.ts   # hook implementation
+  diff/diffProps.ts   # pure diff algorithm
+  hook/useWhyRender.ts
+  logger/consoleLogger.ts
+  types/index.ts
   index.ts            # public re-export
 tests/
-  use-why-render.test.ts
 dist/                 # build output (gitignored)
+```
+
+### `demo` (Next.js demo site — `src/` layout)
+```
+app/                  # routing only
+components/           # shared UI (console-panel, tool-card)
+features/             # tool demo modules (one folder per tool)
+  why-render/
+    index.tsx         # demo component
+    scenarios.ts      # scenario data
+hooks/                # custom React hooks (use-prop-log)
+lib/                  # data / config (registry)
+  registry/
+types/                # TS declarations
 ```
 
 ## Code Conventions
