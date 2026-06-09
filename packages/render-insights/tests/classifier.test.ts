@@ -109,11 +109,7 @@ describe('classifyProps', () => {
 	});
 
 	it('multiple unstable props: all in unstable, priority order correct (function > array > object)', () => {
-		const result = classifyProps(
-			{ fn: () => {}, arr: [1], obj: {} },
-			{ fn: () => {}, arr: [1], obj: {} },
-			[],
-		);
+		const result = classifyProps({ fn: () => {}, arr: [1], obj: {} }, { fn: () => {}, arr: [1], obj: {} }, []);
 		expect(result.unstable.map((p) => p.type)).toContain('function');
 		expect(result.unstable.map((p) => p.type)).toContain('array');
 		expect(result.unstable.map((p) => p.type)).toContain('object');

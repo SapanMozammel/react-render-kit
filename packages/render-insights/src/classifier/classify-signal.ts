@@ -16,9 +16,7 @@ export const classifySignal = (summary: PropChangeSummary): RenderSignal | null 
 
 	const kind: SignalKind = hasGenuine && hasReference ? 'mixed' : hasGenuine ? 'genuine' : 'reference-only';
 
-	const genuineKeys = summary.changed
-		.filter((e) => e.kind !== 'reference-changed')
-		.map((e) => e.key);
+	const genuineKeys = summary.changed.filter((e) => e.kind !== 'reference-changed').map((e) => e.key);
 
 	return { kind, genuineKeys, unstableProps: summary.unstable };
 };

@@ -7,11 +7,7 @@ const classifyRefType = (value: unknown): PropInstabilityKind | null => {
 	return null;
 };
 
-export const classifyProps = (
-	prev: Record<string, unknown>,
-	curr: Record<string, unknown>,
-	ignoreProps: readonly string[],
-): PropChangeSummary => {
+export const classifyProps = (prev: Record<string, unknown>, curr: Record<string, unknown>, ignoreProps: readonly string[]): PropChangeSummary => {
 	const allKeys = [...new Set([...Object.keys(prev), ...Object.keys(curr)])];
 	const changed: PropChangeEntry[] = [];
 	const unstable: PropInstability[] = [];

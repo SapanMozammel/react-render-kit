@@ -116,7 +116,9 @@ describe('logInsights', () => {
 });
 
 describe('logNoChange', () => {
-	beforeEach(() => { vi.spyOn(console, 'log').mockImplementation(() => {}); });
+	beforeEach(() => {
+		vi.spyOn(console, 'log').mockImplementation(() => {});
+	});
 	afterEach(() => vi.restoreAllMocks());
 
 	it('calls console.log exactly once', () => {
@@ -143,7 +145,9 @@ describe('logNoChange', () => {
 });
 
 describe('logFrequencyOneLiner', () => {
-	beforeEach(() => { vi.spyOn(console, 'log').mockImplementation(() => {}); });
+	beforeEach(() => {
+		vi.spyOn(console, 'log').mockImplementation(() => {});
+	});
 	afterEach(() => vi.restoreAllMocks());
 
 	it('output contains render number', () => {

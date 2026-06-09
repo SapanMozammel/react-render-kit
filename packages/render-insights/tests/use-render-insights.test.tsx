@@ -23,14 +23,14 @@ describe('Path 2 — disabled', () => {
 	});
 
 	it('re-enable after disabled renders: compares against last enabled snapshot', () => {
-		let enabled = false;
+		const enabled = false;
 		const { rerender } = renderHook(({ p, en }) => useRenderInsights('C', p, { enabled: en }), {
 			initialProps: { p: { a: 1 }, en: true },
 		});
 		// First render: baseline
 		rerender({ p: { a: 2 }, en: false }); // disabled
 		rerender({ p: { a: 3 }, en: false }); // still disabled
-		rerender({ p: { a: 4 }, en: true });  // re-enabled, compares against a:1 baseline? No — against last enabled value
+		rerender({ p: { a: 4 }, en: true }); // re-enabled, compares against a:1 baseline? No — against last enabled value
 		// After re-enable, a: 4 vs a: 1 → change detected
 		expect(console.groupCollapsed).toHaveBeenCalledTimes(1);
 		void enabled;
@@ -122,7 +122,9 @@ describe('Path 5 — within maxReports', () => {
 	});
 
 	it('onReport error is caught and logged to console.error', () => {
-		const onReport = () => { throw new Error('oops'); };
+		const onReport = () => {
+			throw new Error('oops');
+		};
 		const { rerender } = renderHook(({ p }) => useRenderInsights('C', p, { onReport }), { initialProps: { p: { a: 1 } } });
 		rerender({ p: { a: 2 } });
 		expect(console.error).toHaveBeenCalled();

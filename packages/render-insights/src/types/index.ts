@@ -44,11 +44,7 @@ export type RenderSignal = {
 
 // ── Memo Session ──────────────────────────────────────────────────────────
 
-export type MemoClassification =
-	| 'NOT_APPLICABLE'
-	| 'EFFECTIVE'
-	| 'INEFFECTIVE'
-	| 'PARTIALLY_EFFECTIVE';
+export type MemoClassification = 'NOT_APPLICABLE' | 'EFFECTIVE' | 'INEFFECTIVE' | 'PARTIALLY_EFFECTIVE';
 
 export type MemoSummary = {
 	signalKind: SignalKind | null;
@@ -64,11 +60,7 @@ export type HealthGrade = 'EXCELLENT' | 'GOOD' | 'MODERATE' | 'POOR' | 'CRITICAL
 
 // ── Trigger Inference ─────────────────────────────────────────────────────
 
-export type InferredTrigger =
-	| 'no-prop-change'
-	| 'genuine-prop-change'
-	| 'reference-instability'
-	| 'mixed';
+export type InferredTrigger = 'no-prop-change' | 'genuine-prop-change' | 'reference-instability' | 'mixed';
 
 // ── Report ────────────────────────────────────────────────────────────────
 

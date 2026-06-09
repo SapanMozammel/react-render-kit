@@ -32,30 +32,22 @@ export const generateRecommendations = (ctx: RecommendationContext): string[] =>
 
 	// Rule 1 — STABILIZE_INEFFECTIVE
 	if (ctx.unstableProps.length > 0 && ctx.sessionClass === 'INEFFECTIVE') {
-		results.push(
-			`Reference-only prop changes are defeating memoization. Stabilize ${formatNames(ctx.unstableProps)} — ${formatHints(ctx.unstableProps)}.`,
-		);
+		results.push(`Reference-only prop changes are defeating memoization. Stabilize ${formatNames(ctx.unstableProps)} — ${formatHints(ctx.unstableProps)}.`);
 	}
 
 	// Rule 2 — STABILIZE_PARTIAL
 	if (ctx.unstableProps.length > 0 && ctx.sessionClass === 'PARTIALLY_EFFECTIVE') {
-		results.push(
-			`Reference instability is partially defeating memoization. Stabilize ${formatNames(ctx.unstableProps)} to eliminate reference-driven re-renders.`,
-		);
+		results.push(`Reference instability is partially defeating memoization. Stabilize ${formatNames(ctx.unstableProps)} to eliminate reference-driven re-renders.`);
 	}
 
 	// Rule 3 — HIGH_FREQUENCY_COMPOUND
 	if (ctx.frequencyClass === 'HIGH' && ctx.unstableProps.length > 0) {
-		results.push(
-			`High render frequency compounded by unstable props. Stabilize ${formatNames(ctx.unstableProps)} first, then investigate render triggers upstream.`,
-		);
+		results.push(`High render frequency compounded by unstable props. Stabilize ${formatNames(ctx.unstableProps)} first, then investigate render triggers upstream.`);
 	}
 
 	// Rule 4 — HIGH_FREQUENCY_CLEAN
 	if (ctx.frequencyClass === 'HIGH' && ctx.unstableProps.length === 0) {
-		results.push(
-			'High render frequency with no reference instability. Investigate parent state updates or context subscription breadth.',
-		);
+		results.push('High render frequency with no reference instability. Investigate parent state updates or context subscription breadth.');
 	}
 
 	if (results.length > 0) return results.slice(0, 3);

@@ -3,11 +3,7 @@ import { aggregate } from '../aggregator/aggregator.js';
 import { logFrequencyOneLiner, logInsights, logNoChange } from '../logger/insights-logger.js';
 import type { RenderInsightsOptions, RenderSignal } from '../types/index.js';
 
-export const useRenderInsights = (
-	componentName: string,
-	props: Record<string, unknown>,
-	options?: RenderInsightsOptions,
-): void => {
+export const useRenderInsights = (componentName: string, props: Record<string, unknown>, options?: RenderInsightsOptions): void => {
 	// INV-REFS: all five refs unconditionally before any early return
 	const prevPropsRef = useRef<Record<string, unknown> | null>(null);
 	const renderCountRef = useRef(0);
@@ -18,15 +14,7 @@ export const useRenderInsights = (
 	// Path 1 — production guard
 	if (process.env.NODE_ENV !== 'development') return;
 
-	const {
-		enabled = true,
-		ignoreProps = [],
-		maxReports = 10,
-		logOnEveryRender = false,
-		frequencyWindowMs = 10000,
-		frequencyLogEvery = 0,
-		onReport,
-	} = options ?? {};
+	const { enabled = true, ignoreProps = [], maxReports = 10, logOnEveryRender = false, frequencyWindowMs = 10000, frequencyLogEvery = 0, onReport } = options ?? {};
 
 	// Path 2 — disabled guard
 	if (!enabled) return;

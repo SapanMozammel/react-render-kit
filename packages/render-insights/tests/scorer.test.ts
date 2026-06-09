@@ -134,7 +134,7 @@ describe('computeScore', () => {
 	});
 
 	it('score 89 → GOOD', () => {
-		const { grade } = computeScore({ frequencyClass: 'LOW', unstablePropsCount: 1, sessionClass: 'EFFECTIVE', signalHistory: [] });
+		computeScore({ frequencyClass: 'LOW', unstablePropsCount: 1, sessionClass: 'EFFECTIVE', signalHistory: [] });
 		// 100 - 8 - 3 (need to construct 89)
 		// 100 - 8 = 92, let me construct 89 differently
 		// FP=10 (MODERATE) + UP=1×8=8 = 82? No.

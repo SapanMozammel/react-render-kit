@@ -4,14 +4,7 @@ import { classifySession } from '../classifier/classify-session.js';
 import { classifySignal } from '../classifier/classify-signal.js';
 import { generateRecommendations } from '../recommendations/recommender.js';
 import { computeScore } from '../scoring/scorer.js';
-import type {
-	FrequencySummary,
-	HealthGrade,
-	InferredTrigger,
-	InsightReport,
-	MemoSummary,
-	RenderSignal,
-} from '../types/index.js';
+import type { FrequencySummary, HealthGrade, InferredTrigger, InsightReport, MemoSummary, RenderSignal } from '../types/index.js';
 
 type AggregatorInput = {
 	componentName: string;
@@ -83,10 +76,7 @@ export const aggregate = (input: AggregatorInput): InsightReport => {
 	const inferredTrigger = inferTrigger(signal);
 
 	// Recommendations (only meaningful when signal !== null)
-	const recommendations =
-		signal !== null
-			? generateRecommendations({ unstableProps: propSummary.unstable, sessionClass, frequencyClass })
-			: [];
+	const recommendations = signal !== null ? generateRecommendations({ unstableProps: propSummary.unstable, sessionClass, frequencyClass }) : [];
 
 	return {
 		componentName,
