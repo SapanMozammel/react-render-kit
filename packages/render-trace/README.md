@@ -61,17 +61,17 @@ const root = trace.getRootCause(); // → 'Dashboard'
 
 ### `createRenderTrace(options?)`
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `enabled` | `boolean` | `true` | Enable or disable tracing |
-| `maxCycles` | `number` | `50` | Max retained cycles (FIFO eviction) |
-| `logMode` | `'tree' \| 'flat' \| 'silent'` | `'tree'` | Console output format |
+| Option      | Type                           | Default  | Description                         |
+| ----------- | ------------------------------ | -------- | ----------------------------------- |
+| `enabled`   | `boolean`                      | `true`   | Enable or disable tracing           |
+| `maxCycles` | `number`                       | `50`     | Max retained cycles (FIFO eviction) |
+| `logMode`   | `'tree' \| 'flat' \| 'silent'` | `'tree'` | Console output format               |
 
 ### `useTraceRender(componentName, options?)`
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `enabled` | `boolean` | `true` | Per-call override |
+| Option     | Type            | Default        | Description                     |
+| ---------- | --------------- | -------------- | ------------------------------- |
+| `enabled`  | `boolean`       | `true`         | Per-call override               |
 | `instance` | `TraceInstance` | `defaultTrace` | Custom instance (for isolation) |
 
 ## List components

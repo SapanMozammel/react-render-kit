@@ -61,6 +61,18 @@ export const TOOLS: readonly ToolMeta[] = [
 		demoImport: () =>
 			import('@/features/unstable-props-detector').then((m) => ({ default: m.UnstablePropsDetectorDemo })),
 	},
+	{
+		name: 'memo-effect-analyzer',
+		slug: 'memo-effect-analyzer',
+		description:
+			'Classify the effectiveness of React.memo optimizations by analyzing prop change history — distinguish genuine data changes from reference instability and get a session verdict. Dev-only, zero production cost.',
+		packageName: '@sapanmozammel/memo-effect-analyzer',
+		version: '1.0.0',
+		tags: ['debugging', 'performance', 'hooks'],
+		status: 'stable',
+		demoImport: () =>
+			import('@/features/memo-effect-analyzer').then((m) => ({ default: m.MemoEffectAnalyzerDemo })),
+	},
 ];
 
 export const getToolBySlug = (slug: string): ToolMeta | undefined =>

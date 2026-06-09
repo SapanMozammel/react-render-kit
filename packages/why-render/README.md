@@ -104,13 +104,13 @@ The hook is Strict Mode safe. When React double-invokes component logic, `prevRe
 
 ## Change classification
 
-| Change type | Trigger | Console line |
-|---|---|---|
-| Primitive | `string`, `number`, `boolean`, `null`, `undefined`, `Symbol`, `BigInt` — value differs | `propName   prev → next` |
-| Object reference | `typeof === 'object'`, non-null, reference differs | `propName   object reference changed` |
-| Function reference | `typeof === 'function'`, reference differs | `propName   function reference changed` |
-| Added | Key absent in previous render, present now | `propName` |
-| Removed | Key present in previous render, absent now | `propName` |
+| Change type        | Trigger                                                                                | Console line                            |
+| ------------------ | -------------------------------------------------------------------------------------- | --------------------------------------- |
+| Primitive          | `string`, `number`, `boolean`, `null`, `undefined`, `Symbol`, `BigInt` — value differs | `propName   prev → next`                |
+| Object reference   | `typeof === 'object'`, non-null, reference differs                                     | `propName   object reference changed`   |
+| Function reference | `typeof === 'function'`, reference differs                                             | `propName   function reference changed` |
+| Added              | Key absent in previous render, present now                                             | `propName`                              |
+| Removed            | Key present in previous render, absent now                                             | `propName`                              |
 
 Equality is determined by `Object.is`, which correctly handles `NaN` (equal to itself) and `+0`/`-0` (unequal).
 

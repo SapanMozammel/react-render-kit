@@ -3,7 +3,14 @@
 	"version": "1.0.0",
 	"description": "Debug why your React component re-renders",
 	"license": "MIT",
-	"keywords": ["react", "hooks", "debug", "re-render", "performance", "devtools"],
+	"keywords": [
+		"react",
+		"hooks",
+		"debug",
+		"re-render",
+		"performance",
+		"devtools"
+	],
 	"homepage": "https://react-render-kit.vercel.app/why-render",
 	"bugs": {
 		"url": "https://github.com/SapanMozammel/react-render-kit/issues"

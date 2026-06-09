@@ -106,11 +106,11 @@ useRenderFrequency('UserCard', { sampleEvery: 1 }); // log every render
 
 The Observation field is descriptive only — it tells you what is happening, not what to do.
 
-| Rate | Observation |
-|---|---|
+| Rate             | Observation                      |
+| ---------------- | -------------------------------- |
 | > 10 renders/sec | `High render frequency detected` |
-| > 2 renders/sec | `Moderate render activity` |
-| ≤ 2 renders/sec | `Low render activity` |
+| > 2 renders/sec  | `Moderate render activity`       |
+| ≤ 2 renders/sec  | `Low render activity`            |
 
 ## Production safety
 
@@ -122,14 +122,15 @@ The hook checks `process.env.NODE_ENV !== 'development'` inline. When in product
 
 ## React Strict Mode
 
-React Strict Mode may invoke component logic multiple times during development. Render counts and frequency metrics may appear inflated relative to production behavior. This is expected — the package remains safe and deterministic under Strict Mode.
+React Strict Mode may invoke component logic multiple times during development. Render counts and frequency metrics may appear inflated relative to production behavior. This is expected — the package remains safe and
+deterministic under Strict Mode.
 
 ## Companion package
 
-| Package | Answers |
-|---|---|
-| [`@sapanmozammel/why-render`](https://www.npmjs.com/package/@sapanmozammel/why-render) | *Why* did this component re-render? |
-| `@sapanmozammel/why-render-frequency` | *How often* is this component re-rendering? |
+| Package                                                                                | Answers                                     |
+| -------------------------------------------------------------------------------------- | ------------------------------------------- |
+| [`@sapanmozammel/why-render`](https://www.npmjs.com/package/@sapanmozammel/why-render) | _Why_ did this component re-render?         |
+| `@sapanmozammel/why-render-frequency`                                                  | _How often_ is this component re-rendering? |
 
 ## License
 

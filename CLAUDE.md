@@ -16,6 +16,7 @@ TypeScript strict · React 18/19 peerDependency · Vitest + React Testing Librar
 ## Project Structure
 
 ### `packages/why-render` (library)
+
 ```
 src/
   diff/diff-props.ts   # pure diff algorithm
@@ -28,6 +29,7 @@ dist/                 # build output (gitignored)
 ```
 
 ### `packages/why-render-frequency` (library)
+
 ```
 src/
   hook/use-render-frequency.ts
@@ -39,6 +41,7 @@ dist/                 # build output (gitignored)
 ```
 
 ### `packages/render-trace` (library)
+
 ```
 src/
   engine/engine.ts    # createEngine factory — stack, cycle, flush
@@ -51,6 +54,7 @@ dist/                 # build output (gitignored)
 ```
 
 ### `packages/unstable-props-detector` (library)
+
 ```
 src/
   detector/detector.ts   # pure detection — no React dependency
@@ -62,7 +66,21 @@ tests/
 dist/                    # build output (gitignored)
 ```
 
+### `packages/memo-effect-analyzer` (library)
+
+```
+src/
+  classifier/classifier.ts  # pure classifyRender + classifySession — no React dependency
+  hook/use-memo-effect-analyzer.ts
+  logger/memo-logger.ts
+  types/index.ts
+  index.ts               # public re-export
+tests/
+dist/                    # build output (gitignored)
+```
+
 ### `demo` (Next.js demo site — `src/` layout)
+
 ```
 app/                  # routing only
 components/           # shared UI (console-panel, tool-card)
@@ -86,9 +104,10 @@ types/                # TS declarations
 
 ## Slash Commands
 
-| Command                 | Purpose                                                           |
-| ----------------------- | ----------------------------------------------------------------- |
-| `/implement why-render` | Execute the PRD at `.claude/plans/why-render/prd.md` step by step |
-| `/implement why-render-frequency` | Execute the PRD at `.claude/plans/why-render-frequency/prd.md` step by step |
-| `/implement render-trace` | Execute the PRD at `.claude/plans/render-trace/prd.md` step by step |
+| Command                              | Purpose                                                                        |
+| ------------------------------------ | ------------------------------------------------------------------------------ |
+| `/implement why-render`              | Execute the PRD at `.claude/plans/why-render/prd.md` step by step              |
+| `/implement why-render-frequency`    | Execute the PRD at `.claude/plans/why-render-frequency/prd.md` step by step    |
+| `/implement render-trace`            | Execute the PRD at `.claude/plans/render-trace/prd.md` step by step            |
 | `/implement unstable-props-detector` | Execute the PRD at `.claude/plans/unstable-props-detector/prd.md` step by step |
+| `/implement memo-effect-analyzer`    | Execute the PRD at `.claude/plans/memo-effect-analyzer/prd.md` step by step    |

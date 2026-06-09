@@ -45,12 +45,12 @@ Memoization Note
 
 ## Options
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `enabled` | `boolean` | `true` | Complete no-op when `false` |
-| `ignoreProps` | `string[]` | `[]` | Prop names to exclude from detection |
-| `maxReports` | `number` | `10` | Max instability reports per component instance |
-| `logOnEveryRender` | `boolean` | `false` | Log a stability confirmation when no instability is found |
+| Option             | Type       | Default | Description                                               |
+| ------------------ | ---------- | ------- | --------------------------------------------------------- |
+| `enabled`          | `boolean`  | `true`  | Complete no-op when `false`                               |
+| `ignoreProps`      | `string[]` | `[]`    | Prop names to exclude from detection                      |
+| `maxReports`       | `number`   | `10`    | Max instability reports per component instance            |
+| `logOnEveryRender` | `boolean`  | `false` | Log a stability confirmation when no instability is found |
 
 ```tsx
 useUnstablePropsDetector('Modal', props as Record<string, unknown>, {
