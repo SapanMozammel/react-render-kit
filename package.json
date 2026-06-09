@@ -7,8 +7,9 @@
 		"demo"
 	],
 	"scripts": {
-		"build": "pnpm --filter @sapanmozammel/why-render build && pnpm --filter demo build",
-		"dev": "pnpm --filter @sapanmozammel/why-render build && pnpm --filter demo dev",
+		"build:libs": "pnpm --filter './packages/**' build",
+		"build": "pnpm run build:libs && pnpm --filter demo build",
+		"dev": "pnpm run build:libs && pnpm --filter demo dev",
 		"test": "pnpm -r test",
 		"test:watch": "pnpm -r test:watch",
 		"test:coverage": "pnpm -r test:coverage",

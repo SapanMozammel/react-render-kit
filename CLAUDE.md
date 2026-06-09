@@ -38,6 +38,18 @@ tests/
 dist/                 # build output (gitignored)
 ```
 
+### `packages/render-trace` (library)
+```
+src/
+  engine/engine.ts    # createEngine factory — stack, cycle, flush
+  hook/use-trace-render.ts
+  logger/trace-logger.ts  # tree + flat console output
+  types/index.ts
+  index.ts            # public re-export + createRenderTrace factory
+tests/
+dist/                 # build output (gitignored)
+```
+
 ### `demo` (Next.js demo site — `src/` layout)
 ```
 app/                  # routing only
@@ -66,3 +78,4 @@ types/                # TS declarations
 | ----------------------- | ----------------------------------------------------------------- |
 | `/implement why-render` | Execute the PRD at `.claude/plans/why-render/prd.md` step by step |
 | `/implement why-render-frequency` | Execute the PRD at `.claude/plans/why-render-frequency/prd.md` step by step |
+| `/implement render-trace` | Execute the PRD at `.claude/plans/render-trace/prd.md` step by step |

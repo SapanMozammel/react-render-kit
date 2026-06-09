@@ -1048,3 +1048,139 @@ code {
   color: var(--green);
   background: var(--green-dim);
 }
+
+/* ── render-trace demo ──────────────────────────────────────── */
+
+/* Instrumented component cards */
+.trace-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+}
+
+.trace-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trace-card__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+/* Inline badges */
+.trace-badge {
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: 500;
+  white-space: nowrap;
+  line-height: 1.6;
+}
+
+.trace-badge--root    { background: var(--accent-dim); color: var(--accent); }
+.trace-badge--memo    { background: var(--green-dim);  color: var(--green); }
+.trace-badge--untraced { background: var(--surface-3);  color: var(--text-dim); border: 1px dashed var(--border); }
+
+/* Component hierarchy tree */
+.trace-hierarchy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.trace-subtree {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.trace-subtree__children {
+  margin-left: 10px;
+  padding-left: 12px;
+  padding-top: 4px;
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Trace panel — shows last captured cycle */
+.trace-panel {
+  margin-top: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  animation: trace-panel-in 0.2s ease-out;
+}
+
+.trace-panel--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+}
+
+.trace-empty {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+@keyframes trace-panel-in {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.trace-panel__title {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.trace-panel__stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.trace-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.trace-stat__key   { font-size: 10px; color: var(--text-dim); }
+.trace-stat__value { font-size: 13px; font-weight: 600; color: var(--text); font-family: var(--font-mono); }
+
+/* Cycle node list */
+.trace-nodes {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.trace-node-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.trace-node-row__connector { color: var(--text-dim); }
+.trace-node-row__name      { color: var(--accent); }

@@ -13,7 +13,8 @@
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"@sapanmozammel/why-render": "workspace:*",
-		"@sapanmozammel/why-render-frequency": "workspace:*"
+		"@sapanmozammel/why-render-frequency": "workspace:*",
+		"@sapanmozammel/render-trace": "workspace:*"
 	},
 	"devDependencies": {
 		"@types/node": "^22.0.0",
