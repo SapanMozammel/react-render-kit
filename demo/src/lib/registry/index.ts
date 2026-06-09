@@ -49,6 +49,18 @@ export const TOOLS: readonly ToolMeta[] = [
 		demoImport: () =>
 			import('@/features/render-trace').then((m) => ({ default: m.RenderTraceDemo })),
 	},
+	{
+		name: 'unstable-props-detector',
+		slug: 'unstable-props-detector',
+		description:
+			'Detect props whose reference identity changes between renders — functions, objects, and arrays that silently defeat React.memo optimizations. Dev-only, zero production cost.',
+		packageName: '@sapanmozammel/unstable-props-detector',
+		version: '1.0.0',
+		tags: ['debugging', 'performance', 'hooks'],
+		status: 'stable',
+		demoImport: () =>
+			import('@/features/unstable-props-detector').then((m) => ({ default: m.UnstablePropsDetectorDemo })),
+	},
 ];
 
 export const getToolBySlug = (slug: string): ToolMeta | undefined =>

@@ -14,7 +14,8 @@
 		"react-dom": "^19.0.0",
 		"@sapanmozammel/why-render": "workspace:*",
 		"@sapanmozammel/why-render-frequency": "workspace:*",
-		"@sapanmozammel/render-trace": "workspace:*"
+		"@sapanmozammel/render-trace": "workspace:*",
+		"@sapanmozammel/unstable-props-detector": "workspace:*"
 	},
 	"devDependencies": {
 		"@types/node": "^22.0.0",
