@@ -1,26 +1,26 @@
 {
-	"name": "@sapanmozammel/render-trace",
+	"name": "@sapanmozammel/memo-effect-analyzer",
 	"version": "1.0.0",
-	"description": "Trace React render propagation — see which component triggered a cascade and how deep it went",
+	"description": "Classify React.memo effectiveness by analyzing prop change history — distinguish genuine data changes from reference instability",
 	"license": "MIT",
 	"keywords": [
 		"react",
 		"hooks",
 		"debug",
-		"re-render",
+		"memoization",
+		"memo",
 		"performance",
 		"devtools",
-		"trace",
-		"cascade"
+		"prop-analysis"
 	],
-	"homepage": "https://react-render-kit.vercel.app/render-trace",
+	"homepage": "https://react-render-kit.vercel.app/memo-effect-analyzer",
 	"bugs": {
 		"url": "https://github.com/SapanMozammel/react-render-kit/issues"
 	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SapanMozammel/react-render-kit.git",
-		"directory": "packages/render-trace"
+		"directory": "packages/memo-effect-analyzer"
 	},
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",

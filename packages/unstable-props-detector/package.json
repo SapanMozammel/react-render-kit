@@ -3,7 +3,16 @@
 	"version": "1.0.0",
 	"description": "Detect unstable React props that break memoization — identify inline functions, objects, and arrays causing unnecessary re-renders",
 	"license": "MIT",
-	"keywords": ["react", "hooks", "debug", "memoization", "memo", "performance", "devtools", "unstable-props"],
+	"keywords": [
+		"react",
+		"hooks",
+		"debug",
+		"memoization",
+		"memo",
+		"performance",
+		"devtools",
+		"unstable-props"
+	],
 	"homepage": "https://react-render-kit.vercel.app/unstable-props-detector",
 	"bugs": {
 		"url": "https://github.com/SapanMozammel/react-render-kit/issues"

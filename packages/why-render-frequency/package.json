@@ -3,7 +3,15 @@
 	"version": "1.0.0",
 	"description": "Debug how often your React component re-renders",
 	"license": "MIT",
-	"keywords": ["react", "hooks", "debug", "re-render", "performance", "devtools", "frequency"],
+	"keywords": [
+		"react",
+		"hooks",
+		"debug",
+		"re-render",
+		"performance",
+		"devtools",
+		"frequency"
+	],
 	"homepage": "https://react-render-kit.vercel.app/why-render-frequency",
 	"bugs": {
 		"url": "https://github.com/SapanMozammel/react-render-kit/issues"
