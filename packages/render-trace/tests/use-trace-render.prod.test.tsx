@@ -9,37 +9,37 @@ import { useTraceRender } from '../src/hook/use-trace-render';
 import type { TraceInstance } from '../src/types';
 
 describe('useTraceRender — production guard', () => {
-  let instance: TraceInstance;
+	let instance: TraceInstance;
 
-  beforeEach(() => {
-    instance = createEngine({ logMode: 'silent' });
-    vi.stubEnv('NODE_ENV', 'production');
-  });
+	beforeEach(() => {
+		instance = createEngine({ logMode: 'silent' });
+		vi.stubEnv('NODE_ENV', 'production');
+	});
 
-  afterEach(() => {
-    vi.unstubAllEnvs();
-    instance.resetTrace();
-  });
+	afterEach(() => {
+		vi.unstubAllEnvs();
+		instance.resetTrace();
+	});
 
-  it('does not register any node in production', async () => {
-    const { unmount } = renderHook(() => useTraceRender('Widget', { instance }));
-    await new Promise<void>((resolve) => queueMicrotask(resolve));
-    expect(instance.getRenderChains()).toHaveLength(0);
-    unmount();
-  });
+	it('does not register any node in production', async () => {
+		const { unmount } = renderHook(() => useTraceRender('Widget', { instance }));
+		await new Promise<void>((resolve) => queueMicrotask(resolve));
+		expect(instance.getRenderChains()).toHaveLength(0);
+		unmount();
+	});
 
-  it('produces no console output in production', async () => {
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+	it('produces no console output in production', async () => {
+		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+		const logSpy = vi.spyOn(console, 'log').mockImplementation(() => undefined);
 
-    const { unmount } = renderHook(() => useTraceRender('Widget', { instance }));
-    await new Promise<void>((resolve) => queueMicrotask(resolve));
+		const { unmount } = renderHook(() => useTraceRender('Widget', { instance }));
+		await new Promise<void>((resolve) => queueMicrotask(resolve));
 
-    expect(warnSpy).not.toHaveBeenCalled();
-    expect(logSpy).not.toHaveBeenCalled();
+		expect(warnSpy).not.toHaveBeenCalled();
+		expect(logSpy).not.toHaveBeenCalled();
 
-    warnSpy.mockRestore();
-    logSpy.mockRestore();
-    unmount();
-  });
+		warnSpy.mockRestore();
+		logSpy.mockRestore();
+		unmount();
+	});
 });

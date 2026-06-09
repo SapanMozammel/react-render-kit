@@ -8,5 +8,4 @@ export { defaultTrace, useTraceRender } from './hook/use-trace-render';
 export type { LogMode, RenderCycle, RenderNode, RenderTraceOptions, TraceInstance, TraceRenderOptions } from './types';
 
 // Public factory — wires the default logger
-export const createRenderTrace = (options?: RenderTraceOptions): TraceInstance =>
-  createEngine(options, logCycle);
+export const createRenderTrace = (options?: RenderTraceOptions): TraceInstance => createEngine(options, logCycle);
