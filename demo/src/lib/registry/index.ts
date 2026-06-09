@@ -37,6 +37,18 @@ export const TOOLS: readonly ToolMeta[] = [
 		demoImport: () =>
 			import('@/features/why-render-frequency').then((m) => ({ default: m.WhyRenderFrequencyDemo })),
 	},
+	{
+		name: 'render-trace',
+		slug: 'render-trace',
+		description:
+			'Trace React render propagation — see which component triggered a cascade, how deep it went, and which components were dragged along. Dev-only, zero production cost.',
+		packageName: '@sapanmozammel/render-trace',
+		version: '1.0.0',
+		tags: ['debugging', 'performance', 'hooks'],
+		status: 'stable',
+		demoImport: () =>
+			import('@/features/render-trace').then((m) => ({ default: m.RenderTraceDemo })),
+	},
 ];
 
 export const getToolBySlug = (slug: string): ToolMeta | undefined =>
