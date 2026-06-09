@@ -918,3 +918,133 @@ code {
 .code-hint--usage {
   margin-top: 8px;
 }
+
+/* ── Frequency Demo ───────────────────────────────────────── */
+
+@keyframes freq-flash {
+  0%   { background: var(--accent-dim); }
+  100% { background: transparent; }
+}
+
+/* Overlay remounted via key={count} — CSS animation replays on every mount */
+.freq-flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: var(--radius);
+  animation: freq-flash 0.45s ease-out forwards;
+  z-index: 0;
+}
+
+.freq-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.freq-card__header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.freq-card__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.freq-card__body {
+  position: relative;
+  z-index: 1;
+  padding: 10px 12px;
+}
+
+.freq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .freq-grid { grid-template-columns: 1fr; }
+}
+
+.freq-header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.freq-input-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.freq-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 13px;
+  font-family: var(--font-mono);
+  outline: none;
+  transition: border-color 0.12s;
+}
+
+.freq-input:focus {
+  border-color: var(--accent);
+}
+
+.freq-prop-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.freq-prop-key {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  min-width: 44px;
+  flex-shrink: 0;
+}
+
+.freq-prop-value {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  word-break: break-all;
+}
+
+.freq-prop-value--warn  { color: var(--orange); }
+.freq-prop-value--muted { color: var(--text-dim); }
+
+.freq-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+
+.freq-tag--warn {
+  color: var(--orange);
+  background: var(--orange-dim);
+}
+
+.freq-tag--ok {
+  color: var(--green);
+  background: var(--green-dim);
+}

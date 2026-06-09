@@ -27,6 +27,17 @@ tests/
 dist/                 # build output (gitignored)
 ```
 
+### `packages/why-render-frequency` (library)
+```
+src/
+  hook/use-render-frequency.ts
+  logger/frequency-logger.ts  # pure logger — rate + observation
+  types/index.ts
+  index.ts            # public re-export
+tests/
+dist/                 # build output (gitignored)
+```
+
 ### `demo` (Next.js demo site — `src/` layout)
 ```
 app/                  # routing only
@@ -54,3 +65,4 @@ types/                # TS declarations
 | Command                 | Purpose                                                           |
 | ----------------------- | ----------------------------------------------------------------- |
 | `/implement why-render` | Execute the PRD at `.claude/plans/why-render/prd.md` step by step |
+| `/implement why-render-frequency` | Execute the PRD at `.claude/plans/why-render-frequency/prd.md` step by step |
