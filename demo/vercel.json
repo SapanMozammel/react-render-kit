@@ -1,5 +1,5 @@
 {
-	"buildCommand": "(cd .. && pnpm --filter @sapanmozammel/why-render build) && pnpm run build",
+	"buildCommand": "(cd .. && pnpm --filter @sapanmozammel/why-render build && pnpm --filter @sapanmozammel/why-render-frequency build) && pnpm run build",
 	"outputDirectory": ".next",
 	"installCommand": "pnpm install --frozen-lockfile",
 	"ignoreCommand": "[ \"$VERCEL_GIT_COMMIT_REF\" != \"main\" ]",
