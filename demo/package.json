@@ -16,7 +16,8 @@
 		"@sapanmozammel/why-render-frequency": "workspace:*",
 		"@sapanmozammel/render-trace": "workspace:*",
 		"@sapanmozammel/unstable-props-detector": "workspace:*",
-		"@sapanmozammel/memo-effect-analyzer": "workspace:*"
+		"@sapanmozammel/memo-effect-analyzer": "workspace:*",
+		"@sapanmozammel/render-insights": "workspace:*"
 	},
 	"devDependencies": {
 		"@types/node": "^22.0.0",
