@@ -73,6 +73,18 @@ export const TOOLS: readonly ToolMeta[] = [
 		demoImport: () =>
 			import('@/features/memo-effect-analyzer').then((m) => ({ default: m.MemoEffectAnalyzerDemo })),
 	},
+	{
+		name: 'render-insights',
+		slug: 'render-insights',
+		description:
+			'Unified render diagnostics — correlates prop changes, frequency, unstable references, and memo effectiveness into a single scored report with actionable recommendations. Dev-only, zero production cost.',
+		packageName: '@sapanmozammel/render-insights',
+		version: '1.0.0',
+		tags: ['debugging', 'performance', 'hooks'],
+		status: 'stable',
+		demoImport: () =>
+			import('@/features/render-insights').then((m) => ({ default: m.RenderInsightsDemo })),
+	},
 ];
 
 export const getToolBySlug = (slug: string): ToolMeta | undefined =>

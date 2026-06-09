@@ -79,6 +79,25 @@ tests/
 dist/                    # build output (gitignored)
 ```
 
+### `packages/render-insights` (library)
+
+```
+src/
+  aggregator/aggregator.ts      # correlates all signals into InsightReport
+  classifier/classify-props.ts  # pure prop diff + unstable detection
+  classifier/classify-signal.ts # PropChangeSummary → RenderSignal | null
+  classifier/classify-session.ts # RenderSignal[] → MemoClassification
+  classifier/classify-frequency.ts # windowCount + ms → FrequencyClass
+  scoring/scorer.ts             # RHS formula → score + HealthGrade
+  recommendations/recommender.ts # 5 deterministic rules → string[]
+  hook/use-render-insights.ts
+  logger/insights-logger.ts
+  types/index.ts
+  index.ts               # public re-export
+tests/
+dist/                    # build output (gitignored)
+```
+
 ### `demo` (Next.js demo site — `src/` layout)
 
 ```
@@ -111,3 +130,4 @@ types/                # TS declarations
 | `/implement render-trace`            | Execute the PRD at `.claude/plans/render-trace/prd.md` step by step            |
 | `/implement unstable-props-detector` | Execute the PRD at `.claude/plans/unstable-props-detector/prd.md` step by step |
 | `/implement memo-effect-analyzer`    | Execute the PRD at `.claude/plans/memo-effect-analyzer/prd.md` step by step    |
+| `/implement render-insights`         | Execute the PRD at `.claude/plans/render-insights/prd.md` step by step         |
