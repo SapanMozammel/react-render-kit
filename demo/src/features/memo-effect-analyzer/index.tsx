@@ -126,14 +126,14 @@ const useMemoCapture = (
 		prevRef.current = props;
 	}
 
-	// Flush pending entry — side effect: appending to UI log, not deriving state
 	useEffect(() => {
 		if (pendingRef.current !== null) {
 			const entry = pendingRef.current;
 			setEntries((prev) => [entry, ...prev].slice(0, 30));
 			pendingRef.current = null;
 		}
-	});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [props]);
 
 	const clear = useCallback(() => setEntries([]), []);
 	return { entries, clear };
