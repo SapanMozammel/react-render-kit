@@ -25,6 +25,18 @@ export const TOOLS: readonly ToolMeta[] = [
 		status: 'stable',
 		demoImport: () => import('@/features/why-render').then((m) => ({ default: m.WhyRenderDemo })),
 	},
+	{
+		name: 'why-render-frequency',
+		slug: 'why-render-frequency',
+		description:
+			'Track how often React components re-render. Logs total count, rolling-window rate, and observation (Low / Moderate / High). Dev-only, zero production cost.',
+		packageName: '@sapanmozammel/why-render-frequency',
+		version: '1.0.0',
+		tags: ['debugging', 'performance', 'hooks'],
+		status: 'stable',
+		demoImport: () =>
+			import('@/features/why-render-frequency').then((m) => ({ default: m.WhyRenderFrequencyDemo })),
+	},
 ];
 
 export const getToolBySlug = (slug: string): ToolMeta | undefined =>
