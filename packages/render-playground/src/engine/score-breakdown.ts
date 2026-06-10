@@ -26,10 +26,7 @@ export const computeScoreBreakdown = (report: InsightReport): ScoreBreakdown => 
 		{
 			label: 'Frequency',
 			penalty: frequencyPenalty,
-			explanation:
-				frequencyPenalty === 0
-					? `${report.frequency.classification} frequency — no penalty`
-					: `${report.frequency.classification} frequency class (−${frequencyPenalty} pts)`,
+			explanation: frequencyPenalty === 0 ? `${report.frequency.classification} frequency — no penalty` : `${report.frequency.classification} frequency class (−${frequencyPenalty} pts)`,
 		},
 		{
 			label: 'Prop Instability',
@@ -42,10 +39,7 @@ export const computeScoreBreakdown = (report: InsightReport): ScoreBreakdown => 
 		{
 			label: 'Memo Effectiveness',
 			penalty: memoPenalty,
-			explanation:
-				memoPenalty === 0
-					? `${report.memo.sessionClass} — no penalty`
-					: `${report.memo.sessionClass} session −${memoPenalty} pts`,
+			explanation: memoPenalty === 0 ? `${report.memo.sessionClass} — no penalty` : `${report.memo.sessionClass} session −${memoPenalty} pts`,
 		},
 		{
 			label: 'Mixed Signals',

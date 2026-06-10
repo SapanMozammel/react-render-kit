@@ -47,24 +47,18 @@ export const ScoreGauge = ({ score, grade }: ScoreGaugeProps): React.ReactElemen
 				gap: '4px',
 			}}
 		>
-			<svg
-				width="100"
-				height="100"
-				viewBox="0 0 100 100"
-				role="img"
-				aria-label={`Render health score: ${score} out of 100 — ${gradeLabel[grade]}`}
-			>
+			<svg width='100' height='100' viewBox='0 0 100 100' role='img' aria-label={`Render health score: ${score} out of 100 — ${gradeLabel[grade]}`}>
 				{/* Background arc */}
 				<circle
 					cx={cx}
 					cy={cy}
 					r={RADIUS}
-					fill="none"
+					fill='none'
 					stroke={tokens.border}
 					strokeWidth={STROKE_WIDTH}
 					strokeDasharray={`${arcLength} ${circumference}`}
 					strokeDashoffset={0}
-					strokeLinecap="round"
+					strokeLinecap='round'
 					transform={`rotate(${START_ANGLE} ${cx} ${cy})`}
 				/>
 				{/* Filled arc */}
@@ -72,38 +66,21 @@ export const ScoreGauge = ({ score, grade }: ScoreGaugeProps): React.ReactElemen
 					cx={cx}
 					cy={cy}
 					r={RADIUS}
-					fill="none"
+					fill='none'
 					stroke={fillColor}
 					strokeWidth={STROKE_WIDTH}
 					strokeDasharray={`${arcLength} ${circumference}`}
 					strokeDashoffset={dashOffset}
-					strokeLinecap="round"
+					strokeLinecap='round'
 					transform={`rotate(${START_ANGLE} ${cx} ${cy})`}
 					style={{ transition: 'stroke-dashoffset 0.3s ease' }}
 				/>
 				{/* Score text */}
-				<text
-					x={cx}
-					y={cy - 4}
-					textAnchor="middle"
-					dominantBaseline="middle"
-					fill={tokens.text}
-					fontFamily={tokens.fontMono}
-					fontSize="18"
-					fontWeight="bold"
-				>
+				<text x={cx} y={cy - 4} textAnchor='middle' dominantBaseline='middle' fill={tokens.text} fontFamily={tokens.fontMono} fontSize='18' fontWeight='bold'>
 					{score}
 				</text>
 				{/* Grade text */}
-				<text
-					x={cx}
-					y={cy + 14}
-					textAnchor="middle"
-					dominantBaseline="middle"
-					fill={fillColor}
-					fontFamily={tokens.fontMono}
-					fontSize="9"
-				>
+				<text x={cx} y={cy + 14} textAnchor='middle' dominantBaseline='middle' fill={fillColor} fontFamily={tokens.fontMono} fontSize='9'>
 					{gradeLabel[grade].toUpperCase()}
 				</text>
 			</svg>

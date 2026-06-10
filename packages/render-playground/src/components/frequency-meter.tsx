@@ -28,11 +28,7 @@ export const FrequencyMeter = ({ frequency }: FrequencyMeterProps): React.ReactE
 		>
 			<span style={{ color: tokens.textMuted }}>Frequency</span>
 			<span style={{ color, fontWeight: 'bold' }}>{frequency.classification}</span>
-			{frequency.classification !== 'NOT_ENOUGH_DATA' && (
-				<span style={{ color: tokens.textMuted }}>
-					{frequency.rate.toFixed(1)}/s
-				</span>
-			)}
+			{frequency.classification !== 'NOT_ENOUGH_DATA' && <span style={{ color: tokens.textMuted }}>{frequency.rate.toFixed(1)}/s</span>}
 		</div>
 	);
 };

@@ -46,8 +46,7 @@ export const SessionStrip = ({ stats, totalReports }: SessionStripProps): React.
 			<span>avg {stats.averageScore}</span>
 			{stats.mostUnstableProp !== null && (
 				<span>
-					most unstable:{' '}
-					<span style={{ color: tokens.orange }}>{stats.mostUnstableProp}</span>
+					most unstable: <span style={{ color: tokens.orange }}>{stats.mostUnstableProp}</span>
 				</span>
 			)}
 		</div>

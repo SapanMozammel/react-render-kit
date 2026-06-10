@@ -120,9 +120,7 @@ export const RecommendationCard = ({ recommendation: rec }: RecommendationCardPr
 					textAlign: 'left',
 				}}
 			>
-				<span style={{ color, fontSize: '10px', fontWeight: 'bold', fontFamily: tokens.fontMono }}>
-					● {rec.severity}
-				</span>
+				<span style={{ color, fontSize: '10px', fontWeight: 'bold', fontFamily: tokens.fontMono }}>● {rec.severity}</span>
 				<span
 					style={{
 						color: tokens.text,
@@ -161,11 +159,7 @@ export const RecommendationCard = ({ recommendation: rec }: RecommendationCardPr
 						<span style={{ color: tokens.text }}>{rec.expectedImpact}</span>
 					</p>
 
-					{rec.evidence.length > 0 && (
-						<div style={{ marginTop: '2px' }}>
-							{rec.evidence.map((e, i) => evidenceChip(e, i))}
-						</div>
-					)}
+					{rec.evidence.length > 0 && <div style={{ marginTop: '2px' }}>{rec.evidence.map((e, i) => evidenceChip(e, i))}</div>}
 				</div>
 			)}
 		</div>

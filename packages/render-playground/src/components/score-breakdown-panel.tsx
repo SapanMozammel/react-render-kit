@@ -62,9 +62,7 @@ export const ScoreBreakdownPanel = ({ score, breakdown }: ScoreBreakdownPanelPro
 							>
 								{c.penalty > 0 ? `−${c.penalty}` : '0'}
 							</span>
-							<span style={{ color: tokens.textMuted, marginLeft: '8px', flex: 1 }}>
-								{c.explanation}
-							</span>
+							<span style={{ color: tokens.textMuted, marginLeft: '8px', flex: 1 }}>{c.explanation}</span>
 						</div>
 					))}
 				</div>

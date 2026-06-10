@@ -63,11 +63,7 @@ describe('computeSessionStats', () => {
 	});
 
 	it('mostFrequentTrigger returns the mode trigger', () => {
-		const history = [
-			makeReport({ inferredTrigger: 'no-prop-change' }),
-			makeReport({ inferredTrigger: 'no-prop-change' }),
-			makeReport({ inferredTrigger: 'genuine-prop-change' }),
-		];
+		const history = [makeReport({ inferredTrigger: 'no-prop-change' }), makeReport({ inferredTrigger: 'no-prop-change' }), makeReport({ inferredTrigger: 'genuine-prop-change' })];
 		const stats = computeSessionStats(history);
 		expect(stats.mostFrequentTrigger).toBe('no-prop-change');
 	});
@@ -91,8 +87,10 @@ describe('computeSessionStats', () => {
 
 	it('scoreTrend is improving when second half avg > first half avg by >5', () => {
 		const history = [
-			makeReport({ score: 50 }), makeReport({ score: 55 }), // first half
-			makeReport({ score: 80 }), makeReport({ score: 85 }), // second half
+			makeReport({ score: 50 }),
+			makeReport({ score: 55 }), // first half
+			makeReport({ score: 80 }),
+			makeReport({ score: 85 }), // second half
 		];
 		const stats = computeSessionStats(history);
 		expect(stats.scoreTrend).toBe('improving');
@@ -100,18 +98,17 @@ describe('computeSessionStats', () => {
 
 	it('scoreTrend is degrading when second half avg < first half avg by >5', () => {
 		const history = [
-			makeReport({ score: 90 }), makeReport({ score: 85 }), // first half
-			makeReport({ score: 50 }), makeReport({ score: 55 }), // second half
+			makeReport({ score: 90 }),
+			makeReport({ score: 85 }), // first half
+			makeReport({ score: 50 }),
+			makeReport({ score: 55 }), // second half
 		];
 		const stats = computeSessionStats(history);
 		expect(stats.scoreTrend).toBe('degrading');
 	});
 
 	it('scoreTrend is stable when delta ≤ 5', () => {
-		const history = [
-			makeReport({ score: 80 }), makeReport({ score: 80 }),
-			makeReport({ score: 82 }), makeReport({ score: 82 }),
-		];
+		const history = [makeReport({ score: 80 }), makeReport({ score: 80 }), makeReport({ score: 82 }), makeReport({ score: 82 })];
 		const stats = computeSessionStats(history);
 		expect(stats.scoreTrend).toBe('stable');
 	});

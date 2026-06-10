@@ -17,18 +17,14 @@ export const useInsightCapture = (options?: CaptureOptions): InsightCaptureResul
 	}
 	const store = storeRef.current;
 
-	const reports = React.useSyncExternalStore(
-		store.subscribe,
-		store.getSnapshot,
-		store.getServerSnapshot,
-	);
+	const reports = React.useSyncExternalStore(store.subscribe, store.getSnapshot, store.getServerSnapshot);
 
 	const onReport = React.useCallback(
 		(report: InsightReport) => {
 			if (process.env.NODE_ENV !== 'development') return;
 			store.push(report);
 		},
-		[store],
+		[store]
 	);
 
 	const clearReports = React.useCallback(() => {

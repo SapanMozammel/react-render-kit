@@ -59,7 +59,9 @@ export const PropDiffTable = ({ report }: PropDiffTableProps): React.ReactElemen
 							return (
 								<div key={entry.key} style={rowStyle}>
 									<span style={{ color: tokens.accent }}>{entry.key}</span>
-									<span style={labelStyle}>{safeStringify(entry.prev)} → {safeStringify(entry.next)}</span>
+									<span style={labelStyle}>
+										{safeStringify(entry.prev)} → {safeStringify(entry.next)}
+									</span>
 								</div>
 							);
 						}

@@ -25,7 +25,7 @@ const renderWithStore = (store: PlaygroundStore, props?: Parameters<typeof Rende
 	render(
 		<PlaygroundContext.Provider value={store}>
 			<RenderPlaygroundPanel {...props} />
-		</PlaygroundContext.Provider>,
+		</PlaygroundContext.Provider>
 	);
 
 describe('RenderPlaygroundPanel', () => {

@@ -18,9 +18,7 @@ const computeMemoTrend = (window: readonly InsightReport[]): ScoreTrend => {
 	const secondHalf = window.slice(mid);
 
 	const badRate = (items: readonly InsightReport[]) => {
-		const bad = items.filter(
-			(r) => r.memo.sessionClass === 'INEFFECTIVE' || r.memo.sessionClass === 'PARTIALLY_EFFECTIVE',
-		).length;
+		const bad = items.filter((r) => r.memo.sessionClass === 'INEFFECTIVE' || r.memo.sessionClass === 'PARTIALLY_EFFECTIVE').length;
 		return bad / items.length;
 	};
 

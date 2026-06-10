@@ -49,7 +49,13 @@ describe('computeRecommendations', () => {
 
 	it('R-FUNC-001: severity is CRITICAL when INEFFECTIVE + 2+ func props', () => {
 		const report = makeReport({
-			props: { changed: [], unstable: [{ name: 'fn1', type: 'function' }, { name: 'fn2', type: 'function' }] },
+			props: {
+				changed: [],
+				unstable: [
+					{ name: 'fn1', type: 'function' },
+					{ name: 'fn2', type: 'function' },
+				],
+			},
 			memo: { signalKind: 'reference-only', sessionClass: 'INEFFECTIVE', genuineCount: 0, referenceOnlyCount: 2, mixedCount: 0 },
 		});
 		const result = computeRecommendations(report, []);
@@ -163,10 +169,7 @@ describe('computeRecommendations', () => {
 
 	it('R-PARENT-001: does NOT fire when one of last 5 has different trigger', () => {
 		const npc = makeReport({ inferredTrigger: 'no-prop-change' });
-		const history = [
-			{ ...npc, inferredTrigger: 'genuine-prop-change' as const },
-			...Array.from({ length: 3 }, () => ({ ...npc })),
-		];
+		const history = [{ ...npc, inferredTrigger: 'genuine-prop-change' as const }, ...Array.from({ length: 3 }, () => ({ ...npc }))];
 		const report = { ...npc };
 		const result = computeRecommendations(report, history);
 		expect(result.find((r) => r.id === 'R-PARENT-001')).toBeUndefined();
@@ -223,10 +226,15 @@ describe('computeRecommendations', () => {
 		const report = makeReport({
 			score: 30,
 			frequency: { totalRenders: 20, windowCount: 20, windowMs: 1000, rate: 20, classification: 'HIGH' },
-			props: { changed: [], unstable: [
-				{ name: 'fn1', type: 'function' }, { name: 'fn2', type: 'function' },
-				{ name: 'obj', type: 'object' }, { name: 'arr', type: 'array' },
-			]},
+			props: {
+				changed: [],
+				unstable: [
+					{ name: 'fn1', type: 'function' },
+					{ name: 'fn2', type: 'function' },
+					{ name: 'obj', type: 'object' },
+					{ name: 'arr', type: 'array' },
+				],
+			},
 			memo: { signalKind: 'reference-only', sessionClass: 'INEFFECTIVE', genuineCount: 0, referenceOnlyCount: 5, mixedCount: 2 },
 		});
 		const result = computeRecommendations(report, []);

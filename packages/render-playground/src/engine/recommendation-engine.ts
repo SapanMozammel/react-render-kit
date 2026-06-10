@@ -43,7 +43,7 @@ const rFUNC001: RecommendationRule = {
 		const funcProps = report.props.unstable.filter((p) => p.type === 'function');
 		return funcProps.length > 0 && report.memo.sessionClass !== 'NOT_APPLICABLE';
 	},
-	build: ({ report, history, breakdown }) => {
+	build: ({ report, history }) => {
 		const funcProps = report.props.unstable.filter((p) => p.type === 'function');
 		const propName = funcProps.length === 1 ? funcProps[0].name : funcProps.map((p) => p.name).join(', ');
 		const isIneffective = report.memo.sessionClass === 'INEFFECTIVE';
@@ -262,11 +262,7 @@ const rPARENT001: RecommendationRule = {
 
 const rMEMO003: RecommendationRule = {
 	id: 'R-MEMO-003',
-	matches: ({ report }) =>
-		report.memo.sessionClass === 'EFFECTIVE' &&
-		report.score >= 90 &&
-		report.props.unstable.length === 0 &&
-		report.memo.genuineCount >= 5,
+	matches: ({ report }) => report.memo.sessionClass === 'EFFECTIVE' && report.score >= 90 && report.props.unstable.length === 0 && report.memo.genuineCount >= 5,
 	build: ({ report }) => ({
 		id: 'R-MEMO-003',
 		category: 'over-memoization',
@@ -290,8 +286,7 @@ const rMEMO003: RecommendationRule = {
 
 const rSCORE001: RecommendationRule = {
 	id: 'R-SCORE-001',
-	matches: ({ report, sessionStats }) =>
-		sessionStats.scoreTrend === 'degrading' && sessionStats.averageScore - report.score >= 20,
+	matches: ({ report, sessionStats }) => sessionStats.scoreTrend === 'degrading' && sessionStats.averageScore - report.score >= 20,
 	build: ({ report, sessionStats }) => {
 		const delta = sessionStats.averageScore - report.score;
 		const confidence = clamp(delta / 30, 0, 1);
@@ -318,8 +313,7 @@ const rSCORE001: RecommendationRule = {
 
 const rCLEAR001: RecommendationRule = {
 	id: 'R-CLEAR-001',
-	matches: ({ report }) =>
-		report.score >= 90 && report.props.unstable.length === 0 && report.frequency.classification !== 'HIGH',
+	matches: ({ report }) => report.score >= 90 && report.props.unstable.length === 0 && report.frequency.classification !== 'HIGH',
 	build: ({ sessionStats }) => ({
 		id: 'R-CLEAR-001',
 		category: 'well-optimized',
@@ -333,23 +327,9 @@ const rCLEAR001: RecommendationRule = {
 	}),
 };
 
-const ALL_RULES: RecommendationRule[] = [
-	rFUNC001,
-	rOBJ001,
-	rARR001,
-	rMEMO001,
-	rMEMO002,
-	rFREQ001,
-	rPARENT001,
-	rMEMO003,
-	rSCORE001,
-	rCLEAR001,
-];
+const ALL_RULES: RecommendationRule[] = [rFUNC001, rOBJ001, rARR001, rMEMO001, rMEMO002, rFREQ001, rPARENT001, rMEMO003, rSCORE001, rCLEAR001];
 
-export const computeRecommendations = (
-	report: InsightReport,
-	history: readonly InsightReport[],
-): Recommendation[] => {
+export const computeRecommendations = (report: InsightReport, history: readonly InsightReport[]): Recommendation[] => {
 	const sessionStats = computeSessionStats(history);
 	const breakdown = computeScoreBreakdown(report);
 	const ctx: RuleContext = { report, history, sessionStats, breakdown };

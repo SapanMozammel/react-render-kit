@@ -37,8 +37,8 @@ export const RenderTimeline = ({ reports, maxVisible = 50 }: RenderTimelineProps
 				Render Timeline
 			</div>
 			<div
-				role="list"
-				aria-label="Render timeline"
+				role='list'
+				aria-label='Render timeline'
 				style={{
 					display: 'flex',
 					flexDirection: 'row',
@@ -51,7 +51,7 @@ export const RenderTimeline = ({ reports, maxVisible = 50 }: RenderTimelineProps
 				{visible.map((report) => (
 					<div
 						key={`${report.renderNumber}-${report.reportNumber}`}
-						role="listitem"
+						role='listitem'
 						aria-label={signalLabel(report)}
 						title={`${signalLabel(report)} · score: ${report.score}`}
 						style={{

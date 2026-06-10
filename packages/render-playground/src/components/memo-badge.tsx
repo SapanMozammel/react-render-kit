@@ -8,7 +8,6 @@ type MemoBadgeProps = {
 	classification: MemoClassification;
 };
 
-
 const badgeColor: Record<MemoClassification, string> = {
 	NOT_APPLICABLE: tokens.textMuted,
 	EFFECTIVE: tokens.green,

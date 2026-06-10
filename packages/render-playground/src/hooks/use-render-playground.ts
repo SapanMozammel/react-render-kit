@@ -1,14 +1,9 @@
 import React from 'react';
-import { useRenderInsights } from '@sapanmozammel/render-insights';
-import type { InsightReport } from '@sapanmozammel/render-insights';
+import { type InsightReport, useRenderInsights } from '@sapanmozammel/render-insights';
 import { PlaygroundContext } from '../context/playground-context.js';
 import type { PlaygroundStore, RenderPlaygroundOptions } from '../types/index.js';
 
-export const useRenderPlayground = (
-	componentName: string,
-	props: Record<string, unknown>,
-	options?: RenderPlaygroundOptions,
-): void => {
+export const useRenderPlayground = (componentName: string, props: Record<string, unknown>, options?: RenderPlaygroundOptions): void => {
 	// All hooks unconditionally before any early return (rules of hooks)
 	const store = React.useContext(PlaygroundContext);
 	const storeRef = React.useRef<PlaygroundStore | null>(null);

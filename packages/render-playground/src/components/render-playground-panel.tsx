@@ -25,11 +25,7 @@ const NOOP_STORE: PlaygroundStore = {
 	clear: () => {},
 };
 
-export const RenderPlaygroundPanel = ({
-	className,
-	maxVisible = 50,
-	onClear,
-}: RenderPlaygroundPanelProps): React.ReactElement | null => {
+export const RenderPlaygroundPanel = ({ className, maxVisible = 50, onClear }: RenderPlaygroundPanelProps): React.ReactElement | null => {
 	const contextStore = React.useContext(PlaygroundContext);
 	const store = contextStore ?? NOOP_STORE;
 	const reports = React.useSyncExternalStore(store.subscribe, store.getSnapshot, store.getServerSnapshot);
@@ -52,7 +48,7 @@ export const RenderPlaygroundPanel = ({
 
 	return (
 		<div
-			role="region"
+			role='region'
 			aria-label={`Render diagnostics for ${componentName}`}
 			className={className}
 			style={{
@@ -77,12 +73,11 @@ export const RenderPlaygroundPanel = ({
 				}}
 			>
 				<span style={{ fontSize: '11px', color: tokens.textMuted }}>
-					[render-playground]{' '}
-					<span style={{ color: tokens.text, fontWeight: 'bold' }}>&lt;{componentName}&gt;</span>
+					[render-playground] <span style={{ color: tokens.text, fontWeight: 'bold' }}>&lt;{componentName}&gt;</span>
 				</span>
 				<button
 					onClick={handleClear}
-					aria-label="Clear render history"
+					aria-label='Clear render history'
 					style={{
 						background: 'none',
 						border: `1px solid ${tokens.border}`,
@@ -143,12 +138,8 @@ export const RenderPlaygroundPanel = ({
 							}}
 						>
 							<ScoreGauge score={latestReport.score} grade={latestReport.grade} />
-							<span style={{ fontSize: '11px', color: tokens.text, fontWeight: 'bold' }}>
-								{latestReport.score} / 100
-							</span>
-							{breakdown !== null && (
-								<ScoreBreakdownPanel score={latestReport.score} breakdown={breakdown} />
-							)}
+							<span style={{ fontSize: '11px', color: tokens.text, fontWeight: 'bold' }}>{latestReport.score} / 100</span>
+							{breakdown !== null && <ScoreBreakdownPanel score={latestReport.score} breakdown={breakdown} />}
 						</div>
 
 						{/* Latest render detail */}
@@ -166,9 +157,7 @@ export const RenderPlaygroundPanel = ({
 							<div style={{ color: tokens.textMuted }}>
 								Render <span style={{ color: tokens.text }}>#{latestReport.renderNumber}</span>
 								{' · '}
-								<span style={{ color: tokens.textMuted, fontSize: '10px' }}>
-									{latestReport.inferredTrigger}
-								</span>
+								<span style={{ color: tokens.textMuted, fontSize: '10px' }}>{latestReport.inferredTrigger}</span>
 							</div>
 
 							<FrequencyMeter frequency={latestReport.frequency} />

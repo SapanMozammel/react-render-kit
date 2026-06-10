@@ -57,7 +57,17 @@ describe('computeScoreBreakdown', () => {
 	});
 
 	it('UP = 16 for 2 unstable props', () => {
-		const bd = computeScoreBreakdown(makeReport({ props: { changed: [], unstable: [{ name: 'fn', type: 'function' }, { name: 'obj', type: 'object' }] } }));
+		const bd = computeScoreBreakdown(
+			makeReport({
+				props: {
+					changed: [],
+					unstable: [
+						{ name: 'fn', type: 'function' },
+						{ name: 'obj', type: 'object' },
+					],
+				},
+			})
+		);
 		expect(bd.instabilityPenalty).toBe(16);
 	});
 
@@ -110,11 +120,13 @@ describe('computeScoreBreakdown', () => {
 
 	it('total never goes below 0', () => {
 		const unstable = Array.from({ length: 5 }, (_, i) => ({ name: `p${i}`, type: 'function' as const }));
-		const bd = computeScoreBreakdown(makeReport({
-			frequency: { totalRenders: 20, windowCount: 20, windowMs: 1000, rate: 20, classification: 'HIGH' },
-			props: { changed: [], unstable },
-			memo: { signalKind: 'reference-only', sessionClass: 'INEFFECTIVE', genuineCount: 0, referenceOnlyCount: 10, mixedCount: 10 },
-		}));
+		const bd = computeScoreBreakdown(
+			makeReport({
+				frequency: { totalRenders: 20, windowCount: 20, windowMs: 1000, rate: 20, classification: 'HIGH' },
+				props: { changed: [], unstable },
+				memo: { signalKind: 'reference-only', sessionClass: 'INEFFECTIVE', genuineCount: 0, referenceOnlyCount: 10, mixedCount: 10 },
+			})
+		);
 		expect(bd.total).toBeGreaterThanOrEqual(0);
 	});
 
