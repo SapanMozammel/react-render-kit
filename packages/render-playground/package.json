@@ -1,6 +1,6 @@
 {
 	"name": "@sapanmozammel/render-playground",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Visual render observatory — wraps any React component with a real-time diagnostics panel showing health score, render timeline, prop changes, memo effectiveness, and recommendations",
 	"license": "MIT",
 	"keywords": [
