@@ -12,8 +12,6 @@ const STROKE_WIDTH = 8;
 const FULL_ARC_DEGREES = 270;
 const START_ANGLE = 135;
 
-const degreesToRadians = (deg: number) => (deg * Math.PI) / 180;
-
 const circumference = 2 * Math.PI * RADIUS;
 const arcLength = (circumference * FULL_ARC_DEGREES) / 360;
 
@@ -29,13 +27,8 @@ export const ScoreGauge = ({ score, grade }: ScoreGaugeProps): React.ReactElemen
 	const filled = (score / 100) * arcLength;
 	const dashOffset = arcLength - filled;
 
-	const startRad = degreesToRadians(START_ANGLE);
 	const cx = 50;
 	const cy = 50;
-	const startX = cx + RADIUS * Math.cos(startRad);
-	const startY = cy + RADIUS * Math.sin(startRad);
-
-	const arcPath = `M ${startX} ${startY}`;
 	const fillColor = gradeColors[grade];
 
 	return (
@@ -84,8 +77,6 @@ export const ScoreGauge = ({ score, grade }: ScoreGaugeProps): React.ReactElemen
 					{gradeLabel[grade].toUpperCase()}
 				</text>
 			</svg>
-			{/* Hidden arc path for test accessibility — unused but void unused var */}
-			{arcPath && null}
 		</div>
 	);
 };

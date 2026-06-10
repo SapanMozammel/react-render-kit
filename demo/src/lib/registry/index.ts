@@ -93,7 +93,7 @@ export const TOOLS: readonly ToolMeta[] = [
 		packageName: '@sapanmozammel/render-playground',
 		version: '1.0.0',
 		tags: ['debugging', 'performance', 'hooks', 'ui'],
-		status: 'experimental',
+		status: 'stable',
 		demoImport: () =>
 			import('@/features/render-playground').then((m) => ({ default: m.RenderPlaygroundDemo })),
 	},

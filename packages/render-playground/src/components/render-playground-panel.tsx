@@ -30,14 +30,14 @@ export const RenderPlaygroundPanel = ({ className, maxVisible = 50, onClear }: R
 	const store = contextStore ?? NOOP_STORE;
 	const reports = React.useSyncExternalStore(store.subscribe, store.getSnapshot, store.getServerSnapshot);
 
-	if (process.env.NODE_ENV !== 'development') return null;
-
+	// All hooks unconditionally before the production guard
 	const latestReport = reports.at(-1) ?? null;
-	const history = latestReport !== null ? reports.slice(0, -1) : reports;
+	const history = React.useMemo(() => (latestReport !== null ? reports.slice(0, -1) : reports), [reports, latestReport]);
+	const recommendations = React.useMemo(() => (latestReport !== null ? computeRecommendations(latestReport, history) : []), [latestReport, history]);
+	const breakdown = React.useMemo(() => (latestReport !== null ? computeScoreBreakdown(latestReport) : null), [latestReport]);
+	const sessionStats = React.useMemo(() => computeSessionStats(reports), [reports]);
 
-	const recommendations = latestReport !== null ? computeRecommendations(latestReport, history) : [];
-	const breakdown = latestReport !== null ? computeScoreBreakdown(latestReport) : null;
-	const sessionStats = computeSessionStats(reports);
+	if (process.env.NODE_ENV !== 'development') return null;
 
 	const handleClear = () => {
 		store.clear();
@@ -193,7 +193,7 @@ export const RenderPlaygroundPanel = ({ className, maxVisible = 50, onClear }: R
 						color: tokens.textMuted,
 					}}
 				>
-					[report {latestReport.reportNumber} / — score:v1]
+					[render #{latestReport.renderNumber} of {reports.length} — score:v1]
 				</div>
 			)}
 		</div>

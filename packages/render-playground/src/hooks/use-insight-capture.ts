@@ -3,6 +3,8 @@ import type { InsightReport } from '@sapanmozammel/render-insights';
 import { createPlaygroundStore } from '../store/playground-store.js';
 import type { CaptureOptions } from '../types/index.js';
 
+const EMPTY_REPORTS: readonly InsightReport[] = [];
+
 type InsightCaptureResult = {
 	onReport: (report: InsightReport) => void;
 	reports: readonly InsightReport[];
@@ -32,7 +34,7 @@ export const useInsightCapture = (options?: CaptureOptions): InsightCaptureResul
 	}, [store]);
 
 	if (process.env.NODE_ENV !== 'development') {
-		return { onReport: () => {}, reports: [], clearReports: () => {} };
+		return { onReport: () => {}, reports: EMPTY_REPORTS, clearReports: () => {} };
 	}
 
 	return { onReport, reports, clearReports };

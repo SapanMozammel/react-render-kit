@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import {
 	PlaygroundProvider,
 	RenderPlaygroundPanel,
@@ -58,21 +58,11 @@ const Dashboard = memo(({ title, onClick, onHover, config, tags }: DashboardProp
 
 type RunnerProps = {
 	scenario: Scenario;
+	intervalRef: React.MutableRefObject<ReturnType<typeof setInterval> | null>;
 };
 
-const ScenarioRunner = ({ scenario }: RunnerProps) => {
+const ScenarioRunner = ({ scenario, intervalRef }: RunnerProps) => {
 	const [tick, setTick] = useState(0);
-	const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-	// Stop interval when scenario changes
-	useEffect(() => {
-		return () => {
-			if (intervalRef.current !== null) {
-				clearInterval(intervalRef.current);
-				intervalRef.current = null;
-			}
-		};
-	}, [scenario.id]);
 
 	const trigger = () => {
 		if (scenario.id === 'high-frequency') {
@@ -182,6 +172,7 @@ const ScenarioRunner = ({ scenario }: RunnerProps) => {
 export const RenderPlaygroundDemo = () => {
 	const [activeId, setActiveId] = useState<ScenarioId>('well-optimized');
 	const activeScenario = SCENARIOS.find((s) => s.id === activeId) ?? SCENARIOS[0]!;
+	const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
 	return (
 		<div
@@ -205,7 +196,13 @@ export const RenderPlaygroundDemo = () => {
 					{SCENARIOS.map((s) => (
 						<button
 							key={s.id}
-							onClick={() => setActiveId(s.id)}
+							onClick={() => {
+								if (intervalRef.current !== null) {
+									clearInterval(intervalRef.current);
+									intervalRef.current = null;
+								}
+								setActiveId(s.id);
+							}}
 							style={{
 								padding: '4px 10px',
 								borderRadius: '4px',
@@ -237,7 +234,7 @@ export const RenderPlaygroundDemo = () => {
 
 			{/* Re-mount on scenario change to reset store */}
 			<PlaygroundProvider key={activeId}>
-				<ScenarioRunner scenario={activeScenario} />
+				<ScenarioRunner scenario={activeScenario} intervalRef={intervalRef} />
 			</PlaygroundProvider>
 		</div>
 	);
