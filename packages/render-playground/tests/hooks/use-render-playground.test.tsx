@@ -15,8 +15,7 @@ describe('useRenderPlayground', () => {
 		}).not.toThrow();
 	});
 
-	it('pushes a report to the store after the microtask flush', async () => {
-		let storeSnapshot: readonly unknown[] = [];
+	it('does not throw after microtask flush', async () => {
 		const CapturingWrapper = ({ children }: { children: React.ReactNode }) => {
 			return <PlaygroundProvider>{children}</PlaygroundProvider>;
 		};
@@ -30,10 +29,7 @@ describe('useRenderPlayground', () => {
 
 		// The push is deferred via queueMicrotask — flush it
 		await Promise.resolve();
-
 		unmount();
-		// We can't easily introspect the store from outside here, so just verify no throw
-		expect(true).toBe(true);
 	});
 
 	it('throws in development when called without a provider', () => {

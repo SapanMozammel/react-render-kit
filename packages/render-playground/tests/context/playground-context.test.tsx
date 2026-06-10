@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, renderHook } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { PlaygroundContext, PlaygroundProvider, usePlaygroundStore } from '../../src/context/playground-context.js';
 import { createPlaygroundStore } from '../../src/store/playground-store.js';
 
@@ -9,7 +9,7 @@ describe('PlaygroundProvider', () => {
 		const { getByText } = render(
 			<PlaygroundProvider>
 				<span>hello</span>
-			</PlaygroundProvider>,
+			</PlaygroundProvider>
 		);
 		expect(getByText('hello')).toBeDefined();
 	});
@@ -23,7 +23,7 @@ describe('PlaygroundProvider', () => {
 		render(
 			<PlaygroundProvider>
 				<Consumer />
-			</PlaygroundProvider>,
+			</PlaygroundProvider>
 		);
 		expect(captured).not.toBeNull();
 		expect(typeof (captured as unknown as ReturnType<typeof createPlaygroundStore>).subscribe).toBe('function');
@@ -39,7 +39,7 @@ describe('PlaygroundProvider', () => {
 		render(
 			<PlaygroundProvider store={customStore}>
 				<Consumer />
-			</PlaygroundProvider>,
+			</PlaygroundProvider>
 		);
 		expect(captured).toBe(customStore);
 	});
@@ -55,7 +55,7 @@ describe('PlaygroundProvider', () => {
 		render(
 			<PlaygroundProvider>
 				<Consumer />
-			</PlaygroundProvider>,
+			</PlaygroundProvider>
 		);
 		// In production the Provider wrapper is skipped, so context is null
 		expect(captured).toBeNull();

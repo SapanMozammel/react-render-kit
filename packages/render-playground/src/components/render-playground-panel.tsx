@@ -32,18 +32,9 @@ export const RenderPlaygroundPanel = ({ className, maxVisible = 50, onClear }: R
 
 	// All hooks unconditionally before the production guard
 	const latestReport = reports.at(-1) ?? null;
-	const history = React.useMemo(
-		() => (latestReport !== null ? reports.slice(0, -1) : reports),
-		[reports, latestReport],
-	);
-	const recommendations = React.useMemo(
-		() => (latestReport !== null ? computeRecommendations(latestReport, history) : []),
-		[latestReport, history],
-	);
-	const breakdown = React.useMemo(
-		() => (latestReport !== null ? computeScoreBreakdown(latestReport) : null),
-		[latestReport],
-	);
+	const history = React.useMemo(() => (latestReport !== null ? reports.slice(0, -1) : reports), [reports, latestReport]);
+	const recommendations = React.useMemo(() => (latestReport !== null ? computeRecommendations(latestReport, history) : []), [latestReport, history]);
+	const breakdown = React.useMemo(() => (latestReport !== null ? computeScoreBreakdown(latestReport) : null), [latestReport]);
 	const sessionStats = React.useMemo(() => computeSessionStats(reports), [reports]);
 
 	if (process.env.NODE_ENV !== 'development') return null;
