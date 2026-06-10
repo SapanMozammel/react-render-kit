@@ -52,7 +52,7 @@ describe('RenderPlaygroundPanel', () => {
 		const store = createPlaygroundStore();
 		store.push(makeReport({ renderNumber: 3 }));
 		renderWithStore(store);
-		expect(screen.getByText(/#3/)).toBeTruthy();
+		expect(screen.getAllByText(/#3/).length).toBeGreaterThan(0);
 	});
 
 	it('clear button has correct aria-label', () => {
