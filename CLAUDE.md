@@ -98,6 +98,34 @@ tests/
 dist/                    # build output (gitignored)
 ```
 
+### `packages/render-playground` (library)
+
+```
+src/
+  store/playground-store.ts        # FIFO InsightReport store (useSyncExternalStore-compatible)
+  context/playground-context.ts    # PlaygroundContext + PlaygroundProvider + usePlaygroundStore
+  hooks/use-render-playground.ts   # useRenderPlayground — calls useRenderInsights + pushes to store
+  hooks/use-insight-capture.ts     # useInsightCapture — headless capture without provider
+  engine/recommendation-engine.ts  # 10 deterministic rules → Recommendation[]
+  engine/score-breakdown.ts        # reverses scorer formula → ScoreBreakdown
+  engine/session-stats.ts          # window-based trend analysis → SessionStats
+  components/render-playground-panel.tsx  # master panel (composes all sub-components)
+  components/score-gauge.tsx        # SVG arc gauge
+  components/render-timeline.tsx    # horizontal pill timeline
+  components/prop-diff-table.tsx    # changed + unstable props table
+  components/memo-badge.tsx         # MemoClassification badge
+  components/frequency-meter.tsx    # frequency class + rate display
+  components/recommendation-card.tsx  # expandable recommendation card
+  components/recommendations-section.tsx  # top-3 recommendations with "+N more"
+  components/score-breakdown-panel.tsx    # "Why NN?" toggle panel
+  components/session-strip.tsx      # session trend strip (hidden when < 3 renders)
+  styles/tokens.ts                  # design tokens + severity/grade/signal color maps
+  types/index.ts                    # public types (PlaygroundStore, Recommendation, etc.)
+  index.ts                          # public re-export
+tests/
+dist/                               # build output (gitignored)
+```
+
 ### `demo` (Next.js demo site — `src/` layout)
 
 ```
@@ -131,3 +159,4 @@ types/                # TS declarations
 | `/implement unstable-props-detector` | Execute the PRD at `.claude/plans/unstable-props-detector/prd.md` step by step |
 | `/implement memo-effect-analyzer`    | Execute the PRD at `.claude/plans/memo-effect-analyzer/prd.md` step by step    |
 | `/implement render-insights`         | Execute the PRD at `.claude/plans/render-insights/prd.md` step by step         |
+| `/implement render-playground`       | Execute the PRD at `.claude/plans/render-playground/prd.md` step by step       |

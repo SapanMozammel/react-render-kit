@@ -85,6 +85,18 @@ export const TOOLS: readonly ToolMeta[] = [
 		demoImport: () =>
 			import('@/features/render-insights').then((m) => ({ default: m.RenderInsightsDemo })),
 	},
+	{
+		name: 'render-playground',
+		slug: 'render-playground',
+		description:
+			'Visual render observatory — a self-contained dev panel that renders inline next to your component, displaying score, prop diffs, timeline, memo classification, frequency, and structured recommendations in real time.',
+		packageName: '@sapanmozammel/render-playground',
+		version: '1.0.0',
+		tags: ['debugging', 'performance', 'hooks', 'ui'],
+		status: 'experimental',
+		demoImport: () =>
+			import('@/features/render-playground').then((m) => ({ default: m.RenderPlaygroundDemo })),
+	},
 ];
 
 export const getToolBySlug = (slug: string): ToolMeta | undefined =>

@@ -1,0 +1,69 @@
+{
+	"name": "@sapanmozammel/render-playground",
+	"version": "1.0.0",
+	"description": "Visual render observatory — wraps any React component with a real-time diagnostics panel showing health score, render timeline, prop changes, memo effectiveness, and recommendations",
+	"license": "MIT",
+	"keywords": [
+		"react",
+		"hooks",
+		"debug",
+		"re-render",
+		"performance",
+		"devtools",
+		"memoization",
+		"visual",
+		"playground",
+		"diagnostics"
+	],
+	"homepage": "https://react-render-kit.vercel.app/render-playground",
+	"bugs": {
+		"url": "https://github.com/SapanMozammel/react-render-kit/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SapanMozammel/react-render-kit.git",
+		"directory": "packages/render-playground"
+	},
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"sideEffects": false,
+	"scripts": {
+		"prepublishOnly": "tsup",
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage"
+	},
+	"peerDependencies": {
+		"@sapanmozammel/render-insights": ">=1.0.0",
+		"react": ">=18"
+	},
+	"devDependencies": {
+		"@sapanmozammel/render-insights": "workspace:*",
+		"@testing-library/react": "^16.1.0",
+		"@testing-library/user-event": "^14.6.1",
+		"@types/react": "^19.2.0",
+		"@types/react-dom": "^19.2.0",
+		"@vitest/coverage-v8": "^4.1.8",
+		"jsdom": "^25.0.1",
+		"react": "^19.2.0",
+		"react-dom": "^19.2.0",
+		"vitest": "^2.1.8"
+	}
+}
