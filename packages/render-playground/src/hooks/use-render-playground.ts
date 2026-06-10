@@ -14,16 +14,21 @@ export const useRenderPlayground = (componentName: string, props: Record<string,
 	storeRef.current = store;
 	optionsRef.current = options;
 
-	// Build the stable onReport bridge once; guards production internally
+	// Build the stable onReport bridge once; guards production internally.
+	// queueMicrotask defers the store push to after the current render completes,
+	// preventing the "setState during render" error when useRenderInsights fires
+	// onReport synchronously inside the render phase.
 	if (onReportRef.current === null) {
 		onReportRef.current = (r: InsightReport) => {
 			if (process.env.NODE_ENV !== 'development') return;
-			storeRef.current?.push(r);
-			try {
-				optionsRef.current?.onReport?.(r);
-			} catch (e) {
-				console.error('[render-playground] onReport callback threw:', e);
-			}
+			queueMicrotask(() => {
+				storeRef.current?.push(r);
+				try {
+					optionsRef.current?.onReport?.(r);
+				} catch (e) {
+					console.error('[render-playground] onReport callback threw:', e);
+				}
+			});
 		};
 	}
 
