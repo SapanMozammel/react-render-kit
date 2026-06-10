@@ -1,6 +1,6 @@
 {
 	"name": "@sapanmozammel/render-insights",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Unified React render diagnostic — correlates prop changes, frequency, instability, and memo effectiveness into a single report",
 	"license": "MIT",
 	"keywords": [
