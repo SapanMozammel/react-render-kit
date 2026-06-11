@@ -1,10 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import {
-	createCustomTransport,
-	createTelemetrySession,
-	createRenderEvent,
-} from '../src/index.js';
-import type { TelemetryEvent } from '../src/index.js';
+import { createCustomTransport, createTelemetrySession, createRenderEvent, type TelemetryEvent } from '../src/index.js';
 
 const makeEvent = (): TelemetryEvent => {
 	const session = createTelemetrySession('Test');

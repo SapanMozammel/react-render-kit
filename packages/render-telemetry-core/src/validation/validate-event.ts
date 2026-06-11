@@ -1,8 +1,7 @@
 import type { TelemetryEvent, TelemetryEventType } from '../types/index.js';
 import { EVENT_SCHEMA_VERSIONS } from '../constants/schema-versions.js';
 
-export const isKnownEventType = (type: unknown): type is TelemetryEventType =>
-	typeof type === 'string' && type in EVENT_SCHEMA_VERSIONS;
+export const isKnownEventType = (type: unknown): type is TelemetryEventType => typeof type === 'string' && type in EVENT_SCHEMA_VERSIONS;
 
 const hasBase = (v: Record<string, unknown>): boolean => {
 	if (typeof v['id'] !== 'string') return false;
@@ -27,13 +26,7 @@ export const validateEvent = (value: unknown): value is TelemetryEvent => {
 		case 'render':
 			return typeof v['renderNumber'] === 'number' && typeof v['triggeredBy'] === 'string';
 		case 'prop-change':
-			return (
-				typeof v['renderNumber'] === 'number' &&
-				Array.isArray(v['changed']) &&
-				Array.isArray(v['unstable']) &&
-				typeof v['inferredTrigger'] === 'string' &&
-				typeof v['signalKind'] === 'string'
-			);
+			return typeof v['renderNumber'] === 'number' && Array.isArray(v['changed']) && Array.isArray(v['unstable']) && typeof v['inferredTrigger'] === 'string' && typeof v['signalKind'] === 'string';
 		case 'frequency':
 			return (
 				typeof v['renderNumber'] === 'number' &&
@@ -58,11 +51,7 @@ export const validateEvent = (value: unknown): value is TelemetryEvent => {
 		case 'recommendation':
 			return typeof v['renderNumber'] === 'number' && Array.isArray(v['recommendations']);
 		case 'session-end':
-			return (
-				typeof v['totalRenders'] === 'number' &&
-				typeof v['durationMs'] === 'number' &&
-				(typeof v['finalScore'] === 'number' || v['finalScore'] === null)
-			);
+			return typeof v['totalRenders'] === 'number' && typeof v['durationMs'] === 'number' && (typeof v['finalScore'] === 'number' || v['finalScore'] === null);
 		default:
 			return false;
 	}

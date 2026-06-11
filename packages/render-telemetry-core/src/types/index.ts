@@ -4,14 +4,7 @@ export type SchemaVersion = `${number}.${number}.${number}`;
 
 // ── Event Types ──────────────────────────────────────────────────────────────
 
-export type TelemetryEventType =
-	| 'session-start'
-	| 'render'
-	| 'prop-change'
-	| 'frequency'
-	| 'score'
-	| 'recommendation'
-	| 'session-end';
+export type TelemetryEventType = 'session-start' | 'render' | 'prop-change' | 'frequency' | 'score' | 'recommendation' | 'session-end';
 
 // ── Domain Value Types ────────────────────────────────────────────────────────
 // Self-contained — intentionally NOT imported from @sapanmozammel/render-insights
@@ -28,19 +21,11 @@ export type TelemetryPropRefType = 'function' | 'array' | 'object';
 // 'state' and 'context' are reserved for future use by other consumers.
 export type TelemetryRenderTrigger = 'props' | 'state' | 'context' | 'parent' | 'unknown';
 
-export type TelemetryInferredTrigger =
-	| 'no-prop-change'
-	| 'genuine-prop-change'
-	| 'reference-instability'
-	| 'mixed';
+export type TelemetryInferredTrigger = 'no-prop-change' | 'genuine-prop-change' | 'reference-instability' | 'mixed';
 
 export type TelemetryFrequencyClass = 'LOW' | 'MODERATE' | 'HIGH' | 'NOT_ENOUGH_DATA';
 export type TelemetryHealthGrade = 'EXCELLENT' | 'GOOD' | 'MODERATE' | 'POOR' | 'CRITICAL';
-export type TelemetryMemoClassification =
-	| 'NOT_APPLICABLE'
-	| 'EFFECTIVE'
-	| 'INEFFECTIVE'
-	| 'PARTIALLY_EFFECTIVE';
+export type TelemetryMemoClassification = 'NOT_APPLICABLE' | 'EFFECTIVE' | 'INEFFECTIVE' | 'PARTIALLY_EFFECTIVE';
 export type TelemetrySignalKind = 'genuine' | 'reference-only' | 'mixed';
 
 export type TelemetryPropChangeEntry =
@@ -124,14 +109,7 @@ export type SessionEndEvent = TelemetryEventBase & {
 	readonly finalScore: number | null;
 };
 
-export type TelemetryEvent =
-	| SessionStartEvent
-	| RenderEvent
-	| PropChangeEvent
-	| FrequencyEvent
-	| ScoreEvent
-	| RecommendationEvent
-	| SessionEndEvent;
+export type TelemetryEvent = SessionStartEvent | RenderEvent | PropChangeEvent | FrequencyEvent | ScoreEvent | RecommendationEvent | SessionEndEvent;
 
 // ── Session ───────────────────────────────────────────────────────────────────
 
@@ -174,9 +152,7 @@ export type TelemetryBuffer = {
 	// Queries — O(n) on current snapshot; safe to call inside useSyncExternalStore
 	getEventsBySession: (sessionId: string) => readonly TelemetryEvent[];
 	getEventsByComponent: (componentName: string) => readonly TelemetryEvent[];
-	getEventsByType: <T extends TelemetryEventType>(
-		type: T,
-	) => readonly Extract<TelemetryEvent, { type: T }>[];
+	getEventsByType: <T extends TelemetryEventType>(type: T) => readonly Extract<TelemetryEvent, { type: T }>[];
 	getSession: (sessionId: string) => TelemetrySession | undefined;
 	getSessionsByComponent: (componentName: string) => readonly TelemetrySession[];
 };

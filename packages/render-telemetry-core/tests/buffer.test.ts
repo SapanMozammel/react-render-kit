@@ -1,12 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import {
-	createTelemetryBuffer,
-	createTelemetrySession,
-	createSessionStartEvent,
-	createRenderEvent,
-	createScoreEvent,
-} from '../src/index.js';
-import type { TelemetryEvent } from '../src/index.js';
+import { createTelemetryBuffer, createTelemetrySession, createSessionStartEvent, createRenderEvent, type TelemetryEvent } from '../src/index.js';
 
 const makeSession = (name = 'TestComponent') => createTelemetrySession(name);
 
@@ -65,9 +58,7 @@ describe('push', () => {
 		}
 		expect(buffer.getSnapshot().events).toHaveLength(3);
 		// first event should be gone — renderNumber 1
-		const renderNums = (buffer.getSnapshot().events as Extract<TelemetryEvent, { type: 'render' }>[]).map(
-			(e) => e.renderNumber,
-		);
+		const renderNums = (buffer.getSnapshot().events as Extract<TelemetryEvent, { type: 'render' }>[]).map((e) => e.renderNumber);
 		expect(renderNums).not.toContain(1);
 		expect(renderNums).toContain(4);
 	});

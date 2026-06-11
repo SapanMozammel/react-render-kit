@@ -1,6 +1,7 @@
 # @sapanmozammel/render-telemetry-core
 
-Event protocol and observability infrastructure for React Render Kit. Provides a typed event model, session lifecycle, transport abstraction, and a replay-compatible buffer — zero dependencies, no React peer dependency, no console output.
+Event protocol and observability infrastructure for React Render Kit. Provides a typed event model, session lifecycle, transport abstraction, and a replay-compatible buffer — zero dependencies, no React peer dependency,
+no console output.
 
 ## Install
 
@@ -10,7 +11,8 @@ pnpm add @sapanmozammel/render-telemetry-core
 npm i @sapanmozammel/render-telemetry-core
 ```
 
-> **No NODE_ENV guard.** This package contains no `process.env.NODE_ENV` check. It runs unconditionally wherever you import it. Only create sessions in the environments where you want telemetry — your component code or wrapper hook decides when to call `createTelemetrySession`.
+> **No NODE_ENV guard.** This package contains no `process.env.NODE_ENV` check. It runs unconditionally wherever you import it. Only create sessions in the environments where you want telemetry — your component code or
+> wrapper hook decides when to call `createTelemetrySession`.
 
 ---
 
@@ -69,85 +71,86 @@ console.log(transport.getEmitted()); // all events emitted so far
 
 ### Session Management
 
-| Export | Signature | Description |
-|---|---|---|
-| `createTelemetrySession` | `(componentName: string) => TelemetrySession` | Opens a new session at component mount |
-| `endTelemetrySession` | `(session: TelemetrySession) => TelemetrySession` | Closes a session at component unmount; returns new object |
+| Export                   | Signature                                         | Description                                               |
+| ------------------------ | ------------------------------------------------- | --------------------------------------------------------- |
+| `createTelemetrySession` | `(componentName: string) => TelemetrySession`     | Opens a new session at component mount                    |
+| `endTelemetrySession`    | `(session: TelemetrySession) => TelemetrySession` | Closes a session at component unmount; returns new object |
 
 ### Event Factories
 
 Each factory returns `{ event: T; session: TelemetrySession }` — immutable update pattern. Thread the returned session into the next factory call.
 
-| Export | Emits |
-|---|---|
-| `createSessionStartEvent` | `SessionStartEvent` |
-| `createRenderEvent` | `RenderEvent` |
-| `createPropChangeEvent` | `PropChangeEvent` |
-| `createFrequencyEvent` | `FrequencyEvent` |
-| `createScoreEvent` | `ScoreEvent` |
+| Export                      | Emits                 |
+| --------------------------- | --------------------- |
+| `createSessionStartEvent`   | `SessionStartEvent`   |
+| `createRenderEvent`         | `RenderEvent`         |
+| `createPropChangeEvent`     | `PropChangeEvent`     |
+| `createFrequencyEvent`      | `FrequencyEvent`      |
+| `createScoreEvent`          | `ScoreEvent`          |
 | `createRecommendationEvent` | `RecommendationEvent` |
-| `createSessionEndEvent` | `SessionEndEvent` |
+| `createSessionEndEvent`     | `SessionEndEvent`     |
 
 ### Buffer
 
-| Export | Signature | Description |
-|---|---|---|
+| Export                  | Signature                                               | Description                                                        |
+| ----------------------- | ------------------------------------------------------- | ------------------------------------------------------------------ |
 | `createTelemetryBuffer` | `(options?: TelemetryBufferOptions) => TelemetryBuffer` | Creates a FIFO buffer. Implements `useSyncExternalStore` interface |
 
-`TelemetryBuffer` methods: `subscribe`, `getSnapshot`, `getServerSnapshot`, `push`, `pushSession`, `updateSession`, `clear`, `getEventsBySession`, `getEventsByComponent`, `getEventsByType`, `getSession`, `getSessionsByComponent`.
+`TelemetryBuffer` methods: `subscribe`, `getSnapshot`, `getServerSnapshot`, `push`, `pushSession`, `updateSession`, `clear`, `getEventsBySession`, `getEventsByComponent`, `getEventsByType`, `getSession`,
+`getSessionsByComponent`.
 
 ### Transport Registry
 
-| Export | Signature | Description |
-|---|---|---|
-| `registerTransport` | `(transport: TelemetryTransport) => () => void` | Register; returns unregister function |
-| `unregisterAllTransports` | `() => void` | Clear all transports (use in test teardown) |
-| `emitEvents` | `(events: ReadonlyArray<TelemetryEvent>) => void` | Dispatch events to all registered transports |
+| Export                    | Signature                                         | Description                                  |
+| ------------------------- | ------------------------------------------------- | -------------------------------------------- |
+| `registerTransport`       | `(transport: TelemetryTransport) => () => void`   | Register; returns unregister function        |
+| `unregisterAllTransports` | `() => void`                                      | Clear all transports (use in test teardown)  |
+| `emitEvents`              | `(events: ReadonlyArray<TelemetryEvent>) => void` | Dispatch events to all registered transports |
 
 ### Transport Factories
 
-| Export | Description |
-|---|---|
-| `createMemoryTransport()` | In-memory accumulator with `getEmitted()` and `clearEmitted()` |
-| `createLocalStorageTransport(storageKey, options?)` | Persist events to `localStorage` |
-| `createCustomTransport(name, emitFn)` | Wrap any callback as a transport |
+| Export                                              | Description                                                    |
+| --------------------------------------------------- | -------------------------------------------------------------- |
+| `createMemoryTransport()`                           | In-memory accumulator with `getEmitted()` and `clearEmitted()` |
+| `createLocalStorageTransport(storageKey, options?)` | Persist events to `localStorage`                               |
+| `createCustomTransport(name, emitFn)`               | Wrap any callback as a transport                               |
 
 ### Serialization
 
-| Export | Signature |
-|---|---|
-| `serializeSession` | `(session) => string` |
-| `deserializeSession` | `(json: string) => TelemetrySession \| null` |
-| `serializeBuffer` | `(buffer) => string` |
-| `deserializeBuffer` | `(json: string, options?) => TelemetryBuffer` — never throws |
+| Export               | Signature                                                    |
+| -------------------- | ------------------------------------------------------------ |
+| `serializeSession`   | `(session) => string`                                        |
+| `deserializeSession` | `(json: string) => TelemetrySession \| null`                 |
+| `serializeBuffer`    | `(buffer) => string`                                         |
+| `deserializeBuffer`  | `(json: string, options?) => TelemetryBuffer` — never throws |
 
 ### Validation
 
-| Export | Signature |
-|---|---|
-| `validateEvent` | `(value: unknown) => value is TelemetryEvent` |
+| Export             | Signature                                       |
+| ------------------ | ----------------------------------------------- |
+| `validateEvent`    | `(value: unknown) => value is TelemetryEvent`   |
 | `isKnownEventType` | `(type: unknown) => type is TelemetryEventType` |
 
 ### Constants
 
-| Export | Value |
-|---|---|
-| `CURRENT_SCHEMA_VERSION` | `'1.0.0'` |
-| `EVENT_SCHEMA_VERSIONS` | `Record<TelemetryEventType, SchemaVersion>` |
+| Export                   | Value                                       |
+| ------------------------ | ------------------------------------------- |
+| `CURRENT_SCHEMA_VERSION` | `'1.0.0'`                                   |
+| `EVENT_SCHEMA_VERSIONS`  | `Record<TelemetryEventType, SchemaVersion>` |
 
 ---
 
 ## Event type reference
 
-| Type | Emitted when | Key payload fields |
-|---|---|---|
-| `session-start` | Component mounts | — |
-| `render` | Each render | `renderNumber`, `triggeredBy` |
-| `prop-change` | Props changed | `renderNumber`, `changed[]`, `unstable[]`, `inferredTrigger`, `signalKind` |
-| `frequency` | Frequency window computed | `renderNumber`, `windowMs`, `windowCount`, `rate`, `classification`, `totalRenders` |
-| `score` | Health score computed | `renderNumber`, `score`, `grade`, penalties, `memoClassification`, `signalKind` |
-| `recommendation` | Recommendations generated | `renderNumber`, `recommendations[]` |
-| `session-end` | Component unmounts | `totalRenders`, `durationMs`, `finalScore` |
+| Type             | Emitted when              | Key payload fields                                                                  |
+| ---------------- | ------------------------- | ----------------------------------------------------------------------------------- |
+| `session-start`  | Component mounts          | —                                                                                   |
+| `render`         | Each render               | `renderNumber`, `triggeredBy`                                                       |
+| `prop-change`    | Props changed             | `renderNumber`, `changed[]`, `unstable[]`, `inferredTrigger`, `signalKind`          |
+| `frequency`      | Frequency window computed | `renderNumber`, `windowMs`, `windowCount`, `rate`, `classification`, `totalRenders` |
+| `score`          | Health score computed     | `renderNumber`, `score`, `grade`, penalties, `memoClassification`, `signalKind`     |
+| `recommendation` | Recommendations generated | `renderNumber`, `recommendations[]`                                                 |
+| `session-end`    | Component unmounts        | `totalRenders`, `durationMs`, `finalScore`                                          |
 
 ---
 
@@ -174,21 +177,21 @@ Every event carries `sessionId`, `componentName`, `sequenceNumber` (monotonic wi
 When integrating with `@sapanmozammel/render-insights`, map `InferredTrigger` → `TelemetryRenderTrigger`:
 
 | `InferredTrigger` (render-insights) | `TelemetryRenderTrigger` (this package) |
-|---|---|
-| `'no-prop-change'` | `'parent'` |
-| `'genuine-prop-change'` | `'props'` |
-| `'reference-instability'` | `'props'` |
-| `'mixed'` | `'props'` |
+| ----------------------------------- | --------------------------------------- |
+| `'no-prop-change'`                  | `'parent'`                              |
+| `'genuine-prop-change'`             | `'props'`                               |
+| `'reference-instability'`           | `'props'`                               |
+| `'mixed'`                           | `'props'`                               |
 
 ---
 
 ## Transport guide
 
-| Transport | Use when |
-|---|---|
-| `createMemoryTransport()` | Tests, custom panels, in-process inspection |
+| Transport                          | Use when                                       |
+| ---------------------------------- | ---------------------------------------------- |
+| `createMemoryTransport()`          | Tests, custom panels, in-process inspection    |
 | `createLocalStorageTransport(key)` | Dev browser sessions that survive page refresh |
-| `createCustomTransport(name, fn)` | Storybook, CI reporters, custom dashboards |
+| `createCustomTransport(name, fn)`  | Storybook, CI reporters, custom dashboards     |
 
 ### LocalStorage security warning
 
@@ -235,11 +238,7 @@ const session = createTelemetrySession(name);
 ```tsx
 import { useSyncExternalStore } from 'react';
 
-const snapshot = useSyncExternalStore(
-  buffer.subscribe,
-  buffer.getSnapshot,
-  buffer.getServerSnapshot,
-);
+const snapshot = useSyncExternalStore(buffer.subscribe, buffer.getSnapshot, buffer.getServerSnapshot);
 // snapshot.events — all events; snapshot.sessions — all sessions
 ```
 

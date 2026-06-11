@@ -1,20 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import {
-	CURRENT_SCHEMA_VERSION,
-	EVENT_SCHEMA_VERSIONS,
-	isKnownEventType,
-} from '../src/index.js';
-import type { TelemetryEventType } from '../src/index.js';
+import { CURRENT_SCHEMA_VERSION, EVENT_SCHEMA_VERSIONS, isKnownEventType, type TelemetryEventType } from '../src/index.js';
 
-const ALL_EVENT_TYPES: TelemetryEventType[] = [
-	'session-start',
-	'render',
-	'prop-change',
-	'frequency',
-	'score',
-	'recommendation',
-	'session-end',
-];
+const ALL_EVENT_TYPES: TelemetryEventType[] = ['session-start', 'render', 'prop-change', 'frequency', 'score', 'recommendation', 'session-end'];
 
 describe('schema versions', () => {
 	it('CURRENT_SCHEMA_VERSION is 1.0.0', () => {

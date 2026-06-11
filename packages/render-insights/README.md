@@ -79,15 +79,15 @@ useRenderInsights(
 
 ### Options
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `enabled` | `boolean` | `true` | Disable without removing the call |
-| `ignoreProps` | `string[]` | `[]` | Prop keys excluded from all analysis |
-| `maxReports` | `number` | `10` | Max grouped reports logged per instance |
-| `logOnEveryRender` | `boolean` | `false` | Log a one-liner on renders with no prop changes |
-| `frequencyWindowMs` | `number` | `10000` | Sliding window for rate calculation (ms) |
-| `frequencyLogEvery` | `number` | `0` | Log a frequency one-liner every N renders (0 = off) |
-| `onReport` | `(report: InsightReport) => void` | — | Callback fired with each structured report |
+| Option              | Type                              | Default | Description                                         |
+| ------------------- | --------------------------------- | ------- | --------------------------------------------------- |
+| `enabled`           | `boolean`                         | `true`  | Disable without removing the call                   |
+| `ignoreProps`       | `string[]`                        | `[]`    | Prop keys excluded from all analysis                |
+| `maxReports`        | `number`                          | `10`    | Max grouped reports logged per instance             |
+| `logOnEveryRender`  | `boolean`                         | `false` | Log a one-liner on renders with no prop changes     |
+| `frequencyWindowMs` | `number`                          | `10000` | Sliding window for rate calculation (ms)            |
+| `frequencyLogEvery` | `number`                          | `0`     | Log a frequency one-liner every N renders (0 = off) |
+| `onReport`          | `(report: InsightReport) => void` | —       | Callback fired with each structured report          |
 
 ### `componentName`
 
@@ -124,12 +124,12 @@ useRenderInsights('UserCard', props, {
 ```ts
 type InsightReport = {
   componentName: string;
-  renderNumber: number;   // total renders since mount
-  reportNumber: number;   // reports logged so far (capped at maxReports)
+  renderNumber: number; // total renders since mount
+  reportNumber: number; // reports logged so far (capped at maxReports)
   props: PropChangeSummary;
   frequency: FrequencySummary;
   memo: MemoSummary;
-  score: number;          // 0–100
+  score: number; // 0–100
   grade: HealthGrade;
   inferredTrigger: InferredTrigger;
   recommendations: string[];
@@ -146,44 +146,44 @@ score = 100
       − mixed_signal_penalty (mixed renders × 3, max 15)
 ```
 
-| Grade | Score |
-|---|---|
+| Grade       | Score  |
+| ----------- | ------ |
 | `EXCELLENT` | 90–100 |
-| `GOOD` | 70–89 |
-| `MODERATE` | 50–69 |
-| `POOR` | 30–49 |
-| `CRITICAL` | 0–29 |
+| `GOOD`      | 70–89  |
+| `MODERATE`  | 50–69  |
+| `POOR`      | 30–49  |
+| `CRITICAL`  | 0–29   |
 
 ## Inferred trigger
 
-| Value | Meaning |
-|---|---|
-| `no-prop-change` | All props equal by `Object.is` — parent re-render or context |
-| `genuine-prop-change` | At least one value-type prop changed |
+| Value                   | Meaning                                                                   |
+| ----------------------- | ------------------------------------------------------------------------- |
+| `no-prop-change`        | All props equal by `Object.is` — parent re-render or context              |
+| `genuine-prop-change`   | At least one value-type prop changed                                      |
 | `reference-instability` | Only reference-type props changed (new object/function/array each render) |
-| `mixed` | Both genuine value changes and reference instability in the same render |
+| `mixed`                 | Both genuine value changes and reference instability in the same render   |
 
 ## Memo effectiveness
 
 Tracks whether `React.memo` (if applied) would skip these re-renders:
 
-| Classification | Meaning |
-|---|---|
-| `NOT_APPLICABLE` | No re-renders observed yet |
-| `EFFECTIVE` | All re-renders were data-driven; memo would not help further |
-| `INEFFECTIVE` | All re-renders are reference-only; memo would skip them if props were stable |
-| `PARTIALLY_EFFECTIVE` | Mix of genuine changes and reference instability |
+| Classification        | Meaning                                                                      |
+| --------------------- | ---------------------------------------------------------------------------- |
+| `NOT_APPLICABLE`      | No re-renders observed yet                                                   |
+| `EFFECTIVE`           | All re-renders were data-driven; memo would not help further                 |
+| `INEFFECTIVE`         | All re-renders are reference-only; memo would skip them if props were stable |
+| `PARTIALLY_EFFECTIVE` | Mix of genuine changes and reference instability                             |
 
 ## Frequency classes
 
 Measured over a sliding `frequencyWindowMs` window (default 10 s):
 
-| Class | Threshold |
-|---|---|
+| Class             | Threshold                          |
+| ----------------- | ---------------------------------- |
 | `NOT_ENOUGH_DATA` | Fewer than 3 renders in the window |
-| `LOW` | < 1 render/sec |
-| `MODERATE` | 1–5 renders/sec |
-| `HIGH` | > 5 renders/sec |
+| `LOW`             | < 1 render/sec                     |
+| `MODERATE`        | 1–5 renders/sec                    |
+| `HIGH`            | > 5 renders/sec                    |
 
 ## Production safety
 
@@ -210,13 +210,7 @@ Strict Mode safe. React's double-invocation advances `prevPropsRef` on the first
 All types are exported:
 
 ```ts
-import type {
-  InsightReport,
-  RenderInsightsOptions,
-  FrequencyClass,
-  HealthGrade,
-  InferredTrigger,
-} from '@sapanmozammel/render-insights';
+import type { InsightReport, RenderInsightsOptions, FrequencyClass, HealthGrade, InferredTrigger } from '@sapanmozammel/render-insights';
 ```
 
 ## License

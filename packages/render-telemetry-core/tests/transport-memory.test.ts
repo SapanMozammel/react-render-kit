@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createMemoryTransport, createTelemetrySession, createRenderEvent } from '../src/index.js';
-import type { TelemetryEvent } from '../src/index.js';
+import { createMemoryTransport, createTelemetrySession, createRenderEvent, type TelemetryEvent } from '../src/index.js';
 
 const makeEvent = (): TelemetryEvent => {
 	const session = createTelemetrySession('Test');

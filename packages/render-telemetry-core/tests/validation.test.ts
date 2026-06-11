@@ -19,9 +19,7 @@ describe('validateEvent', () => {
 	});
 
 	it('returns true for a valid RenderEvent', () => {
-		expect(
-			validateEvent(makeBase({ type: 'render', renderNumber: 1, triggeredBy: 'props' })),
-		).toBe(true);
+		expect(validateEvent(makeBase({ type: 'render', renderNumber: 1, triggeredBy: 'props' }))).toBe(true);
 	});
 
 	it('returns true for a valid PropChangeEvent', () => {
@@ -34,8 +32,8 @@ describe('validateEvent', () => {
 					unstable: [],
 					inferredTrigger: 'genuine-prop-change',
 					signalKind: 'genuine',
-				}),
-			),
+				})
+			)
 		).toBe(true);
 	});
 
@@ -50,8 +48,8 @@ describe('validateEvent', () => {
 					rate: 0.3,
 					classification: 'LOW',
 					totalRenders: 5,
-				}),
-			),
+				})
+			)
 		).toBe(true);
 	});
 
@@ -69,8 +67,8 @@ describe('validateEvent', () => {
 					mixedSignalPenalty: 0,
 					memoClassification: 'INEFFECTIVE',
 					signalKind: 'reference-only',
-				}),
-			),
+				})
+			)
 		).toBe(true);
 	});
 
@@ -88,8 +86,8 @@ describe('validateEvent', () => {
 					mixedSignalPenalty: 0,
 					memoClassification: 'NOT_APPLICABLE',
 					signalKind: null,
-				}),
-			),
+				})
+			)
 		).toBe(true);
 	});
 
@@ -100,8 +98,8 @@ describe('validateEvent', () => {
 					type: 'recommendation',
 					renderNumber: 1,
 					recommendations: ['Use useCallback'],
-				}),
-			),
+				})
+			)
 		).toBe(true);
 	});
 
@@ -113,8 +111,8 @@ describe('validateEvent', () => {
 					totalRenders: 5,
 					durationMs: 1200,
 					finalScore: null,
-				}),
-			),
+				})
+			)
 		).toBe(true);
 	});
 
@@ -147,12 +145,14 @@ describe('validateEvent', () => {
 	});
 
 	it('returns false when id is missing', () => {
-		const { id: _id, ...noId } = makeBase();
+		const { id, ...noId } = makeBase();
+		void id;
 		expect(validateEvent(noId)).toBe(false);
 	});
 
 	it('returns false when sessionId is missing', () => {
-		const { sessionId: _sid, ...noSid } = makeBase();
+		const { sessionId, ...noSid } = makeBase();
+		void sessionId;
 		expect(validateEvent(noSid)).toBe(false);
 	});
 
@@ -166,8 +166,8 @@ describe('validateEvent', () => {
 					unstable: [],
 					inferredTrigger: 'genuine-prop-change',
 					// signalKind intentionally omitted
-				}),
-			),
+				})
+			)
 		).toBe(false);
 	});
 
@@ -181,8 +181,8 @@ describe('validateEvent', () => {
 					unstable: [],
 					inferredTrigger: 'genuine-prop-change',
 					signalKind: 'genuine',
-				}),
-			),
+				})
+			)
 		).toBe(false);
 	});
 
@@ -200,8 +200,8 @@ describe('validateEvent', () => {
 					mixedSignalPenalty: 0,
 					// memoClassification intentionally omitted
 					signalKind: null,
-				}),
-			),
+				})
+			)
 		).toBe(false);
 	});
 
@@ -213,23 +213,15 @@ describe('validateEvent', () => {
 					totalRenders: 5,
 					durationMs: 1000,
 					finalScore: 'bad',
-				}),
-			),
+				})
+			)
 		).toBe(false);
 	});
 });
 
 describe('isKnownEventType', () => {
 	it('returns true for all 7 known types', () => {
-		const types = [
-			'session-start',
-			'render',
-			'prop-change',
-			'frequency',
-			'score',
-			'recommendation',
-			'session-end',
-		];
+		const types = ['session-start', 'render', 'prop-change', 'frequency', 'score', 'recommendation', 'session-end'];
 		types.forEach((t) => expect(isKnownEventType(t)).toBe(true));
 	});
 

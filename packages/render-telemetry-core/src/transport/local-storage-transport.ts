@@ -1,13 +1,6 @@
-import type {
-	LocalStorageTransportOptions,
-	TelemetryEvent,
-	TelemetryTransport,
-} from '../types/index.js';
+import type { LocalStorageTransportOptions, TelemetryEvent, TelemetryTransport } from '../types/index.js';
 
-export const createLocalStorageTransport = (
-	storageKey: string,
-	options?: LocalStorageTransportOptions,
-): TelemetryTransport => {
+export const createLocalStorageTransport = (storageKey: string, options?: LocalStorageTransportOptions): TelemetryTransport => {
 	const maxBytes = options?.maxBytes ?? 2_000_000;
 	const onExceed = options?.onExceed ?? 'prune';
 

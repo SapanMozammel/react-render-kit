@@ -1,10 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import {
-	createLocalStorageTransport,
-	createTelemetrySession,
-	createRenderEvent,
-} from '../src/index.js';
-import type { TelemetryEvent } from '../src/index.js';
+import { createLocalStorageTransport, createTelemetrySession, createRenderEvent, type TelemetryEvent } from '../src/index.js';
 
 const makeEvent = (): TelemetryEvent => {
 	const session = createTelemetrySession('Test');
@@ -26,9 +21,7 @@ let originalLocalStorage: typeof globalThis.localStorage | undefined;
 let mockStorage: MockStorage;
 
 beforeEach(() => {
-	originalLocalStorage = (globalThis as Record<string, unknown>)['localStorage'] as
-		| typeof globalThis.localStorage
-		| undefined;
+	originalLocalStorage = (globalThis as Record<string, unknown>)['localStorage'] as typeof globalThis.localStorage | undefined;
 	mockStorage = {
 		store: new Map<string, string>(),
 		getItem: (key: string) => mockStorage.store.get(key) ?? null,

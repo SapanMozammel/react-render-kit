@@ -1,11 +1,4 @@
-import type {
-	TelemetryBuffer,
-	TelemetryBufferOptions,
-	TelemetryBufferSnapshot,
-	TelemetryEvent,
-	TelemetryEventType,
-	TelemetrySession,
-} from '../types/index.js';
+import type { TelemetryBuffer, TelemetryBufferOptions, TelemetryBufferSnapshot, TelemetryEvent, TelemetryEventType, TelemetrySession } from '../types/index.js';
 
 const SERVER_SNAPSHOT: TelemetryBufferSnapshot = Object.freeze({
 	events: Object.freeze([]) as readonly TelemetryEvent[],
@@ -68,21 +61,14 @@ export const createTelemetryBuffer = (options?: TelemetryBufferOptions): Telemet
 			notify();
 		},
 
-		getEventsBySession: (sessionId) =>
-			snapshot.events.filter((e) => e.sessionId === sessionId),
+		getEventsBySession: (sessionId) => snapshot.events.filter((e) => e.sessionId === sessionId),
 
-		getEventsByComponent: (componentName) =>
-			snapshot.events.filter((e) => e.componentName === componentName),
+		getEventsByComponent: (componentName) => snapshot.events.filter((e) => e.componentName === componentName),
 
-		getEventsByType: <T extends TelemetryEventType>(type: T) =>
-			(snapshot.events.filter((e) => e.type === type) as unknown) as readonly Extract<
-				TelemetryEvent,
-				{ type: T }
-			>[],
+		getEventsByType: <T extends TelemetryEventType>(type: T) => snapshot.events.filter((e) => e.type === type) as unknown as readonly Extract<TelemetryEvent, { type: T }>[],
 
 		getSession: (sessionId) => snapshot.sessions[sessionId],
 
-		getSessionsByComponent: (componentName) =>
-			Object.values(snapshot.sessions).filter((s) => s.componentName === componentName),
+		getSessionsByComponent: (componentName) => Object.values(snapshot.sessions).filter((s) => s.componentName === componentName),
 	};
 };

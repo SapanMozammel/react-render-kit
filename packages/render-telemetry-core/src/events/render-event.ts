@@ -1,10 +1,7 @@
 import type { RenderEvent, RenderEventData, TelemetrySession } from '../types/index.js';
 import { createEventBase } from './event-base.js';
 
-export const createRenderEvent = (
-	session: TelemetrySession,
-	data: RenderEventData,
-): { event: RenderEvent; session: TelemetrySession } => {
+export const createRenderEvent = (session: TelemetrySession, data: RenderEventData): { event: RenderEvent; session: TelemetrySession } => {
 	const { base, session: updatedSession } = createEventBase(session, 'render');
 	return {
 		event: {

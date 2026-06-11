@@ -7,10 +7,7 @@ export type EventBaseResult<T extends TelemetryEventType> = {
 	session: TelemetrySession;
 };
 
-export const createEventBase = <T extends TelemetryEventType>(
-	session: TelemetrySession,
-	type: T,
-): EventBaseResult<T> => {
+export const createEventBase = <T extends TelemetryEventType>(session: TelemetrySession, type: T): EventBaseResult<T> => {
 	const newCounter = session.sequenceCounter + 1;
 	const base = {
 		id: generateId(),

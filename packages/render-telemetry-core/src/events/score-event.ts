@@ -1,10 +1,7 @@
 import type { ScoreEvent, ScoreEventData, TelemetrySession } from '../types/index.js';
 import { createEventBase } from './event-base.js';
 
-export const createScoreEvent = (
-	session: TelemetrySession,
-	data: ScoreEventData,
-): { event: ScoreEvent; session: TelemetrySession } => {
+export const createScoreEvent = (session: TelemetrySession, data: ScoreEventData): { event: ScoreEvent; session: TelemetrySession } => {
 	const { base, session: updatedSession } = createEventBase(session, 'score');
 	return {
 		event: {

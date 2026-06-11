@@ -57,11 +57,7 @@ export { createSessionEndEvent } from './events/session-end-event.js';
 export { createTelemetryBuffer } from './buffer/buffer.js';
 
 // ── Transport Registry ────────────────────────────────────────────────────────
-export {
-	registerTransport,
-	unregisterAllTransports,
-	emitEvents,
-} from './transport/registry.js';
+export { registerTransport, unregisterAllTransports, emitEvents } from './transport/registry.js';
 
 // ── Transport Factories ───────────────────────────────────────────────────────
 export { createMemoryTransport } from './transport/memory-transport.js';
@@ -69,12 +65,7 @@ export { createLocalStorageTransport } from './transport/local-storage-transport
 export { createCustomTransport } from './transport/custom-transport.js';
 
 // ── Serialization ─────────────────────────────────────────────────────────────
-export {
-	serializeSession,
-	deserializeSession,
-	serializeBuffer,
-	deserializeBuffer,
-} from './serialization/serialize.js';
+export { serializeSession, deserializeSession, serializeBuffer, deserializeBuffer } from './serialization/serialize.js';
 
 // ── Validation ────────────────────────────────────────────────────────────────
 export { validateEvent, isKnownEventType } from './validation/validate-event.js';

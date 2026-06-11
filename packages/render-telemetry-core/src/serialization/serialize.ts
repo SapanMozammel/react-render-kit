@@ -1,8 +1,4 @@
-import type {
-	TelemetryBuffer,
-	TelemetryBufferOptions,
-	TelemetrySession,
-} from '../types/index.js';
+import type { TelemetryBuffer, TelemetryBufferOptions, TelemetrySession } from '../types/index.js';
 import { CURRENT_SCHEMA_VERSION } from '../constants/schema-versions.js';
 import { createTelemetryBuffer } from '../buffer/buffer.js';
 import { validateEvent } from '../validation/validate-event.js';
@@ -41,35 +37,21 @@ export const serializeBuffer = (buffer: TelemetryBuffer): string => {
 	});
 };
 
-export const deserializeBuffer = (
-	json: string,
-	options?: TelemetryBufferOptions,
-): TelemetryBuffer => {
+export const deserializeBuffer = (json: string, options?: TelemetryBufferOptions): TelemetryBuffer => {
 	try {
 		const parsed = JSON.parse(json) as Record<string, unknown>;
 
-		if (
-			parsed === null ||
-			typeof parsed !== 'object' ||
-			!Array.isArray(parsed['events']) ||
-			typeof parsed['sessions'] !== 'object' ||
-			parsed['sessions'] === null
-		) {
+		if (parsed === null || typeof parsed !== 'object' || !Array.isArray(parsed['events']) || typeof parsed['sessions'] !== 'object' || parsed['sessions'] === null) {
 			console.warn('[render-telemetry-core] deserializeBuffer: invalid format');
 			return createTelemetryBuffer(options);
 		}
 
 		if (parsed['schemaVersion'] !== CURRENT_SCHEMA_VERSION) {
-			console.warn(
-				'[render-telemetry-core] deserializeBuffer: unknown schemaVersion:',
-				parsed['schemaVersion'],
-			);
+			console.warn('[render-telemetry-core] deserializeBuffer: unknown schemaVersion:', parsed['schemaVersion']);
 		}
 
 		const validEvents = (parsed['events'] as unknown[]).filter(validateEvent);
-		const validSessions = Object.values(
-			parsed['sessions'] as Record<string, unknown>,
-		).filter(isValidSession);
+		const validSessions = Object.values(parsed['sessions'] as Record<string, unknown>).filter(isValidSession);
 
 		const buffer = createTelemetryBuffer(options);
 		validEvents.forEach((e) => buffer.push(e));

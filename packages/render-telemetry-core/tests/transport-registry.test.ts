@@ -1,13 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import {
-	registerTransport,
-	unregisterAllTransports,
-	emitEvents,
-	createMemoryTransport,
-	createTelemetrySession,
-	createRenderEvent,
-} from '../src/index.js';
-import type { TelemetryEvent } from '../src/index.js';
+import { registerTransport, unregisterAllTransports, emitEvents, createMemoryTransport, createTelemetrySession, createRenderEvent, type TelemetryEvent } from '../src/index.js';
 
 const makeEvent = (): TelemetryEvent => {
 	const session = createTelemetrySession('Test');
