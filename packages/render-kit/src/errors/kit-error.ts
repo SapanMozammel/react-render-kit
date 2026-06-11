@@ -16,5 +16,4 @@ export class RenderKitError extends Error {
 	}
 }
 
-export const createRenderKitError = (code: RenderKitErrorCode, message: string): RenderKitError =>
-	new RenderKitError(code, message);
+export const createRenderKitError = (code: RenderKitErrorCode, message: string): RenderKitError => new RenderKitError(code, message);

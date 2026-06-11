@@ -1,15 +1,5 @@
-import { buildReplaySessions, createReplayEngine, ReplayError } from '@sapanmozammel/render-replay-engine';
-import type {
-	TelemetryBuffer,
-	TelemetryEvent,
-} from '@sapanmozammel/render-telemetry-core';
-import type {
-	ReplayEngine,
-	ReplayEngineOptions,
-	ReplaySession,
-	ReplaySessionId,
-	ReplaySource,
-} from '@sapanmozammel/render-replay-engine';
+import { buildReplaySessions, createReplayEngine, ReplayError, type ReplayEngine, type ReplayEngineOptions, type ReplaySession, type ReplaySessionId, type ReplaySource } from '@sapanmozammel/render-replay-engine';
+import type { TelemetryBuffer, TelemetryEvent } from '@sapanmozammel/render-telemetry-core';
 import { RenderKitError } from '../errors/kit-error.js';
 import type { ResolvedRenderKitConfig, RenderKitReplay } from '../types/index.js';
 
@@ -21,10 +11,7 @@ const handleReplayError = (e: unknown, allowEmptySource: boolean): readonly Repl
 	throw new RenderKitError('REPLAY_FAILED', e instanceof Error ? e.message : String(e));
 };
 
-export const createReplaySubsystem = (
-	config: ResolvedRenderKitConfig['replay'],
-	buffer: TelemetryBuffer,
-): RenderKitReplay => {
+export const createReplaySubsystem = (config: ResolvedRenderKitConfig['replay'], buffer: TelemetryBuffer): RenderKitReplay => {
 	const kitOptions: ReplayEngineOptions = {
 		maxFrames: config.maxFrames,
 		pruningStrategy: config.pruningStrategy,
@@ -74,14 +61,10 @@ const EMPTY_SESSIONS = Object.freeze([]) as readonly ReplaySession[];
 export const createDisabledReplay = (): RenderKitReplay =>
 	Object.freeze({
 		enabled: false,
-		fromBuffer: (_options?: ReplayEngineOptions): readonly ReplaySession[] => EMPTY_SESSIONS,
-		fromEvents: (
-			_events: readonly TelemetryEvent[],
-			_options?: ReplayEngineOptions,
-		): readonly ReplaySession[] => EMPTY_SESSIONS,
-		fromSerialized: (_json: string, _options?: ReplayEngineOptions): readonly ReplaySession[] =>
-			EMPTY_SESSIONS,
-		engine: (_source: ReplaySource, _sessionId?: string, _options?: ReplayEngineOptions): ReplayEngine => {
+		fromBuffer: (): readonly ReplaySession[] => EMPTY_SESSIONS,
+		fromEvents: (): readonly ReplaySession[] => EMPTY_SESSIONS,
+		fromSerialized: (): readonly ReplaySession[] => EMPTY_SESSIONS,
+		engine: (): ReplayEngine => {
 			throw new RenderKitError('DISABLED', 'render-kit replay subsystem is disabled');
 		},
 	});

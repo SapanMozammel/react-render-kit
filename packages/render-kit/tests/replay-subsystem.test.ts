@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { createTelemetryBuffer, serializeBuffer } from '@sapanmozammel/render-telemetry-core';
-import type { RenderEvent } from '@sapanmozammel/render-telemetry-core';
+import { createTelemetryBuffer, serializeBuffer, type RenderEvent } from '@sapanmozammel/render-telemetry-core';
 import { createReplaySubsystem, createDisabledReplay } from '../src/subsystems/replay.js';
 import { RenderKitError } from '../src/errors/kit-error.js';
 import { resetSeq, nextSeq } from './helpers.js';

@@ -24,16 +24,7 @@ describe('RenderKitError', () => {
 	});
 
 	it('all 8 error codes construct without throw', () => {
-		const codes: RenderKitErrorCode[] = [
-			'INIT_FAILED',
-			'TELEMETRY_FAILED',
-			'REPLAY_FAILED',
-			'ANALYSIS_FAILED',
-			'PLUGIN_FAILED',
-			'CONTEXT_MISSING',
-			'DISABLED',
-			'INVALID_CONFIG',
-		];
+		const codes: RenderKitErrorCode[] = ['INIT_FAILED', 'TELEMETRY_FAILED', 'REPLAY_FAILED', 'ANALYSIS_FAILED', 'PLUGIN_FAILED', 'CONTEXT_MISSING', 'DISABLED', 'INVALID_CONFIG'];
 		codes.forEach((code) => {
 			expect(() => new RenderKitError(code, 'msg')).not.toThrow();
 		});

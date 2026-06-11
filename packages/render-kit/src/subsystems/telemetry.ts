@@ -3,13 +3,11 @@ import {
 	endTelemetrySession,
 	registerTransport,
 	serializeBuffer,
-} from '@sapanmozammel/render-telemetry-core';
-import type {
-	TelemetryBuffer,
-	TelemetryBufferSnapshot,
-	TelemetryEvent,
-	TelemetrySession,
-	TelemetryTransport,
+	type TelemetryBuffer,
+	type TelemetryBufferSnapshot,
+	type TelemetryEvent,
+	type TelemetrySession,
+	type TelemetryTransport,
 } from '@sapanmozammel/render-telemetry-core';
 import type { ResolvedRenderKitConfig, RenderKitTelemetry } from '../types/index.js';
 
@@ -21,29 +19,23 @@ const DISABLED_SNAPSHOT: TelemetryBufferSnapshot = Object.freeze({
 
 // Single frozen instance shared across all disabled kits — zero allocation per disabled kit
 const DISABLED_BUFFER: TelemetryBuffer = Object.freeze({
-	subscribe: (_listener: () => void) => () => undefined,
+	subscribe: () => () => undefined,
 	getSnapshot: () => DISABLED_SNAPSHOT,
 	getServerSnapshot: () => DISABLED_SNAPSHOT,
-	push: (_event: TelemetryEvent) => undefined,
-	pushSession: (_session: TelemetrySession) => undefined,
-	updateSession: (_session: TelemetrySession) => undefined,
+	push: () => undefined,
+	pushSession: () => undefined,
+	updateSession: () => undefined,
 	clear: () => undefined,
-	getEventsBySession: (_sessionId: string) => Object.freeze([]) as readonly TelemetryEvent[],
-	getEventsByComponent: (_componentName: string) => Object.freeze([]) as readonly TelemetryEvent[],
-	getEventsByType: <T extends TelemetryEvent['type']>(
-		_type: T,
-	) => Object.freeze([]) as readonly Extract<TelemetryEvent, { type: T }>[],
-	getSession: (_sessionId: string) => undefined,
-	getSessionsByComponent: (_componentName: string) => Object.freeze([]) as readonly TelemetrySession[],
+	getEventsBySession: () => Object.freeze([]) as readonly TelemetryEvent[],
+	getEventsByComponent: () => Object.freeze([]) as readonly TelemetryEvent[],
+	getEventsByType: <T extends TelemetryEvent['type']>() => Object.freeze([]) as readonly Extract<TelemetryEvent, { type: T }>[],
+	getSession: () => undefined,
+	getSessionsByComponent: () => Object.freeze([]) as readonly TelemetrySession[],
 });
 
 export { DISABLED_BUFFER };
 
-export const createTelemetrySubsystem = (
-	config: ResolvedRenderKitConfig['telemetry'],
-	buffer: TelemetryBuffer,
-	deregFns: Array<() => void>,
-): RenderKitTelemetry => {
+export const createTelemetrySubsystem = (config: ResolvedRenderKitConfig['telemetry'], buffer: TelemetryBuffer, deregFns: Array<() => void>): RenderKitTelemetry => {
 	const registerKit = (transport: TelemetryTransport): (() => void) => {
 		const deregFn = registerTransport(transport);
 		deregFns.push(deregFn);
@@ -58,8 +50,7 @@ export const createTelemetrySubsystem = (
 	return Object.freeze({
 		enabled: config.enabled,
 		buffer,
-		createSession: (componentName: string): TelemetrySession =>
-			createTelemetrySession(componentName),
+		createSession: (componentName: string): TelemetrySession => createTelemetrySession(componentName),
 		endSession: (session: TelemetrySession): TelemetrySession => endTelemetrySession(session),
 		registerTransport: registerKit,
 		unregisterAllTransports: unregisterAll,
@@ -84,9 +75,8 @@ export const createDisabledTelemetry = (): RenderKitTelemetry =>
 				status: 'active' as const,
 				sequenceCounter: 0,
 			}),
-		endSession: (session: TelemetrySession): TelemetrySession =>
-			Object.freeze({ ...session, status: 'ended' as const }),
-		registerTransport: (_transport: TelemetryTransport): (() => void) => () => undefined,
+		endSession: (session: TelemetrySession): TelemetrySession => Object.freeze({ ...session, status: 'ended' as const }),
+		registerTransport: (): (() => void) => () => undefined,
 		unregisterAllTransports: (): void => undefined,
 		snapshot: (): TelemetryBufferSnapshot => DISABLED_SNAPSHOT,
 		serialize: (): string => JSON.stringify({ events: [], sessions: {} }),

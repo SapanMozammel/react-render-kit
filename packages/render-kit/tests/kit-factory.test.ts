@@ -119,7 +119,12 @@ describe('createRenderKit', () => {
 	it('plugin onInit error → logged, does not abort factory, subsequent plugins still run', () => {
 		const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
 		const ran: string[] = [];
-		const pBad = makePlugin({ id: 'bad', onInit: () => { throw new Error('boom'); } });
+		const pBad = makePlugin({
+			id: 'bad',
+			onInit: () => {
+				throw new Error('boom');
+			},
+		});
 		const pGood = makePlugin({ id: 'good', onInit: () => ran.push('good') });
 		const kit = createRenderKit({ plugins: [pBad, pGood] });
 		expect(ran).toContain('good');
@@ -132,7 +137,12 @@ describe('createRenderKit', () => {
 		const destroyed: string[] = [];
 		// p2 destroys first (reverse order), p2 throws, p1 still runs
 		const p1 = makePlugin({ id: 'p1', onDestroy: () => destroyed.push('p1') });
-		const p2 = makePlugin({ id: 'p2', onDestroy: () => { throw new Error('boom'); } });
+		const p2 = makePlugin({
+			id: 'p2',
+			onDestroy: () => {
+				throw new Error('boom');
+			},
+		});
 		const kit = createRenderKit({ plugins: [p1, p2] });
 		kit.destroy();
 		expect(destroyed).toContain('p1');

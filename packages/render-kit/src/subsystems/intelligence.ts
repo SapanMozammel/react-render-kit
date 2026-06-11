@@ -1,10 +1,4 @@
-import { analyzeRenders, IntelligenceError } from '@sapanmozammel/render-intelligence';
-import type {
-	AnalysisPlugin,
-	IntelligenceOptions,
-	IntelligenceReport,
-	IntelligenceSource,
-} from '@sapanmozammel/render-intelligence';
+import { analyzeRenders, IntelligenceError, type AnalysisPlugin, type IntelligenceOptions, type IntelligenceReport, type IntelligenceSource } from '@sapanmozammel/render-intelligence';
 import type { TelemetryBuffer } from '@sapanmozammel/render-telemetry-core';
 import { RenderKitError } from '../errors/kit-error.js';
 import type { ResolvedRenderKitConfig } from '../types/index.js';
@@ -13,10 +7,7 @@ type IntelligenceSubsystem = {
 	readonly analyze: (source?: IntelligenceSource, options?: Partial<IntelligenceOptions>) => IntelligenceReport;
 };
 
-export const createIntelligenceSubsystem = (
-	config: ResolvedRenderKitConfig['intelligence'],
-	buffer: TelemetryBuffer,
-): IntelligenceSubsystem => {
+export const createIntelligenceSubsystem = (config: ResolvedRenderKitConfig['intelligence'], buffer: TelemetryBuffer): IntelligenceSubsystem => {
 	const kitOptions: IntelligenceOptions = {
 		maxBottlenecks: config.maxBottlenecks,
 		maxRecommendations: config.maxRecommendations,
@@ -56,7 +47,7 @@ export const createIntelligenceSubsystem = (
 
 export const createDisabledIntelligence = (): IntelligenceSubsystem =>
 	Object.freeze({
-		analyze: (_source?: IntelligenceSource, _options?: Partial<IntelligenceOptions>): never => {
+		analyze: (): never => {
 			throw new RenderKitError('DISABLED', 'render-kit intelligence subsystem is disabled');
 		},
 	});

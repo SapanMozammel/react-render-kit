@@ -9,8 +9,7 @@ import type { RenderKit } from '../src/types/index.js';
 beforeEach(() => resetSeq());
 
 const makeWrapper = (kit: RenderKit) => {
-	const Wrapper = ({ children }: { children: React.ReactNode }) =>
-		React.createElement(RenderKitProvider, { kit, children });
+	const Wrapper = ({ children }: { children: React.ReactNode }) => React.createElement(RenderKitProvider, { kit, children });
 	return Wrapper;
 };
 
@@ -64,7 +63,7 @@ describe('useRenderKit + RenderKitProvider', () => {
 				const k = useRenderKit();
 				return k.enabled;
 			},
-			{ wrapper: makeWrapper(kit) },
+			{ wrapper: makeWrapper(kit) }
 		);
 		expect(result.current).toBe(true);
 		kit.destroy();

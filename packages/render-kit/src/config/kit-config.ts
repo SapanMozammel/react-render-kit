@@ -1,8 +1,4 @@
-import type {
-	RenderKitConfig,
-	RenderKitPlugin,
-	ResolvedRenderKitConfig,
-} from '../types/index.js';
+import type { RenderKitConfig, RenderKitPlugin, ResolvedRenderKitConfig } from '../types/index.js';
 
 const clamp = (value: number, min: number, max: number, field: string): number => {
 	if (value < min) {
@@ -25,9 +21,7 @@ const clampMin = (value: number, min: number, field: string): number => {
 };
 
 export const resolveConfig = (config: RenderKitConfig): ResolvedRenderKitConfig => {
-	const globalEnabled =
-		config.enabled ??
-		(typeof process !== 'undefined' ? process.env?.NODE_ENV !== 'production' : true);
+	const globalEnabled = config.enabled ?? (typeof process !== 'undefined' ? process.env?.NODE_ENV !== 'production' : true);
 
 	const telemetryEnabled = config.telemetry?.enabled ?? globalEnabled;
 	const replayEnabled = config.replay?.enabled ?? globalEnabled;
@@ -64,9 +58,7 @@ export const resolveConfig = (config: RenderKitConfig): ResolvedRenderKitConfig 
 	});
 
 	// Collect analysisPlugins from kit plugins and prepend to intelligence.plugins
-	const kitAnalysisPlugins = validPlugins
-		.filter((p) => p.analysisPlugin !== undefined)
-		.map((p) => p.analysisPlugin!);
+	const kitAnalysisPlugins = validPlugins.filter((p) => p.analysisPlugin !== undefined).map((p) => p.analysisPlugin!);
 	const callerIntelligencePlugins = config.intelligence?.plugins ?? [];
 	const intelligencePlugins = [...kitAnalysisPlugins, ...callerIntelligencePlugins];
 

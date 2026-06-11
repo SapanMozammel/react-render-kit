@@ -1,18 +1,8 @@
 import { createTelemetryBuffer, registerTransport } from '@sapanmozammel/render-telemetry-core';
 import { resolveConfig } from '../config/kit-config.js';
-import { RenderKitError } from '../errors/kit-error.js';
-import {
-	createTelemetrySubsystem,
-	createDisabledTelemetry,
-} from '../subsystems/telemetry.js';
-import {
-	createReplaySubsystem,
-	createDisabledReplay,
-} from '../subsystems/replay.js';
-import {
-	createIntelligenceSubsystem,
-	createDisabledIntelligence,
-} from '../subsystems/intelligence.js';
+import { createTelemetrySubsystem, createDisabledTelemetry } from '../subsystems/telemetry.js';
+import { createReplaySubsystem, createDisabledReplay } from '../subsystems/replay.js';
+import { createIntelligenceSubsystem, createDisabledIntelligence } from '../subsystems/intelligence.js';
 import type { RenderKit, RenderKitConfig, ResolvedRenderKitConfig } from '../types/index.js';
 
 const createDisabledKit = (resolved: ResolvedRenderKitConfig): RenderKit => {

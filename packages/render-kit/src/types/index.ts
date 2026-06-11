@@ -1,36 +1,11 @@
 import type { ReactNode } from 'react';
-import type {
-	TelemetryTransport,
-	TelemetryBuffer,
-	TelemetrySession,
-	TelemetryBufferSnapshot,
-	TelemetryEvent,
-} from '@sapanmozammel/render-telemetry-core';
-import type {
-	ReplaySource,
-	ReplaySession,
-	ReplayEngine,
-	ReplayEngineOptions,
-	ReplayPruningStrategy,
-} from '@sapanmozammel/render-replay-engine';
-import type {
-	IntelligenceSource,
-	IntelligenceOptions,
-	IntelligenceReport,
-	AnalysisPlugin,
-} from '@sapanmozammel/render-intelligence';
+import type { TelemetryTransport, TelemetryBuffer, TelemetrySession, TelemetryBufferSnapshot, TelemetryEvent } from '@sapanmozammel/render-telemetry-core';
+import type { ReplaySource, ReplaySession, ReplayEngine, ReplayEngineOptions, ReplayPruningStrategy } from '@sapanmozammel/render-replay-engine';
+import type { IntelligenceSource, IntelligenceOptions, IntelligenceReport, AnalysisPlugin } from '@sapanmozammel/render-intelligence';
 
 // ── Error ─────────────────────────────────────────────────────────────────────
 
-export type RenderKitErrorCode =
-	| 'INIT_FAILED'
-	| 'TELEMETRY_FAILED'
-	| 'REPLAY_FAILED'
-	| 'ANALYSIS_FAILED'
-	| 'PLUGIN_FAILED'
-	| 'CONTEXT_MISSING'
-	| 'DISABLED'
-	| 'INVALID_CONFIG';
+export type RenderKitErrorCode = 'INIT_FAILED' | 'TELEMETRY_FAILED' | 'REPLAY_FAILED' | 'ANALYSIS_FAILED' | 'PLUGIN_FAILED' | 'CONTEXT_MISSING' | 'DISABLED' | 'INVALID_CONFIG';
 
 // ── Config ────────────────────────────────────────────────────────────────────
 

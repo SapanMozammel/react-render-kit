@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createTelemetryBuffer } from '@sapanmozammel/render-telemetry-core';
-import type { RenderEvent } from '@sapanmozammel/render-telemetry-core';
+import { createTelemetryBuffer, type RenderEvent } from '@sapanmozammel/render-telemetry-core';
 import { createIntelligenceSubsystem, createDisabledIntelligence } from '../src/subsystems/intelligence.js';
 import { RenderKitError } from '../src/errors/kit-error.js';
 import { resetSeq, nextSeq } from './helpers.js';
@@ -61,10 +60,7 @@ describe('createIntelligenceSubsystem', () => {
 		const buffer = createTelemetryBuffer();
 		const subsystem = createIntelligenceSubsystem(makeConfig({ maxBottlenecks: 10 }), buffer);
 		subsystem.analyze({ type: 'events', events: [makeRenderEvt()] }, { maxBottlenecks: 3 });
-		expect(spy).toHaveBeenCalledWith(
-			expect.anything(),
-			expect.objectContaining({ maxBottlenecks: 3 }),
-		);
+		expect(spy).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ maxBottlenecks: 3 }));
 	});
 
 	it('analyze(source) uses kit-default maxBottlenecks when caller does not specify', () => {
@@ -72,10 +68,7 @@ describe('createIntelligenceSubsystem', () => {
 		const buffer = createTelemetryBuffer();
 		const subsystem = createIntelligenceSubsystem(makeConfig({ maxBottlenecks: 7 }), buffer);
 		subsystem.analyze({ type: 'events', events: [makeRenderEvt()] });
-		expect(spy).toHaveBeenCalledWith(
-			expect.anything(),
-			expect.objectContaining({ maxBottlenecks: 7 }),
-		);
+		expect(spy).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ maxBottlenecks: 7 }));
 	});
 
 	it('kit analysisPlugin is active in analyze() (plugin analyze fn is called)', () => {
