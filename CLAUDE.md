@@ -232,6 +232,23 @@ tests/
 dist/                                 # build output (gitignored)
 ```
 
+### `packages/render-kit` (library)
+
+```
+src/
+  config/kit-config.ts        # resolveConfig() + clamp guards — no sibling package runtime imports
+  errors/kit-error.ts         # RenderKitError class + createRenderKitError
+  subsystems/telemetry.ts     # createTelemetrySubsystem + DISABLED_BUFFER + createDisabledTelemetry
+  subsystems/replay.ts        # createReplaySubsystem + createDisabledReplay
+  subsystems/intelligence.ts  # createIntelligenceSubsystem + createDisabledIntelligence
+  factory/kit-factory.ts      # createRenderKit + createDisabledKit
+  context/kit-context.ts      # RenderKitContext, RenderKitProvider, useRenderKit
+  types/index.ts              # all public types; zero runtime code
+  index.ts                    # locked manifest re-exports; no logic; no export *
+tests/
+dist/                         # build output (gitignored)
+```
+
 ### `demo` (Next.js demo site — `src/` layout)
 
 ```
@@ -270,3 +287,4 @@ types/                # TS declarations
 | `/implement render-replay-engine`    | Execute the PRD at `.claude/plans/render-replay-engine/prd.md` step by step    |
 | `/implement render-core-schema`      | Execute the PRD at `.claude/plans/render-core-schema/prd.md` step by step      |
 | `/implement render-intelligence`     | Execute the PRD at `.claude/plans/render-intelligence/prd.md` step by step     |
+| `/implement render-kit`              | Execute the PRD at `.claude/plans/render-kit/prd.md` step by step              |
