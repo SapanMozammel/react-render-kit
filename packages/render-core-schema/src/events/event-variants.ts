@@ -60,11 +60,4 @@ export type SessionEndEvent = EventBase & {
 	readonly finalScore: number | null;
 };
 
-export type TelemetryEvent =
-	| SessionStartEvent
-	| RenderEvent
-	| PropChangeEvent
-	| FrequencyEvent
-	| ScoreEvent
-	| RecommendationEvent
-	| SessionEndEvent;
+export type TelemetryEvent = SessionStartEvent | RenderEvent | PropChangeEvent | FrequencyEvent | ScoreEvent | RecommendationEvent | SessionEndEvent;
