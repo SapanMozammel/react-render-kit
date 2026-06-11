@@ -19,16 +19,7 @@ export type { HealthGrade, ScoreBreakdown } from './analysis/scoring.js';
 // ── Events ────────────────────────────────────────────────────────────────────
 export type { EventType } from './events/event-types.js';
 export type { EventBase } from './events/event-base.js';
-export type {
-	SessionStartEvent,
-	RenderEvent,
-	PropChangeEvent,
-	FrequencyEvent,
-	ScoreEvent,
-	RecommendationEvent,
-	SessionEndEvent,
-	TelemetryEvent,
-} from './events/event-variants.js';
+export type { SessionStartEvent, RenderEvent, PropChangeEvent, FrequencyEvent, ScoreEvent, RecommendationEvent, SessionEndEvent, TelemetryEvent } from './events/event-variants.js';
 
 // ── Session ───────────────────────────────────────────────────────────────────
 export type { SessionStatus, RenderSession, TelemetrySnapshot } from './session/session.js';
@@ -43,14 +34,7 @@ export type { ReplaySessionId, ReplayFrameId, ReplayBookmarkId } from './replay/
 export type { ReplayFrame } from './replay/replay-frame.js';
 
 // ── Replay — session ──────────────────────────────────────────────────────────
-export type {
-	ReplaySessionStats,
-	ReplayPruningInfo,
-	ReplayTimelineEntry,
-	ReplaySegment,
-	ReplayTimeline,
-	ReplaySession,
-} from './replay/replay-session.js';
+export type { ReplaySessionStats, ReplayPruningInfo, ReplayTimelineEntry, ReplaySegment, ReplayTimeline, ReplaySession } from './replay/replay-session.js';
 
 // ── Replay — filter ───────────────────────────────────────────────────────────
 export type { ReplayFilter, ReplayFilterResult, ReplayFilterPreset } from './replay/replay-filter.js';
@@ -59,37 +43,14 @@ export type { ReplayFilter, ReplayFilterResult, ReplayFilterPreset } from './rep
 export type { ReplayCursor } from './replay/replay-cursor.js';
 
 // ── Replay — bookmarks ────────────────────────────────────────────────────────
-export type {
-	ReplayBookmark,
-	ReplayBookmarkCreateParams,
-	ReplayBookmarkUpdate,
-	ReplayBookmarkStore,
-} from './replay/replay-bookmark.js';
+export type { ReplayBookmark, ReplayBookmarkCreateParams, ReplayBookmarkUpdate, ReplayBookmarkStore } from './replay/replay-bookmark.js';
 
 // ── Replay — navigator ────────────────────────────────────────────────────────
 export type { ReplayNavigator } from './replay/replay-navigator.js';
 
 // ── Replay — engine ───────────────────────────────────────────────────────────
-export type {
-	ReplayBufferSource,
-	ReplayEventsSource,
-	ReplaySerializedSource,
-	ReplaySource,
-	ReplayPruningStrategy,
-	ReplayEngineOptions,
-	ReplayEngine,
-	ReplayEngineMap,
-} from './replay/replay-engine.js';
+export type { ReplayBufferSource, ReplayEventsSource, ReplaySerializedSource, ReplaySource, ReplayPruningStrategy, ReplayEngineOptions, ReplayEngine, ReplayEngineMap } from './replay/replay-engine.js';
 
 // ── Utils ─────────────────────────────────────────────────────────────────────
 export { compareSchemaVersions, isSchemaVersionAtLeast } from './utils/compare-versions.js';
-export {
-	isSchemaVersion,
-	isEventType,
-	isHealthGrade,
-	isFrequencyClass,
-	isMemoClassification,
-	isSignalKind,
-	isRenderTrigger,
-	isInferredTrigger,
-} from './utils/type-guards.js';
+export { isSchemaVersion, isEventType, isHealthGrade, isFrequencyClass, isMemoClassification, isSignalKind, isRenderTrigger, isInferredTrigger } from './utils/type-guards.js';

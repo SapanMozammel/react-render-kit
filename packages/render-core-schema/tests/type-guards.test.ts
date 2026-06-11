@@ -1,14 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-	isSchemaVersion,
-	isEventType,
-	isHealthGrade,
-	isFrequencyClass,
-	isMemoClassification,
-	isSignalKind,
-	isRenderTrigger,
-	isInferredTrigger,
-} from '../src/utils/type-guards.js';
+import { isSchemaVersion, isEventType, isHealthGrade, isFrequencyClass, isMemoClassification, isSignalKind, isRenderTrigger, isInferredTrigger } from '../src/utils/type-guards.js';
 
 describe('isSchemaVersion', () => {
 	it('accepts valid semver strings', () => {

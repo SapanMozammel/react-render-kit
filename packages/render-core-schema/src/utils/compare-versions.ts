@@ -17,5 +17,4 @@ export const compareSchemaVersions = (a: SchemaVersion, b: SchemaVersion): -1 | 
 	return 0;
 };
 
-export const isSchemaVersionAtLeast = (version: SchemaVersion, minimum: SchemaVersion): boolean =>
-	compareSchemaVersions(version, minimum) >= 0;
+export const isSchemaVersionAtLeast = (version: SchemaVersion, minimum: SchemaVersion): boolean => compareSchemaVersions(version, minimum) >= 0;

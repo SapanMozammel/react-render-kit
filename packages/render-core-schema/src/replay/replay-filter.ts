@@ -25,11 +25,4 @@ export type ReplayFilterResult = {
 	readonly totalFrameCount: number;
 };
 
-export type ReplayFilterPreset =
-	| 'issues-only'
-	| 'score-degradation'
-	| 'reference-instability'
-	| 'high-frequency'
-	| 'ineffective-memo'
-	| 'prop-changes-only'
-	| 'parent-triggered-only';
+export type ReplayFilterPreset = 'issues-only' | 'score-degradation' | 'reference-instability' | 'high-frequency' | 'ineffective-memo' | 'prop-changes-only' | 'parent-triggered-only';
