@@ -18,20 +18,14 @@ describe('detectCorrelations', () => {
 	});
 
 	it('returns empty when components have fewer than 5 renders', () => {
-		const data = [
-			makeTimestampedRenders('A', 's1', [100, 200, 300, 400]),
-			makeTimestampedRenders('B', 's1', [110, 210, 310, 410]),
-		];
+		const data = [makeTimestampedRenders('A', 's1', [100, 200, 300, 400]), makeTimestampedRenders('B', 's1', [110, 210, 310, 410])];
 		expect(detectCorrelations(data, 50)).toHaveLength(0);
 	});
 
 	it('returns empty when fewer than 5 proximate pairs', () => {
 		const tsA = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 		const tsB = [150, 250, 9000, 9100, 9200, 9300, 9400, 9500, 9600, 9700];
-		const data = [
-			makeTimestampedRenders('A', 's1', tsA),
-			makeTimestampedRenders('B', 's1', tsB),
-		];
+		const data = [makeTimestampedRenders('A', 's1', tsA), makeTimestampedRenders('B', 's1', tsB)];
 		expect(detectCorrelations(data, 30)).toHaveLength(0);
 	});
 
@@ -40,10 +34,7 @@ describe('detectCorrelations', () => {
 		const base = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 		const tsA = base;
 		const tsB = base.map((t) => t + 5);
-		const data = [
-			makeTimestampedRenders('A', 's1', tsA),
-			makeTimestampedRenders('B', 's1', tsB),
-		];
+		const data = [makeTimestampedRenders('A', 's1', tsA), makeTimestampedRenders('B', 's1', tsB)];
 		const result = detectCorrelations(data, 50);
 		expect(result.length).toBeGreaterThan(0);
 		const cascade = result.find((g) => g.type === 'probable-cascade');
@@ -56,10 +47,7 @@ describe('detectCorrelations', () => {
 		const base = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 		const tsB = base;
 		const tsA = base.map((t) => t + 5);
-		const data = [
-			makeTimestampedRenders('A', 's1', tsA),
-			makeTimestampedRenders('B', 's1', tsB),
-		];
+		const data = [makeTimestampedRenders('A', 's1', tsA), makeTimestampedRenders('B', 's1', tsB)];
 		const result = detectCorrelations(data, 50);
 		const cascade = result.find((g) => g.type === 'probable-cascade');
 		expect(cascade).toBeDefined();
@@ -70,10 +58,7 @@ describe('detectCorrelations', () => {
 		// Interleaved timestamps — no consistent ordering
 		const tsA = [100, 210, 300, 410, 500, 610, 700, 810, 900, 1010];
 		const tsB = [105, 205, 305, 405, 505, 605, 705, 805, 905, 1005];
-		const data = [
-			makeTimestampedRenders('A', 's1', tsA),
-			makeTimestampedRenders('B', 's1', tsB),
-		];
+		const data = [makeTimestampedRenders('A', 's1', tsA), makeTimestampedRenders('B', 's1', tsB)];
 		const result = detectCorrelations(data, 50);
 		expect(result.length).toBeGreaterThan(0);
 		expect(result[0]!.components).toContain('A');
@@ -84,18 +69,23 @@ describe('detectCorrelations', () => {
 		const ts = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
 		const data = [
 			makeTimestampedRenders('A', 's1', ts),
-			makeTimestampedRenders('B', 's1', ts.map((t) => t + 3)),
-			makeTimestampedRenders('C', 's1', ts.map((t) => t + 6)),
+			makeTimestampedRenders(
+				'B',
+				's1',
+				ts.map((t) => t + 3)
+			),
+			makeTimestampedRenders(
+				'C',
+				's1',
+				ts.map((t) => t + 6)
+			),
 		];
 		const result = detectCorrelations(data, 50);
 		expect(result.length).toBeGreaterThanOrEqual(1);
 	});
 
 	it('returns frozen array', () => {
-		const data = [
-			makeTimestampedRenders('A', 's1', [100, 200, 300, 400, 500]),
-			makeTimestampedRenders('B', 's1', [110, 210, 310, 410, 510]),
-		];
+		const data = [makeTimestampedRenders('A', 's1', [100, 200, 300, 400, 500]), makeTimestampedRenders('B', 's1', [110, 210, 310, 410, 510])];
 		const result = detectCorrelations(data, 50);
 		expect(Object.isFrozen(result)).toBe(true);
 	});

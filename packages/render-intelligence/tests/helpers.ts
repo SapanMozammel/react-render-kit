@@ -17,7 +17,9 @@ import type { ComponentSessionData, ComponentAnalysis } from '../src/types/index
 let seq = 0;
 const nextSeq = () => ++seq;
 
-export const resetSeq = () => { seq = 0; };
+export const resetSeq = () => {
+	seq = 0;
+};
 
 export const makeRenderEvent = (
 	opts: {
@@ -26,7 +28,7 @@ export const makeRenderEvent = (
 		renderNumber?: number;
 		wallTimestamp?: number;
 		triggeredBy?: 'props' | 'state' | 'context' | 'parent' | 'unknown';
-	} = {},
+	} = {}
 ): RenderEvent => ({
 	id: `evt-${nextSeq()}`,
 	type: 'render',
@@ -49,7 +51,7 @@ export const makeScoreEvent = (
 		grade?: HealthGrade;
 		memoClassification?: MemoClassification;
 		signalKind?: SignalKind | null;
-	} = {},
+	} = {}
 ): ScoreEvent => {
 	const score = opts.score ?? 80;
 	const grade: HealthGrade = opts.grade ?? (score >= 90 ? 'EXCELLENT' : score >= 70 ? 'GOOD' : score >= 50 ? 'MODERATE' : score >= 30 ? 'POOR' : 'CRITICAL');
@@ -82,7 +84,7 @@ export const makePropChangeEvent = (
 		unstable?: Array<{ name: string; type: 'function' | 'object' | 'array' }>;
 		signalKind?: SignalKind;
 		inferredTrigger?: 'no-prop-change' | 'genuine-prop-change' | 'reference-instability' | 'mixed';
-	} = {},
+	} = {}
 ): PropChangeEvent => ({
 	id: `evt-${nextSeq()}`,
 	type: 'prop-change',
@@ -104,7 +106,7 @@ export const makeFrequencyEvent = (
 		sessionId?: string;
 		componentName?: string;
 		classification?: FrequencyClass;
-	} = {},
+	} = {}
 ): FrequencyEvent => ({
 	id: `evt-${nextSeq()}`,
 	type: 'frequency',
@@ -127,7 +129,7 @@ export const makeRecommendationEvent = (
 		sessionId?: string;
 		componentName?: string;
 		recommendations?: string[];
-	} = {},
+	} = {}
 ): RecommendationEvent => ({
 	id: `evt-${nextSeq()}`,
 	type: 'recommendation',
@@ -171,7 +173,7 @@ export const makeSessionData = (
 		componentName?: string;
 		sessionId?: string;
 		events?: TelemetryEvent[];
-	} = {},
+	} = {}
 ): ComponentSessionData => ({
 	componentName: opts.componentName ?? 'TestComponent',
 	sessionId: opts.sessionId ?? 'session-1',

@@ -72,11 +72,7 @@ const buildDescription = (c: ComponentAnalysis, category: BottleneckCategory, im
 	}
 };
 
-export const rankBottlenecks = (
-	components: readonly ComponentAnalysis[],
-	_correlations: readonly CorrelationGroup[],
-	maxBottlenecks: number,
-): readonly Bottleneck[] => {
+export const rankBottlenecks = (components: readonly ComponentAnalysis[], _correlations: readonly CorrelationGroup[], maxBottlenecks: number): readonly Bottleneck[] => {
 	if (components.length === 0) return Object.freeze([]);
 
 	const maxRenders = Math.max(...components.map((c) => c.totalRenders), 1);
@@ -101,6 +97,6 @@ export const rankBottlenecks = (
 			impactScore: Math.round(impactScore * 10) / 10,
 			description: buildDescription(c, category, impactScore),
 			evidence: buildEvidence(c, category),
-		})),
+		}))
 	);
 };

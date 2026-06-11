@@ -10,17 +10,12 @@ describe('rankBottlenecks', () => {
 	});
 
 	it('limits results to maxBottlenecks', () => {
-		const components = Array.from({ length: 5 }, (_, i) =>
-			makeComponentAnalysis({ componentName: `C${i}`, totalRenders: 10, averageScore: 50 - i }),
-		);
+		const components = Array.from({ length: 5 }, (_, i) => makeComponentAnalysis({ componentName: `C${i}`, totalRenders: 10, averageScore: 50 - i }));
 		expect(rankBottlenecks(components, [], 3)).toHaveLength(3);
 	});
 
 	it('ranks by impactScore descending', () => {
-		const components = [
-			makeComponentAnalysis({ componentName: 'A', totalRenders: 10, averageScore: 90 }),
-			makeComponentAnalysis({ componentName: 'B', totalRenders: 10, averageScore: 20 }),
-		];
+		const components = [makeComponentAnalysis({ componentName: 'A', totalRenders: 10, averageScore: 90 }), makeComponentAnalysis({ componentName: 'B', totalRenders: 10, averageScore: 20 })];
 		const result = rankBottlenecks(components, [], 10);
 		expect(result[0]!.componentName).toBe('B');
 		expect(result[1]!.componentName).toBe('A');
@@ -85,10 +80,7 @@ describe('rankBottlenecks', () => {
 	});
 
 	it('breaks ties alphabetically by componentName', () => {
-		const components = [
-			makeComponentAnalysis({ componentName: 'Beta', totalRenders: 10, averageScore: 50 }),
-			makeComponentAnalysis({ componentName: 'Alpha', totalRenders: 10, averageScore: 50 }),
-		];
+		const components = [makeComponentAnalysis({ componentName: 'Beta', totalRenders: 10, averageScore: 50 }), makeComponentAnalysis({ componentName: 'Alpha', totalRenders: 10, averageScore: 50 })];
 		const result = rankBottlenecks(components, [], 10);
 		expect(result[0]!.componentName).toBe('Alpha');
 	});

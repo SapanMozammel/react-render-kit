@@ -9,10 +9,7 @@ const gradeFromScore = (score: number): HealthGrade => {
 	return 'CRITICAL';
 };
 
-export const scoreApplication = (
-	components: readonly ComponentAnalysis[],
-	source: 'snapshot' | 'events' | 'replay',
-): ApplicationHealth => {
+export const scoreApplication = (components: readonly ComponentAnalysis[], source: 'snapshot' | 'events' | 'replay'): ApplicationHealth => {
 	if (components.length === 0) {
 		return {
 			score: 0,

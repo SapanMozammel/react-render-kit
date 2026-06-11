@@ -40,12 +40,7 @@ export const analyzeRenders = (source: IntelligenceSource, options: Intelligence
 	const plugins = options.plugins ?? [];
 
 	// Step 1: Normalize source to ComponentSessionData[]
-	const rawData =
-		source.type === 'snapshot'
-			? fromSnapshot(source.snapshot)
-			: source.type === 'events'
-				? fromEvents(source.events)
-				: fromReplay(source.sessions);
+	const rawData = source.type === 'snapshot' ? fromSnapshot(source.snapshot) : source.type === 'events' ? fromEvents(source.events) : fromReplay(source.sessions);
 
 	// Step 2: Partition (merge duplicate sessions)
 	const data = partitionSessions(rawData);
@@ -65,9 +60,7 @@ export const analyzeRenders = (source: IntelligenceSource, options: Intelligence
 
 	// Step 7: Recommendations
 	const recommendationOptions: Pick<IntelligenceOptions, 'maxRecommendations' | 'includeWellOptimized'> =
-		options.includeWellOptimized !== undefined
-			? { maxRecommendations, includeWellOptimized: options.includeWellOptimized }
-			: { maxRecommendations };
+		options.includeWellOptimized !== undefined ? { maxRecommendations, includeWellOptimized: options.includeWellOptimized } : { maxRecommendations };
 	const recommendations = generateRecommendations(components, bottlenecks, rootCauses, correlations, health, recommendationOptions);
 
 	// Step 8: Plugins
@@ -91,22 +84,12 @@ export const analyzeRenders = (source: IntelligenceSource, options: Intelligence
 	};
 };
 
-export const analyzeComponents = (
-	source: IntelligenceSource,
-	options: Pick<IntelligenceOptions, 'confidenceThreshold'> = {},
-): readonly ComponentAnalysis[] => {
+export const analyzeComponents = (source: IntelligenceSource): readonly ComponentAnalysis[] => {
 	validateSource(source);
-	const rawData =
-		source.type === 'snapshot'
-			? fromSnapshot(source.snapshot)
-			: source.type === 'events'
-				? fromEvents(source.events)
-				: fromReplay(source.sessions);
+	const rawData = source.type === 'snapshot' ? fromSnapshot(source.snapshot) : source.type === 'events' ? fromEvents(source.events) : fromReplay(source.sessions);
 	const data = partitionSessions(rawData);
 	return analyzeComponentsFn(data);
 };
 
-export const rankBottlenecks = (
-	components: readonly ComponentAnalysis[],
-	options: Pick<IntelligenceOptions, 'maxBottlenecks'> = {},
-) => rankBottlenecksFn(components, [], options.maxBottlenecks ?? DEFAULT_MAX_BOTTLENECKS);
+export const rankBottlenecks = (components: readonly ComponentAnalysis[], options: Pick<IntelligenceOptions, 'maxBottlenecks'> = {}) =>
+	rankBottlenecksFn(components, [], options.maxBottlenecks ?? DEFAULT_MAX_BOTTLENECKS);

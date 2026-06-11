@@ -90,9 +90,7 @@ export const detectCorrelations = (data: readonly ComponentSessionData[], window
 
 			if (proximityRatio >= 0.5) {
 				const avgGapMs = pairs.reduce((sum, p) => sum + Math.abs(p.tA - p.tB), 0) / pairs.length;
-				const evidence: CorrelationEvidence[] = [
-					{ type: 'timestamp-proximity', avgGapMs: Math.round(avgGapMs), sampleCount: pairs.length },
-				];
+				const evidence: CorrelationEvidence[] = [{ type: 'timestamp-proximity', avgGapMs: Math.round(avgGapMs), sampleCount: pairs.length }];
 
 				const aBeforeCount = pairs.filter((p) => p.aBeforeB).length;
 				const cascadeRatio = aBeforeCount / pairs.length;

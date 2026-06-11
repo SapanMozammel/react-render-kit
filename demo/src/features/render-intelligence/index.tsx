@@ -152,33 +152,31 @@ const gradeBadgeClass = (grade: string): string => {
 // ── Scenario panels ────────────────────────────────────────────────────────────
 
 const BottleneckRankingPanel = ({ report }: { report: IntelligenceReport }) => (
-	<div className="scenario-body">
-		<div className="demo-pane">
-			<div className="demo-pane__header">
-				<span className="demo-pane__title">
+	<div className='scenario-body'>
+		<div className='demo-pane'>
+			<div className='demo-pane__header'>
+				<span className='demo-pane__title'>
 					Application Health — Score {report.applicationHealth.score} ({report.applicationHealth.grade})
 				</span>
 				<span className={`console-entry__badge ${gradeBadgeClass(report.applicationHealth.grade)}`}>
 					{report.applicationHealth.healthyCount} healthy · {report.applicationHealth.degradedCount} degraded · {report.applicationHealth.criticalCount} critical
 				</span>
 			</div>
-			<div className="demo-pane__body console-panel">
+			<div className='demo-pane__body console-panel'>
 				{report.bottlenecks.map((b) => (
-					<div key={b.componentName} className="console-entry">
-						<div className="console-entry__header">
-							<span className="console-entry__title">
+					<div key={b.componentName} className='console-entry'>
+						<div className='console-entry__header'>
+							<span className='console-entry__title'>
 								#{b.rank} — {b.componentName}
 							</span>
-							<span className="console-entry__meta">
-								<span className="console-entry__badge console-entry__badge--warn">
-									impact {b.impactScore}
-								</span>
-								<span className="console-entry__render">{b.category}</span>
+							<span className='console-entry__meta'>
+								<span className='console-entry__badge console-entry__badge--warn'>impact {b.impactScore}</span>
+								<span className='console-entry__render'>{b.category}</span>
 							</span>
 						</div>
-						<div className="console-section">
-							<div className="console-section__line">
-								<span className="console-line__key" style={{ color: 'var(--text-muted)' }}>
+						<div className='console-section'>
+							<div className='console-section__line'>
+								<span className='console-line__key' style={{ color: 'var(--text-muted)' }}>
 									{b.description}
 								</span>
 							</div>
@@ -191,30 +189,30 @@ const BottleneckRankingPanel = ({ report }: { report: IntelligenceReport }) => (
 );
 
 const RootCausePanel = ({ report }: { report: IntelligenceReport }) => (
-	<div className="scenario-body">
-		<div className="demo-pane">
-			<div className="demo-pane__header">
-				<span className="demo-pane__title">Root Causes ({report.rootCauses.length})</span>
+	<div className='scenario-body'>
+		<div className='demo-pane'>
+			<div className='demo-pane__header'>
+				<span className='demo-pane__title'>Root Causes ({report.rootCauses.length})</span>
 			</div>
-			<div className="demo-pane__body console-panel">
+			<div className='demo-pane__body console-panel'>
 				{report.rootCauses.length === 0 ? (
-					<div className="console-panel__empty">
+					<div className='console-panel__empty'>
 						<span>No root causes detected above confidence threshold.</span>
 					</div>
 				) : (
 					report.rootCauses.map((rc, i) => (
-						<div key={i} className="console-entry">
-							<div className="console-entry__header">
-								<span className="console-entry__title">{rc.componentName}</span>
-								<span className="console-entry__meta">
-									<span className="console-entry__badge console-entry__badge--warn">{rc.kind}</span>
-									<span className="console-entry__render">conf: {(rc.confidence * 100).toFixed(0)}%</span>
+						<div key={i} className='console-entry'>
+							<div className='console-entry__header'>
+								<span className='console-entry__title'>{rc.componentName}</span>
+								<span className='console-entry__meta'>
+									<span className='console-entry__badge console-entry__badge--warn'>{rc.kind}</span>
+									<span className='console-entry__render'>conf: {(rc.confidence * 100).toFixed(0)}%</span>
 								</span>
 							</div>
-							<div className="console-section">
+							<div className='console-section'>
 								{rc.causalChain.map((step, j) => (
-									<div key={j} className="console-section__line">
-										<span className="console-line__key" style={{ color: 'var(--text-muted)', fontSize: '0.85em' }}>
+									<div key={j} className='console-section__line'>
+										<span className='console-line__key' style={{ color: 'var(--text-muted)', fontSize: '0.85em' }}>
 											{j + 1}. {step}
 										</span>
 									</div>
@@ -229,33 +227,29 @@ const RootCausePanel = ({ report }: { report: IntelligenceReport }) => (
 );
 
 const RecommendationsPanel = ({ report }: { report: IntelligenceReport }) => (
-	<div className="scenario-body">
-		<div className="demo-pane">
-			<div className="demo-pane__header">
-				<span className="demo-pane__title">Recommendations ({report.recommendations.length})</span>
+	<div className='scenario-body'>
+		<div className='demo-pane'>
+			<div className='demo-pane__header'>
+				<span className='demo-pane__title'>Recommendations ({report.recommendations.length})</span>
 			</div>
-			<div className="demo-pane__body console-panel">
+			<div className='demo-pane__body console-panel'>
 				{report.recommendations.map((rec, i) => (
-					<div key={i} className="console-entry">
-						<div className="console-entry__header">
-							<span className="console-entry__title">{rec.title}</span>
-							<span className="console-entry__meta">
-								<span className={`console-entry__badge ${SEVERITY_COLORS[rec.severity] ?? ''}`}>
-									{rec.severity}
-								</span>
-								<span className="console-entry__render">
-									{rec.componentName ?? 'app-level'}
-								</span>
+					<div key={i} className='console-entry'>
+						<div className='console-entry__header'>
+							<span className='console-entry__title'>{rec.title}</span>
+							<span className='console-entry__meta'>
+								<span className={`console-entry__badge ${SEVERITY_COLORS[rec.severity] ?? ''}`}>{rec.severity}</span>
+								<span className='console-entry__render'>{rec.componentName ?? 'app-level'}</span>
 							</span>
 						</div>
-						<div className="console-section">
-							<div className="console-section__line">
-								<span className="console-line__key" style={{ color: 'var(--text-muted)', fontSize: '0.85em' }}>
+						<div className='console-section'>
+							<div className='console-section__line'>
+								<span className='console-line__key' style={{ color: 'var(--text-muted)', fontSize: '0.85em' }}>
 									Fix: {rec.fix}
 								</span>
 							</div>
-							<div className="console-section__line">
-								<span className="console-line__key" style={{ color: 'var(--text-muted)', fontSize: '0.85em' }}>
+							<div className='console-section__line'>
+								<span className='console-line__key' style={{ color: 'var(--text-muted)', fontSize: '0.85em' }}>
 									Impact: {rec.expectedImpact}
 								</span>
 							</div>
@@ -272,8 +266,7 @@ const JsonExplorerPanel = ({ report }: { report: IntelligenceReport }) => {
 		applicationHealth: true,
 	});
 
-	const toggle = (key: string) =>
-		setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
+	const toggle = (key: string) => setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
 
 	type JsonSection = { key: string; label: string; value: unknown };
 
@@ -287,19 +280,21 @@ const JsonExplorerPanel = ({ report }: { report: IntelligenceReport }) => {
 	];
 
 	return (
-		<div className="scenario-body">
-			<div className="demo-pane">
-				<div className="demo-pane__header">
-					<span className="demo-pane__title">IntelligenceReport</span>
-					<span className="console-entry__render" style={{ fontSize: '0.8em' }}>
+		<div className='scenario-body'>
+			<div className='demo-pane'>
+				<div className='demo-pane__header'>
+					<span className='demo-pane__title'>IntelligenceReport</span>
+					<span className='console-entry__render' style={{ fontSize: '0.8em' }}>
 						v{report.schemaVersion}
 					</span>
 				</div>
-				<div className="demo-pane__body console-panel">
+				<div className='demo-pane__body console-panel'>
 					{sections.map(({ key, label, value }) => (
-						<div key={key} className="console-entry" style={{ cursor: 'pointer' }} onClick={() => toggle(key)}>
-							<div className="console-entry__header">
-								<span className="console-entry__title">{expanded[key] ? '▼' : '▶'} {label}</span>
+						<div key={key} className='console-entry' style={{ cursor: 'pointer' }} onClick={() => toggle(key)}>
+							<div className='console-entry__header'>
+								<span className='console-entry__title'>
+									{expanded[key] ? '▼' : '▶'} {label}
+								</span>
 							</div>
 							{expanded[key] && (
 								<pre
@@ -332,18 +327,10 @@ type ScenarioTabsProps = {
 };
 
 const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
-	<div className="scenario-tabs" role="tablist">
+	<div className='scenario-tabs' role='tablist'>
 		{SCENARIOS.map((s) => (
-			<button
-				key={s.id}
-				role="tab"
-				className={`scenario-tab scenario-tab--${s.badge}`}
-				aria-selected={active === s.id}
-				onClick={() => onChange(s.id)}
-			>
-				<span className={`scenario-tab__indicator scenario-tab__indicator--${s.badge}`}>
-					{s.badge === 'warn' ? '⚠' : '✓'}
-				</span>
+			<button key={s.id} role='tab' className={`scenario-tab scenario-tab--${s.badge}`} aria-selected={active === s.id} onClick={() => onChange(s.id)}>
+				<span className={`scenario-tab__indicator scenario-tab__indicator--${s.badge}`}>{s.badge === 'warn' ? '⚠' : '✓'}</span>
 				{s.label}
 			</button>
 		))}
@@ -373,19 +360,17 @@ export const RenderIntelligenceDemo = () => {
 		<>
 			<ScenarioTabs active={activeId} onChange={setActiveId} />
 
-			<div className="scenario-header">
-				<span className={`scenario-badge scenario-badge--${activeScenario.badge}`}>
-					{activeScenario.badge === 'warn' ? '⚠ issues detected' : '✓ clean output'}
-				</span>
-				<p className="scenario-description">{activeScenario.description}</p>
+			<div className='scenario-header'>
+				<span className={`scenario-badge scenario-badge--${activeScenario.badge}`}>{activeScenario.badge === 'warn' ? '⚠ issues detected' : '✓ clean output'}</span>
+				<p className='scenario-description'>{activeScenario.description}</p>
 			</div>
 
 			<ScenarioPanel key={activeId} scenario={activeScenario} report={report} />
 
-			<details className="code-hint code-hint--usage">
+			<details className='code-hint code-hint--usage'>
 				<summary>How to use render-intelligence</summary>
-				<div className="code-hint__body">
-					<pre className="code-hint__pre">{`import { analyzeRenders } from '@sapanmozammel/render-intelligence';
+				<div className='code-hint__body'>
+					<pre className='code-hint__pre'>{`import { analyzeRenders } from '@sapanmozammel/render-intelligence';
 
 // Feed any telemetry source into the analysis engine
 const report = analyzeRenders({
@@ -425,9 +410,8 @@ analyzeRenders(source, {
   includeWellOptimized: false,
   plugins: [myCustomPlugin],
 });`}</pre>
-					<p className="code-hint__note">
-						Pure TypeScript, zero runtime dependencies. Works in Node.js, browsers, and edge runtimes.
-						Accepts live telemetry events, buffered snapshots, or replay sessions interchangeably.
+					<p className='code-hint__note'>
+						Pure TypeScript, zero runtime dependencies. Works in Node.js, browsers, and edge runtimes. Accepts live telemetry events, buffered snapshots, or replay sessions interchangeably.
 					</p>
 				</div>
 			</details>

@@ -1,14 +1,4 @@
-import type {
-	SchemaVersion,
-	TelemetryEvent,
-	TelemetrySnapshot,
-	ReplaySession,
-	ReplayFrame,
-	HealthGrade,
-	MemoClassification,
-	FrequencyClass,
-	PropRefType,
-} from '@sapanmozammel/render-core-schema';
+import type { SchemaVersion, TelemetryEvent, TelemetrySnapshot, ReplaySession, ReplayFrame, HealthGrade, MemoClassification, FrequencyClass, PropRefType } from '@sapanmozammel/render-core-schema';
 
 // ── Re-export schema types used in public API ──────────────────────────────
 export type { HealthGrade, MemoClassification, FrequencyClass, PropRefType };
@@ -77,13 +67,7 @@ export type ApplicationHealth = {
 
 // ── Bottlenecks ────────────────────────────────────────────────────────────
 
-export type BottleneckCategory =
-	| 'ineffective-memo'
-	| 'reference-instability'
-	| 'high-frequency'
-	| 'score-degradation'
-	| 'parent-cascade'
-	| 'no-change-renders';
+export type BottleneckCategory = 'ineffective-memo' | 'reference-instability' | 'high-frequency' | 'score-degradation' | 'parent-cascade' | 'no-change-renders';
 
 export type BottleneckEvidence =
 	| { readonly type: 'unstable-prop'; readonly propName: string; readonly refType: PropRefType; readonly occurrenceRate: number }

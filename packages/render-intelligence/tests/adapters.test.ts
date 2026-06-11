@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { fromEvents } from '../src/adapters/from-events.js';
 import { fromSnapshot } from '../src/adapters/from-snapshot.js';
 import { fromReplay } from '../src/adapters/from-replay.js';
-import { resetSeq, makeRenderEvent, makeScoreEvent, makeSessionData } from './helpers.js';
+import { resetSeq, makeRenderEvent, makeScoreEvent } from './helpers.js';
 import type { TelemetrySnapshot } from '@sapanmozammel/render-core-schema';
 
 beforeEach(() => resetSeq());
@@ -13,10 +13,7 @@ describe('fromEvents', () => {
 	});
 
 	it('groups events from a single session into one ComponentSessionData', () => {
-		const events = [
-			makeRenderEvent({ sessionId: 's1', componentName: 'A' }),
-			makeScoreEvent({ sessionId: 's1', componentName: 'A' }),
-		];
+		const events = [makeRenderEvent({ sessionId: 's1', componentName: 'A' }), makeScoreEvent({ sessionId: 's1', componentName: 'A' })];
 		const result = fromEvents(events);
 		expect(result).toHaveLength(1);
 		expect(result[0]!.componentName).toBe('A');
@@ -25,11 +22,7 @@ describe('fromEvents', () => {
 	});
 
 	it('creates separate sessions for different (sessionId, componentName) pairs', () => {
-		const events = [
-			makeRenderEvent({ sessionId: 's1', componentName: 'A' }),
-			makeRenderEvent({ sessionId: 's1', componentName: 'B' }),
-			makeRenderEvent({ sessionId: 's2', componentName: 'A' }),
-		];
+		const events = [makeRenderEvent({ sessionId: 's1', componentName: 'A' }), makeRenderEvent({ sessionId: 's1', componentName: 'B' }), makeRenderEvent({ sessionId: 's2', componentName: 'A' })];
 		const result = fromEvents(events);
 		expect(result).toHaveLength(3);
 		const names = result.map((r) => `${r.sessionId}::${r.componentName}`);
@@ -66,10 +59,7 @@ describe('fromSnapshot', () => {
 	});
 
 	it('handles multi-component snapshot', () => {
-		const events = [
-			makeRenderEvent({ sessionId: 's1', componentName: 'A' }),
-			makeRenderEvent({ sessionId: 's1', componentName: 'B' }),
-		];
+		const events = [makeRenderEvent({ sessionId: 's1', componentName: 'A' }), makeRenderEvent({ sessionId: 's1', componentName: 'B' })];
 		const snapshot: TelemetrySnapshot = { events, sessions: {} };
 		expect(fromSnapshot(snapshot)).toHaveLength(2);
 	});
@@ -153,10 +143,18 @@ describe('fromReplay', () => {
 			frames: [],
 			timeline: { sessionId: id, entries: [], duration: null, segments: [] },
 			stats: {
-				totalRenders: 0, averageScore: null, minScore: null, maxScore: null,
-				initialScore: null, finalScore: null, scoreDelta: null,
-				ineffectiveRenderCount: 0, highFrequencyCount: 0,
-				unstablePropNames: [], totalRecommendations: 0, uniqueRecommendations: [],
+				totalRenders: 0,
+				averageScore: null,
+				minScore: null,
+				maxScore: null,
+				initialScore: null,
+				finalScore: null,
+				scoreDelta: null,
+				ineffectiveRenderCount: 0,
+				highFrequencyCount: 0,
+				unstablePropNames: [],
+				totalRecommendations: 0,
+				uniqueRecommendations: [],
 			},
 			frameCount: 0,
 			pruningInfo: { pruned: false as const },

@@ -1,8 +1,4 @@
-export type ScenarioId =
-	| 'bottleneck-ranking'
-	| 'root-cause'
-	| 'recommendations'
-	| 'json-explorer';
+export type ScenarioId = 'bottleneck-ranking' | 'root-cause' | 'recommendations' | 'json-explorer';
 
 export type ScenarioBadge = 'ok' | 'warn';
 
@@ -17,8 +13,7 @@ export const SCENARIOS: readonly Scenario[] = [
 	{
 		id: 'bottleneck-ranking',
 		label: 'Bottleneck Ranking',
-		description:
-			'Feed a multi-component event stream into analyzeRenders() and inspect the ranked bottleneck list. Each entry shows the dominant problem category, impact score, and evidence backing the finding.',
+		description: 'Feed a multi-component event stream into analyzeRenders() and inspect the ranked bottleneck list. Each entry shows the dominant problem category, impact score, and evidence backing the finding.',
 		badge: 'warn',
 	},
 	{

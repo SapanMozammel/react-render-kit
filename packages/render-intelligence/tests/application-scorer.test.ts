@@ -15,10 +15,7 @@ describe('scoreApplication', () => {
 	});
 
 	it('computes weighted average score by render count', () => {
-		const components = [
-			makeComponentAnalysis({ componentName: 'A', totalRenders: 80, averageScore: 80 }),
-			makeComponentAnalysis({ componentName: 'B', totalRenders: 20, averageScore: 40 }),
-		];
+		const components = [makeComponentAnalysis({ componentName: 'A', totalRenders: 80, averageScore: 80 }), makeComponentAnalysis({ componentName: 'B', totalRenders: 20, averageScore: 40 })];
 		// Weighted: (80*0.8 + 40*0.2) = 64+8 = 72
 		const result = scoreApplication(components, 'snapshot');
 		expect(result.score).toBe(72);
@@ -53,18 +50,12 @@ describe('scoreApplication', () => {
 	});
 
 	it('returns totalRenders as sum across all components', () => {
-		const components = [
-			makeComponentAnalysis({ componentName: 'A', totalRenders: 30, averageScore: 80 }),
-			makeComponentAnalysis({ componentName: 'B', totalRenders: 70, averageScore: 70 }),
-		];
+		const components = [makeComponentAnalysis({ componentName: 'A', totalRenders: 30, averageScore: 80 }), makeComponentAnalysis({ componentName: 'B', totalRenders: 70, averageScore: 70 })];
 		expect(scoreApplication(components, 'events').totalRenders).toBe(100);
 	});
 
 	it('falls back to equal weights when totalRenders is 0', () => {
-		const components = [
-			makeComponentAnalysis({ componentName: 'A', totalRenders: 0, averageScore: 80 }),
-			makeComponentAnalysis({ componentName: 'B', totalRenders: 0, averageScore: 40 }),
-		];
+		const components = [makeComponentAnalysis({ componentName: 'A', totalRenders: 0, averageScore: 80 }), makeComponentAnalysis({ componentName: 'B', totalRenders: 0, averageScore: 40 })];
 		// Equal weights: (80+40)/2 = 60
 		const result = scoreApplication(components, 'events');
 		expect(result.score).toBe(60);

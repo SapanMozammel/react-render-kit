@@ -10,5 +10,4 @@ export class IntelligenceError extends Error {
 	}
 }
 
-export const createIntelligenceError = (code: IntelligenceErrorCode, message: string): IntelligenceError =>
-	new IntelligenceError(code, message);
+export const createIntelligenceError = (code: IntelligenceErrorCode, message: string): IntelligenceError => new IntelligenceError(code, message);

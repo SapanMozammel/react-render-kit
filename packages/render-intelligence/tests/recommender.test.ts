@@ -19,10 +19,7 @@ const makeHealth = (overrides: Partial<ApplicationHealth> = {}): ApplicationHeal
 
 describe('generateRecommendations', () => {
 	it('returns WELL-001 when app score >=90 and no actionable issues', () => {
-		const components = [
-			makeComponentAnalysis({ componentName: 'A', totalRenders: 10, averageScore: 95 }),
-			makeComponentAnalysis({ componentName: 'B', totalRenders: 10, averageScore: 95 }),
-		];
+		const components = [makeComponentAnalysis({ componentName: 'A', totalRenders: 10, averageScore: 95 }), makeComponentAnalysis({ componentName: 'B', totalRenders: 10, averageScore: 95 })];
 		const health = makeHealth({ score: 95, grade: 'EXCELLENT', componentCount: 2, healthyCount: 2 });
 		const result = generateRecommendations(components, [], [], [], health, { maxRecommendations: 20 });
 		expect(result.some((r) => r.id === 'R-INTEL-WELL-001')).toBe(true);
@@ -60,9 +57,7 @@ describe('generateRecommendations', () => {
 	});
 
 	it('fires FREQ-001 for HIGH frequency components', () => {
-		const components = [
-			makeComponentAnalysis({ componentName: 'A', totalRenders: 10, frequencyClass: 'HIGH', renderVelocity: 5 }),
-		];
+		const components = [makeComponentAnalysis({ componentName: 'A', totalRenders: 10, frequencyClass: 'HIGH', renderVelocity: 5 })];
 		const health = makeHealth({ score: 60, grade: 'MODERATE' });
 		const result = generateRecommendations(components, [], [], [], health, { maxRecommendations: 20 });
 		expect(result.some((r) => r.id === 'R-INTEL-FREQ-001')).toBe(true);
@@ -112,10 +107,7 @@ describe('generateRecommendations', () => {
 	});
 
 	it('fires APP-001 when >30% components are degraded or critical', () => {
-		const components = [
-			makeComponentAnalysis({ componentName: 'A', totalRenders: 10, averageScore: 20 }),
-			makeComponentAnalysis({ componentName: 'B', totalRenders: 10, averageScore: 20 }),
-		];
+		const components = [makeComponentAnalysis({ componentName: 'A', totalRenders: 10, averageScore: 20 }), makeComponentAnalysis({ componentName: 'B', totalRenders: 10, averageScore: 20 })];
 		const health = makeHealth({ score: 20, grade: 'CRITICAL', componentCount: 2, criticalCount: 2, healthyCount: 0 });
 		const result = generateRecommendations(components, [], [], [], health, { maxRecommendations: 20 });
 		expect(result.some((r) => r.id === 'R-INTEL-APP-001')).toBe(true);
@@ -136,7 +128,7 @@ describe('generateRecommendations', () => {
 				averageScore: 30,
 				memoClassification: 'INEFFECTIVE',
 				ineffectiveRenderCount: 10,
-			}),
+			})
 		);
 		const health = makeHealth({ score: 20, grade: 'CRITICAL', componentCount: 10, criticalCount: 10, healthyCount: 0 });
 		const result = generateRecommendations(components, [], [], [], health, { maxRecommendations: 3 });

@@ -11,9 +11,7 @@ export const partitionSessions = (data: readonly ComponentSessionData[]): readon
 
 		if (existingIndex !== undefined) {
 			const existing = merged[existingIndex]!;
-			const combined = [...existing.events, ...item.events].sort(
-				(a: TelemetryEvent, b: TelemetryEvent) => a.sequenceNumber - b.sequenceNumber,
-			);
+			const combined = [...existing.events, ...item.events].sort((a: TelemetryEvent, b: TelemetryEvent) => a.sequenceNumber - b.sequenceNumber);
 			merged[existingIndex] = {
 				componentName: existing.componentName,
 				sessionId: existing.sessionId,

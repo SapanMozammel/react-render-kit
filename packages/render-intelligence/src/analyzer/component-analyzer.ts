@@ -101,7 +101,6 @@ const analyzeComponent = (name: string, group: SessionGroup): ComponentAnalysis 
 	const propChangeEvents = allEvents.filter(isPropChangeEvent);
 	const frequencyEvents = allEvents.filter(isFrequencyEvent);
 	const recommendationEvents = allEvents.filter(isRecommendationEvent);
-	const sessionEndEvents = allEvents.filter(isSessionEndEvent);
 
 	// Scores
 	const scores = scoreEvents.map((e) => e.score);
@@ -152,13 +151,16 @@ const analyzeComponent = (name: string, group: SessionGroup): ComponentAnalysis 
 		if (sessionRenders === 0) continue;
 
 		const endEvent = session.events.filter(isSessionEndEvent)[0];
-		const durationMs = endEvent !== undefined ? endEvent.durationMs : (() => {
-			const sessionRenderEvents = session.events.filter(isRenderEvent);
-			if (sessionRenderEvents.length < 2) return 0;
-			const first = sessionRenderEvents[0]!.wallTimestamp;
-			const last = sessionRenderEvents[sessionRenderEvents.length - 1]!.wallTimestamp;
-			return last - first;
-		})();
+		const durationMs =
+			endEvent !== undefined
+				? endEvent.durationMs
+				: (() => {
+						const sessionRenderEvents = session.events.filter(isRenderEvent);
+						if (sessionRenderEvents.length < 2) return 0;
+						const first = sessionRenderEvents[0]!.wallTimestamp;
+						const last = sessionRenderEvents[sessionRenderEvents.length - 1]!.wallTimestamp;
+						return last - first;
+					})();
 
 		if (durationMs > 0) {
 			totalVelocity += sessionRenders / (durationMs / 1000);

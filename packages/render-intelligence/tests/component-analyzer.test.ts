@@ -23,10 +23,7 @@ describe('analyzeComponents', () => {
 	});
 
 	it('extracts average score from ScoreEvents', () => {
-		const events = [
-			makeScoreEvent({ score: 80 }),
-			makeScoreEvent({ score: 60 }),
-		];
+		const events = [makeScoreEvent({ score: 80 }), makeScoreEvent({ score: 60 })];
 		const data = [makeSessionData({ events })];
 		const result = analyzeComponents(data);
 		expect(result[0]!.averageScore).toBe(70);
@@ -56,7 +53,12 @@ describe('analyzeComponents', () => {
 
 	it('collects unique unstable prop names', () => {
 		const events = [
-			makePropChangeEvent({ unstable: [{ name: 'onClick', type: 'function' }, { name: 'style', type: 'object' }] }),
+			makePropChangeEvent({
+				unstable: [
+					{ name: 'onClick', type: 'function' },
+					{ name: 'style', type: 'object' },
+				],
+			}),
 			makePropChangeEvent({ unstable: [{ name: 'onClick', type: 'function' }] }),
 		];
 		const data = [makeSessionData({ events })];
@@ -67,11 +69,7 @@ describe('analyzeComponents', () => {
 	});
 
 	it('picks worst-case frequency class', () => {
-		const events = [
-			makeFrequencyEvent({ classification: 'LOW' }),
-			makeFrequencyEvent({ classification: 'HIGH' }),
-			makeFrequencyEvent({ classification: 'MODERATE' }),
-		];
+		const events = [makeFrequencyEvent({ classification: 'LOW' }), makeFrequencyEvent({ classification: 'HIGH' }), makeFrequencyEvent({ classification: 'MODERATE' })];
 		const data = [makeSessionData({ events })];
 		const result = analyzeComponents(data);
 		expect(result[0]!.frequencyClass).toBe('HIGH');
@@ -84,11 +82,7 @@ describe('analyzeComponents', () => {
 	});
 
 	it('counts noChangeRenderCount from parent-triggered renders', () => {
-		const events = [
-			makeRenderEvent({ triggeredBy: 'parent' }),
-			makeRenderEvent({ triggeredBy: 'parent' }),
-			makeRenderEvent({ triggeredBy: 'props' }),
-		];
+		const events = [makeRenderEvent({ triggeredBy: 'parent' }), makeRenderEvent({ triggeredBy: 'parent' }), makeRenderEvent({ triggeredBy: 'props' })];
 		const data = [makeSessionData({ events })];
 		const result = analyzeComponents(data);
 		expect(result[0]!.noChangeRenderCount).toBe(2);
@@ -96,21 +90,14 @@ describe('analyzeComponents', () => {
 	});
 
 	it('counts ineffectiveRenderCount from reference-only signals', () => {
-		const events = [
-			makeScoreEvent({ signalKind: 'reference-only' }),
-			makeScoreEvent({ signalKind: 'genuine' }),
-			makeScoreEvent({ signalKind: 'reference-only' }),
-		];
+		const events = [makeScoreEvent({ signalKind: 'reference-only' }), makeScoreEvent({ signalKind: 'genuine' }), makeScoreEvent({ signalKind: 'reference-only' })];
 		const data = [makeSessionData({ events })];
 		const result = analyzeComponents(data);
 		expect(result[0]!.ineffectiveRenderCount).toBe(2);
 	});
 
 	it('collects unique recommendations', () => {
-		const events = [
-			makeRecommendationEvent({ recommendations: ['Fix A', 'Fix B'] }),
-			makeRecommendationEvent({ recommendations: ['Fix A', 'Fix C'] }),
-		];
+		const events = [makeRecommendationEvent({ recommendations: ['Fix A', 'Fix B'] }), makeRecommendationEvent({ recommendations: ['Fix A', 'Fix C'] })];
 		const data = [makeSessionData({ events })];
 		const result = analyzeComponents(data);
 		expect(result[0]!.uniqueRecommendations).toHaveLength(3);
@@ -141,11 +128,7 @@ describe('analyzeComponents', () => {
 	});
 
 	it('derives memoClassification from majority vote', () => {
-		const events = [
-			makeScoreEvent({ memoClassification: 'INEFFECTIVE' }),
-			makeScoreEvent({ memoClassification: 'INEFFECTIVE' }),
-			makeScoreEvent({ memoClassification: 'EFFECTIVE' }),
-		];
+		const events = [makeScoreEvent({ memoClassification: 'INEFFECTIVE' }), makeScoreEvent({ memoClassification: 'INEFFECTIVE' }), makeScoreEvent({ memoClassification: 'EFFECTIVE' })];
 		const data = [makeSessionData({ events })];
 		expect(analyzeComponents(data)[0]!.memoClassification).toBe('INEFFECTIVE');
 	});

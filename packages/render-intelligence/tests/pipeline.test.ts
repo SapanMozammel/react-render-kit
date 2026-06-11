@@ -26,23 +26,27 @@ describe('analyzeRenders', () => {
 
 	it('throws EMPTY_SOURCE for events source with no events', () => {
 		expect(() => analyzeRenders({ type: 'events', events: [] })).toThrow(IntelligenceError);
-		try { analyzeRenders({ type: 'events', events: [] }); } catch (e) {
+		try {
+			analyzeRenders({ type: 'events', events: [] });
+		} catch (e) {
 			expect((e as IntelligenceError).code).toBe('EMPTY_SOURCE');
 		}
 	});
 
 	it('throws EMPTY_SOURCE for snapshot source with no events', () => {
-		expect(() =>
-			analyzeRenders({ type: 'snapshot', snapshot: { events: [], sessions: {} } }),
-		).toThrow(IntelligenceError);
-		try { analyzeRenders({ type: 'snapshot', snapshot: { events: [], sessions: {} } }); } catch (e) {
+		expect(() => analyzeRenders({ type: 'snapshot', snapshot: { events: [], sessions: {} } })).toThrow(IntelligenceError);
+		try {
+			analyzeRenders({ type: 'snapshot', snapshot: { events: [], sessions: {} } });
+		} catch (e) {
 			expect((e as IntelligenceError).code).toBe('EMPTY_SOURCE');
 		}
 	});
 
 	it('throws EMPTY_SOURCE for replay source with no sessions', () => {
 		expect(() => analyzeRenders({ type: 'replay', sessions: [] })).toThrow(IntelligenceError);
-		try { analyzeRenders({ type: 'replay', sessions: [] }); } catch (e) {
+		try {
+			analyzeRenders({ type: 'replay', sessions: [] });
+		} catch (e) {
 			expect((e as IntelligenceError).code).toBe('EMPTY_SOURCE');
 		}
 	});
@@ -59,11 +63,7 @@ describe('analyzeRenders', () => {
 	});
 
 	it('respects maxBottlenecks option', () => {
-		const events = [
-			makeRenderEvent({ componentName: 'A', sessionId: 's1' }),
-			makeRenderEvent({ componentName: 'B', sessionId: 's1' }),
-			makeRenderEvent({ componentName: 'C', sessionId: 's1' }),
-		];
+		const events = [makeRenderEvent({ componentName: 'A', sessionId: 's1' }), makeRenderEvent({ componentName: 'B', sessionId: 's1' }), makeRenderEvent({ componentName: 'C', sessionId: 's1' })];
 		const report = analyzeRenders({ type: 'events', events }, { maxBottlenecks: 2 });
 		expect(report.bottlenecks.length).toBeLessThanOrEqual(2);
 	});
@@ -87,13 +87,15 @@ describe('analyzeRenders', () => {
 		const report = analyzeRenders(
 			{ type: 'events', events },
 			{
-				plugins: [{
-					id: 'test-plugin',
-					name: 'Test',
-					version: '1.0.0',
-					analyze: () => ({ bottlenecks: [mockBottleneck], rootCauses: [], recommendations: [], correlations: [] }),
-				}],
-			},
+				plugins: [
+					{
+						id: 'test-plugin',
+						name: 'Test',
+						version: '1.0.0',
+						analyze: () => ({ bottlenecks: [mockBottleneck], rootCauses: [], recommendations: [], correlations: [] }),
+					},
+				],
+			}
 		);
 		expect(report.bottlenecks.some((b) => b.componentName === 'Plugin-Component')).toBe(true);
 	});
@@ -117,7 +119,9 @@ describe('analyzeComponents (secondary export)', () => {
 
 	it('throws EMPTY_SOURCE for empty events', () => {
 		expect(() => analyzeComponents({ type: 'events', events: [] })).toThrow(IntelligenceError);
-		try { analyzeComponents({ type: 'events', events: [] }); } catch (e) {
+		try {
+			analyzeComponents({ type: 'events', events: [] });
+		} catch (e) {
 			expect((e as IntelligenceError).code).toBe('EMPTY_SOURCE');
 		}
 	});
@@ -125,10 +129,7 @@ describe('analyzeComponents (secondary export)', () => {
 
 describe('rankBottlenecks (secondary export)', () => {
 	it('returns bottlenecks for a list of components', () => {
-		const source = makeEventsSource([
-			makeRenderEvent({ componentName: 'A' }),
-			makeScoreEvent({ componentName: 'A', score: 20 }),
-		]);
+		const source = makeEventsSource([makeRenderEvent({ componentName: 'A' }), makeScoreEvent({ componentName: 'A', score: 20 })]);
 		const components = analyzeComponents(source);
 		const bottlenecks = rankBottlenecks(components);
 		expect(bottlenecks.length).toBeGreaterThan(0);

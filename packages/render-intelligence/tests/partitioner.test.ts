@@ -17,11 +17,7 @@ describe('partitionSessions', () => {
 	});
 
 	it('passes through multiple distinct sessions unchanged', () => {
-		const data = [
-			makeSessionData({ componentName: 'A', sessionId: 's1' }),
-			makeSessionData({ componentName: 'B', sessionId: 's1' }),
-			makeSessionData({ componentName: 'A', sessionId: 's2' }),
-		];
+		const data = [makeSessionData({ componentName: 'A', sessionId: 's1' }), makeSessionData({ componentName: 'B', sessionId: 's1' }), makeSessionData({ componentName: 'A', sessionId: 's2' })];
 		const result = partitionSessions(data);
 		expect(result).toHaveLength(3);
 	});
@@ -29,10 +25,7 @@ describe('partitionSessions', () => {
 	it('merges duplicate (componentName, sessionId) pairs by concatenating events in order', () => {
 		const e1 = makeRenderEvent({ sessionId: 's1', componentName: 'A' });
 		const e2 = makeScoreEvent({ sessionId: 's1', componentName: 'A' });
-		const data = [
-			makeSessionData({ componentName: 'A', sessionId: 's1', events: [e2] }),
-			makeSessionData({ componentName: 'A', sessionId: 's1', events: [e1] }),
-		];
+		const data = [makeSessionData({ componentName: 'A', sessionId: 's1', events: [e2] }), makeSessionData({ componentName: 'A', sessionId: 's1', events: [e1] })];
 		const result = partitionSessions(data);
 		expect(result).toHaveLength(1);
 		expect(result[0]!.events).toHaveLength(2);
@@ -52,10 +45,7 @@ describe('partitionSessions', () => {
 	});
 
 	it('uses frames from first session when second has null frames', () => {
-		const data = [
-			makeSessionData({ componentName: 'A', sessionId: 's1' }),
-			makeSessionData({ componentName: 'A', sessionId: 's1' }),
-		];
+		const data = [makeSessionData({ componentName: 'A', sessionId: 's1' }), makeSessionData({ componentName: 'A', sessionId: 's1' })];
 		const result = partitionSessions(data);
 		expect(result[0]!.frames).toBeNull();
 	});

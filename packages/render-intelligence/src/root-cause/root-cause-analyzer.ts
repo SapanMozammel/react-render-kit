@@ -13,19 +13,13 @@ const detectReferenceInstability = (c: ComponentAnalysis): RootCauseCandidate | 
 	if (c.unstablePropNames.length === 0) return null;
 	const ineffectiveRatio = c.totalRenders > 0 ? c.ineffectiveRenderCount / c.totalRenders : 0;
 	const hasMemoDefeat = c.memoClassification === 'INEFFECTIVE';
-	const confidence = clamp(
-		(c.unstablePropNames.length > 1 ? 0.7 : 0.5) + (hasMemoDefeat ? 0.2 : 0) + ineffectiveRatio * 0.1,
-		0,
-		1,
-	);
+	const confidence = clamp((c.unstablePropNames.length > 1 ? 0.7 : 0.5) + (hasMemoDefeat ? 0.2 : 0) + ineffectiveRatio * 0.1, 0, 1);
 
 	const propList = c.unstablePropNames.slice(0, 3).join(', ');
 	const chain: string[] = [
 		`${c.componentName} receives unstable prop references: ${propList}`,
 		'Props create new object/function references on every parent render',
-		hasMemoDefeat
-			? 'React.memo receives a new reference → bails out of the optimization → component re-renders'
-			: 'Component re-renders even when underlying data is unchanged',
+		hasMemoDefeat ? 'React.memo receives a new reference → bails out of the optimization → component re-renders' : 'Component re-renders even when underlying data is unchanged',
 		'Fix: stabilize these props with useCallback (functions) or useMemo (objects/arrays) at the call site',
 	];
 	return { kind: 'reference-instability', confidence, affectedComponents: [], causalChain: chain };
@@ -82,11 +76,7 @@ const getCascadeAffected = (componentName: string, correlations: readonly Correl
 	return affected;
 };
 
-export const analyzeRootCauses = (
-	components: readonly ComponentAnalysis[],
-	correlations: readonly CorrelationGroup[],
-	confidenceThreshold: number,
-): readonly RootCause[] => {
+export const analyzeRootCauses = (components: readonly ComponentAnalysis[], correlations: readonly CorrelationGroup[], confidenceThreshold: number): readonly RootCause[] => {
 	const results: RootCause[] = [];
 
 	for (const c of components) {
@@ -110,9 +100,7 @@ export const analyzeRootCauses = (
 		const best = candidates[0]!;
 		if (best.confidence < confidenceThreshold) continue;
 
-		const affectedComponents = best.kind === 'high-frequency-source' || best.kind === 'memo-defeat'
-			? getCascadeAffected(c.componentName, correlations)
-			: best.affectedComponents;
+		const affectedComponents = best.kind === 'high-frequency-source' || best.kind === 'memo-defeat' ? getCascadeAffected(c.componentName, correlations) : best.affectedComponents;
 
 		results.push({
 			componentName: c.componentName,

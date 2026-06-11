@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { executePlugins, createPlugin } from '../src/plugins/plugin-registry.js';
-import { resetSeq, makeRenderEvent, makeSessionData } from './helpers.js';
+import { resetSeq, makeRenderEvent } from './helpers.js';
 import type { AnalysisPlugin, AnalysisContext } from '../src/types/index.js';
 
 beforeEach(() => resetSeq());
@@ -80,7 +80,9 @@ describe('executePlugins', () => {
 			id: 'throwing',
 			name: 'Thrower',
 			version: '1.0.0',
-			analyze: () => { throw new Error('plugin boom'); },
+			analyze: () => {
+				throw new Error('plugin boom');
+			},
 		};
 		const goodPlugin: AnalysisPlugin = {
 			id: 'good',
