@@ -97,6 +97,18 @@ export const TOOLS: readonly ToolMeta[] = [
 		demoImport: () =>
 			import('@/features/render-playground').then((m) => ({ default: m.RenderPlaygroundDemo })),
 	},
+	{
+		name: 'render-telemetry-core',
+		slug: 'render-telemetry-core',
+		description:
+			'Typed event protocol and observability infrastructure — emit structured telemetry events from any React component, buffer them with useSyncExternalStore, and pipe them to custom transports. Zero dependencies, no React peer dep.',
+		packageName: '@sapanmozammel/render-telemetry-core',
+		version: '1.0.0',
+		tags: ['debugging', 'performance', 'infrastructure', 'protocol'],
+		status: 'beta',
+		demoImport: () =>
+			import('@/features/render-telemetry-core').then((m) => ({ default: m.RenderTelemetryCoreDemo })),
+	},
 ];
 
 export const getToolBySlug = (slug: string): ToolMeta | undefined =>

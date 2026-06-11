@@ -1,0 +1,54 @@
+{
+	"name": "@sapanmozammel/render-telemetry-core",
+	"version": "1.0.0",
+	"description": "Event protocol and observability infrastructure for React Render Kit",
+	"license": "MIT",
+	"keywords": [
+		"react",
+		"telemetry",
+		"observability",
+		"events",
+		"replay",
+		"devtools",
+		"performance"
+	],
+	"homepage": "https://react-render-kit.vercel.app/render-telemetry-core",
+	"bugs": {
+		"url": "https://github.com/SapanMozammel/react-render-kit/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SapanMozammel/react-render-kit.git",
+		"directory": "packages/render-telemetry-core"
+	},
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"sideEffects": false,
+	"scripts": {
+		"prepublishOnly": "tsup",
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage"
+	},
+	"devDependencies": {
+		"@vitest/coverage-v8": "^4.1.8",
+		"vitest": "^2.1.8"
+	}
+}

@@ -68,6 +68,9 @@ importers:
       '@sapanmozammel/render-playground':
         specifier: workspace:*
         version: link:../packages/render-playground
+      '@sapanmozammel/render-telemetry-core':
+        specifier: workspace:*
+        version: link:../packages/render-telemetry-core
       '@sapanmozammel/render-trace':
         specifier: workspace:*
         version: link:../packages/render-trace
@@ -192,6 +195,15 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.2.6(react@19.2.6)
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@22.19.20)(jsdom@25.0.1)
+
+  packages/render-telemetry-core:
+    devDependencies:
+      '@vitest/coverage-v8':
+        specifier: ^4.1.8
+        version: 4.1.8(vitest@2.1.9(@types/node@22.19.20)(jsdom@25.0.1))
       vitest:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@22.19.20)(jsdom@25.0.1)
