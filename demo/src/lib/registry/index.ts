@@ -133,6 +133,18 @@ export const TOOLS: readonly ToolMeta[] = [
 		demoImport: () =>
 			import('@/features/render-core-schema').then((m) => ({ default: m.RenderCoreSchemaDemo })),
 	},
+	{
+		name: 'render-intelligence',
+		slug: 'render-intelligence',
+		description:
+			'Post-hoc analysis engine for React render telemetry — ranks performance bottlenecks, traces root causes, detects cross-component correlations, and generates 15 deterministic recommendations. Framework-agnostic, zero runtime dependencies.',
+		packageName: '@sapanmozammel/render-intelligence',
+		version: '1.0.0',
+		tags: ['analysis', 'performance', 'intelligence', 'infrastructure'],
+		status: 'stable',
+		demoImport: () =>
+			import('@/features/render-intelligence').then((m) => ({ default: m.RenderIntelligenceDemo })),
+	},
 ];
 
 export const getToolBySlug = (slug: string): ToolMeta | undefined =>

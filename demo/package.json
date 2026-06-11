@@ -21,7 +21,8 @@
 		"@sapanmozammel/render-playground": "workspace:*",
 		"@sapanmozammel/render-telemetry-core": "workspace:*",
 		"@sapanmozammel/render-replay-engine": "workspace:*",
-		"@sapanmozammel/render-core-schema": "workspace:*"
+		"@sapanmozammel/render-core-schema": "workspace:*",
+		"@sapanmozammel/render-intelligence": "workspace:*"
 	},
 	"devDependencies": {
 		"@types/node": "^22.0.0",
