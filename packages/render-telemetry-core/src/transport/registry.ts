@@ -18,9 +18,7 @@ export const emitEvents = (events: ReadonlyArray<TelemetryEvent>): void => {
 		try {
 			transport.emit(events);
 		} catch {
-			if (process.env.NODE_ENV === 'development') {
-				console.warn(`[render-telemetry-core] transport "${transport.name}" emit() threw`, );
-			}
+			console.warn(`[render-telemetry-core] transport "${transport.name}" emit() threw`);
 		}
 	});
 };

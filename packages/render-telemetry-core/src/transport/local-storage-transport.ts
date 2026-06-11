@@ -12,7 +12,7 @@ export const createLocalStorageTransport = (
 	const onExceed = options?.onExceed ?? 'prune';
 
 	return {
-		name: 'local-storage',
+		name: `local-storage:${storageKey}`,
 
 		emit: (events) => {
 			if (typeof localStorage === 'undefined') return;

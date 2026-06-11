@@ -105,7 +105,7 @@ export const TOOLS: readonly ToolMeta[] = [
 		packageName: '@sapanmozammel/render-telemetry-core',
 		version: '1.0.0',
 		tags: ['debugging', 'performance', 'infrastructure', 'protocol'],
-		status: 'beta',
+		status: 'stable',
 		demoImport: () =>
 			import('@/features/render-telemetry-core').then((m) => ({ default: m.RenderTelemetryCoreDemo })),
 	},

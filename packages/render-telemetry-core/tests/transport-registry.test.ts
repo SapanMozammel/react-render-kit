@@ -58,8 +58,10 @@ describe('emitEvents', () => {
 		const good = createMemoryTransport();
 		registerTransport(throwing);
 		registerTransport(good);
+		const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		expect(() => emitEvents([makeEvent()])).not.toThrow();
 		expect(good.getEmitted()).toHaveLength(1);
+		expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('throwing'));
 	});
 
 	it('no error when registry is empty', () => {

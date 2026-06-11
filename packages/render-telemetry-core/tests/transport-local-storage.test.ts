@@ -49,6 +49,11 @@ afterEach(() => {
 });
 
 describe('createLocalStorageTransport', () => {
+	it('name includes the storage key', () => {
+		const transport = createLocalStorageTransport('test:render-telemetry');
+		expect(transport.name).toBe('local-storage:test:render-telemetry');
+	});
+
 	it('emit writes event as JSON array to storage key', () => {
 		const transport = createLocalStorageTransport(TEST_KEY);
 		const event = makeEvent();

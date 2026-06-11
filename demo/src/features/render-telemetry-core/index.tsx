@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import {
 	createTelemetryBuffer,
 	createTelemetrySession,
@@ -24,12 +24,6 @@ import type {
 	TelemetryMemoClassification,
 	TelemetryFrequencyClass,
 	TelemetryHealthGrade,
-	RenderEvent,
-	PropChangeEvent,
-	FrequencyEvent,
-	ScoreEvent,
-	RecommendationEvent,
-	SessionEndEvent,
 } from '@sapanmozammel/render-telemetry-core';
 import { SCENARIOS, type Scenario, type ScenarioId } from './scenarios';
 
@@ -356,20 +350,110 @@ const EVENT_TYPE_LABEL: Record<string, string> = {
 
 const eventBadgeClass = (event: TelemetryEvent): string => {
 	if (event.type === 'prop-change') {
-		const ev = event as PropChangeEvent;
-		return ev.unstable.length > 0 ? 'console-entry__badge--warn' : 'console-entry__badge--ok';
+		return event.unstable.length > 0 ? 'console-entry__badge--warn' : 'console-entry__badge--ok';
 	}
 	if (event.type === 'frequency') {
-		const ev = event as FrequencyEvent;
-		return ev.classification === 'HIGH' ? 'console-entry__badge--warn' : 'console-entry__badge--ok';
+		return event.classification === 'HIGH' ? 'console-entry__badge--warn' : 'console-entry__badge--ok';
 	}
 	if (event.type === 'score') {
-		const ev = event as ScoreEvent;
-		return ev.grade === 'EXCELLENT' || ev.grade === 'GOOD'
+		return event.grade === 'EXCELLENT' || event.grade === 'GOOD'
 			? 'console-entry__badge--ok'
 			: 'console-entry__badge--warn';
 	}
 	return EVENT_TYPE_BADGE[event.type] ?? 'console-entry__badge--ok';
+};
+
+const renderEventDetails = (event: TelemetryEvent): ReactNode => {
+	if (event.type === 'render') {
+		return (
+			<div className="console-section">
+				<div className="console-section__label">render #{event.renderNumber}</div>
+				<div className="console-section__line console-section__line--added">
+					<span className="console-line__key">triggeredBy</span>
+					<span className="console-line__added">{event.triggeredBy}</span>
+				</div>
+			</div>
+		);
+	}
+	if (event.type === 'prop-change') {
+		return (
+			<div className="console-section">
+				<div className="console-section__label">
+					render #{event.renderNumber} · {event.changed.length} changed
+					{event.unstable.length > 0 ? ` · ${event.unstable.length} unstable` : ''} ·{' '}
+					<span
+						className={event.signalKind === 'genuine' ? 'console-line__added' : 'console-line__ref'}
+					>
+						{event.signalKind}
+					</span>
+				</div>
+				{event.changed.slice(0, 5).map((e, i) => (
+					<div
+						key={i}
+						className={`console-section__line ${e.kind === 'reference-changed' ? 'console-section__line--reference' : 'console-section__line--added'}`}
+					>
+						<span className="console-line__key">{e.key}</span>
+						<span className={e.kind === 'reference-changed' ? 'console-line__ref' : 'console-line__added'}>
+							{e.kind === 'reference-changed'
+								? `new ${e.refType} reference`
+								: e.kind === 'value-changed'
+									? 'value changed'
+									: e.kind}
+						</span>
+					</div>
+				))}
+			</div>
+		);
+	}
+	if (event.type === 'frequency') {
+		return (
+			<div className="console-section">
+				<div className="console-section__label">
+					render #{event.renderNumber} · {event.classification}
+					{event.classification !== 'NOT_ENOUGH_DATA' ? ` · ${event.rate.toFixed(2)}/s` : ''}
+				</div>
+			</div>
+		);
+	}
+	if (event.type === 'score') {
+		return (
+			<div className="console-section">
+				<div className="console-section__label">
+					render #{event.renderNumber} · {event.score}/100 · {event.grade}
+				</div>
+				<div className="console-section__line console-section__line--added">
+					<span className="console-line__key">memo</span>
+					<span className="console-line__added">{event.memoClassification}</span>
+				</div>
+			</div>
+		);
+	}
+	if (event.type === 'recommendation') {
+		if (event.recommendations.length === 0) return null;
+		return (
+			<div className="console-section">
+				<div className="console-section__label">
+					render #{event.renderNumber} · {event.recommendations.length} recommendation
+					{event.recommendations.length !== 1 ? 's' : ''}
+				</div>
+				{event.recommendations.map((r, i) => (
+					<div key={i} className="console-section__line console-section__line--reference">
+						<span className="console-line__ref">{r}</span>
+					</div>
+				))}
+			</div>
+		);
+	}
+	if (event.type === 'session-end') {
+		return (
+			<div className="console-section">
+				<div className="console-section__label">
+					total renders: {event.totalRenders} · duration: {event.durationMs.toFixed(0)}ms
+				</div>
+			</div>
+		);
+	}
+	return null;
 };
 
 const EventRow = ({ event }: { event: TelemetryEvent }) => {
@@ -386,104 +470,7 @@ const EventRow = ({ event }: { event: TelemetryEvent }) => {
 					<span className="console-entry__time">{formatTime(event.wallTimestamp)}</span>
 				</span>
 			</div>
-
-			{event.type === 'render' && (
-				<div className="console-section">
-					<div className="console-section__label">render #{(event as RenderEvent).renderNumber}</div>
-					<div className="console-section__line console-section__line--added">
-						<span className="console-line__key">triggeredBy</span>
-						<span className="console-line__added">{(event as RenderEvent).triggeredBy}</span>
-					</div>
-				</div>
-			)}
-
-			{event.type === 'prop-change' && (() => {
-				const ev = event as PropChangeEvent;
-				return (
-					<div className="console-section">
-						<div className="console-section__label">
-							render #{ev.renderNumber} · {ev.changed.length} changed
-							{ev.unstable.length > 0 ? ` · ${ev.unstable.length} unstable` : ''} ·{' '}
-							<span
-								className={ev.signalKind === 'genuine' ? 'console-line__added' : 'console-line__ref'}
-							>
-								{ev.signalKind}
-							</span>
-						</div>
-						{ev.changed.slice(0, 5).map((e, i) => (
-							<div
-								key={i}
-								className={`console-section__line ${e.kind === 'reference-changed' ? 'console-section__line--reference' : 'console-section__line--added'}`}
-							>
-								<span className="console-line__key">{e.key}</span>
-								<span className={e.kind === 'reference-changed' ? 'console-line__ref' : 'console-line__added'}>
-									{e.kind === 'reference-changed'
-										? `new ${e.refType} reference`
-										: e.kind === 'value-changed'
-											? 'value changed'
-											: e.kind}
-								</span>
-							</div>
-						))}
-					</div>
-				);
-			})()}
-
-			{event.type === 'frequency' && (() => {
-				const ev = event as FrequencyEvent;
-				return (
-					<div className="console-section">
-						<div className="console-section__label">
-							render #{ev.renderNumber} · {ev.classification}
-							{ev.classification !== 'NOT_ENOUGH_DATA' ? ` · ${ev.rate.toFixed(2)}/s` : ''}
-						</div>
-					</div>
-				);
-			})()}
-
-			{event.type === 'score' && (() => {
-				const ev = event as ScoreEvent;
-				return (
-					<div className="console-section">
-						<div className="console-section__label">
-							render #{ev.renderNumber} · {ev.score}/100 · {ev.grade}
-						</div>
-						<div className="console-section__line console-section__line--added">
-							<span className="console-line__key">memo</span>
-							<span className="console-line__added">{ev.memoClassification}</span>
-						</div>
-					</div>
-				);
-			})()}
-
-			{event.type === 'recommendation' && (() => {
-				const ev = event as RecommendationEvent;
-				if (ev.recommendations.length === 0) return null;
-				return (
-					<div className="console-section">
-						<div className="console-section__label">
-							render #{ev.renderNumber} · {ev.recommendations.length} recommendation
-							{ev.recommendations.length !== 1 ? 's' : ''}
-						</div>
-						{ev.recommendations.map((r, i) => (
-							<div key={i} className="console-section__line console-section__line--reference">
-								<span className="console-line__ref">{r}</span>
-							</div>
-						))}
-					</div>
-				);
-			})()}
-
-			{event.type === 'session-end' && (() => {
-				const ev = event as SessionEndEvent;
-				return (
-					<div className="console-section">
-						<div className="console-section__label">
-							total renders: {ev.totalRenders} · duration: {ev.durationMs.toFixed(0)}ms
-						</div>
-					</div>
-				);
-			})()}
+			{renderEventDetails(event)}
 		</div>
 	);
 };
