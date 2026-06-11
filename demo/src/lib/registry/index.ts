@@ -121,6 +121,18 @@ export const TOOLS: readonly ToolMeta[] = [
 		demoImport: () =>
 			import('@/features/render-replay-engine').then((m) => ({ default: m.RenderReplayEngineDemo })),
 	},
+	{
+		name: 'render-core-schema',
+		slug: 'render-core-schema',
+		description:
+			'Canonical TypeScript schema and protocol definitions for the react-render-kit ecosystem — one shared vocabulary for all packages. Zero deps, zero runtime coupling. Includes type guards and version utilities for boundary validation.',
+		packageName: '@sapanmozammel/render-core-schema',
+		version: '1.0.0',
+		tags: ['types', 'schema', 'protocol', 'infrastructure'],
+		status: 'stable',
+		demoImport: () =>
+			import('@/features/render-core-schema').then((m) => ({ default: m.RenderCoreSchemaDemo })),
+	},
 ];
 
 export const getToolBySlug = (slug: string): ToolMeta | undefined =>
