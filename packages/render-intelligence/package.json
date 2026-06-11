@@ -1,0 +1,63 @@
+{
+	"name": "@sapanmozammel/render-intelligence",
+	"version": "1.0.0",
+	"description": "Framework-agnostic analysis engine for the react-render-kit ecosystem — root-cause analysis, bottleneck rankings, cross-component correlations, and application-level health scoring",
+	"license": "MIT",
+	"keywords": [
+		"react",
+		"performance",
+		"analysis",
+		"intelligence",
+		"bottleneck",
+		"root-cause",
+		"devtools",
+		"observability"
+	],
+	"homepage": "https://react-render-kit.vercel.app/render-intelligence",
+	"bugs": {
+		"url": "https://github.com/SapanMozammel/react-render-kit/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SapanMozammel/react-render-kit.git",
+		"directory": "packages/render-intelligence"
+	},
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"sideEffects": false,
+	"scripts": {
+		"prepublishOnly": "tsup",
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"type:check": "tsc --noEmit"
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"peerDependencies": {
+		"@sapanmozammel/render-core-schema": "^1.0.0"
+	},
+	"devDependencies": {
+		"@sapanmozammel/render-core-schema": "workspace:*",
+		"@vitest/coverage-v8": "^2.1.9",
+		"vitest": "^2.1.8"
+	}
+}

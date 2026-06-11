@@ -209,6 +209,29 @@ tests/
 dist/                          # build output (gitignored)
 ```
 
+### `packages/render-intelligence` (library)
+
+```
+src/
+  adapters/from-events.ts        # TelemetryEvent[] → ComponentSessionData[]
+  adapters/from-snapshot.ts      # TelemetrySnapshot → ComponentSessionData[]
+  adapters/from-replay.ts        # ReplaySession[] → ComponentSessionData[]
+  partitioner/session-partitioner.ts  # merges duplicate (sessionId, componentName) pairs
+  analyzer/component-analyzer.ts     # per-component signal aggregation
+  scorer/application-scorer.ts       # weighted average → ApplicationHealth
+  correlator/correlation-engine.ts   # O(N log M) binary search correlation detection
+  ranker/bottleneck-ranker.ts         # impact formula → ranked Bottleneck[]
+  root-cause/root-cause-analyzer.ts  # 4 detectors → highest-confidence RootCause per component
+  recommender/intelligence-recommender.ts  # 15 deterministic rules → IntelligenceRecommendation[]
+  plugins/plugin-registry.ts          # executePlugins + createPlugin factory
+  pipeline/pipeline.ts                # analyzeRenders 9-stage orchestration
+  errors/intelligence-error.ts        # IntelligenceError class + createIntelligenceError
+  types/index.ts                      # all public types (no logic)
+  index.ts                            # public re-export
+tests/
+dist/                                 # build output (gitignored)
+```
+
 ### `demo` (Next.js demo site — `src/` layout)
 
 ```
@@ -246,3 +269,4 @@ types/                # TS declarations
 | `/implement render-telemetry-core`   | Execute the PRD at `.claude/plans/render-telemetry-core/prd.md` step by step   |
 | `/implement render-replay-engine`    | Execute the PRD at `.claude/plans/render-replay-engine/prd.md` step by step    |
 | `/implement render-core-schema`      | Execute the PRD at `.claude/plans/render-core-schema/prd.md` step by step      |
+| `/implement render-intelligence`     | Execute the PRD at `.claude/plans/render-intelligence/prd.md` step by step     |
