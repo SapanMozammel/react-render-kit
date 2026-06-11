@@ -145,6 +145,18 @@ export const TOOLS: readonly ToolMeta[] = [
 		demoImport: () =>
 			import('@/features/render-intelligence').then((m) => ({ default: m.RenderIntelligenceDemo })),
 	},
+	{
+		name: 'render-kit',
+		slug: 'render-kit',
+		description:
+			'Unified orchestration SDK — one install for all react-render-kit packages with a single config, pre-wired telemetry, replay, and intelligence pipeline.',
+		packageName: '@sapanmozammel/render-kit',
+		version: '1.0.0',
+		tags: ['sdk', 'orchestration', 'infrastructure', 'unified'],
+		status: 'stable',
+		demoImport: () =>
+			import('@/features/render-kit').then((m) => ({ default: m.RenderKitDemo })),
+	},
 ];
 
 export const getToolBySlug = (slug: string): ToolMeta | undefined =>

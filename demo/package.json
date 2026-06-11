@@ -22,7 +22,8 @@
 		"@sapanmozammel/render-telemetry-core": "workspace:*",
 		"@sapanmozammel/render-replay-engine": "workspace:*",
 		"@sapanmozammel/render-core-schema": "workspace:*",
-		"@sapanmozammel/render-intelligence": "workspace:*"
+		"@sapanmozammel/render-intelligence": "workspace:*",
+		"@sapanmozammel/render-kit": "workspace:*"
 	},
 	"devDependencies": {
 		"@types/node": "^22.0.0",

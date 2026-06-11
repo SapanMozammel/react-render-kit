@@ -1,0 +1,62 @@
+{
+	"name": "@sapanmozammel/render-kit",
+	"version": "1.0.0",
+	"description": "Unified React render observability SDK — orchestrates all react-render-kit packages in a single install",
+	"license": "MIT",
+	"keywords": ["react", "performance", "devtools", "hooks", "render", "observability", "sdk"],
+	"homepage": "https://react-render-kit.vercel.app/render-kit",
+	"bugs": { "url": "https://github.com/SapanMozammel/react-render-kit/issues" },
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SapanMozammel/react-render-kit.git",
+		"directory": "packages/render-kit"
+	},
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"files": ["dist", "README.md"],
+	"publishConfig": { "access": "public" },
+	"sideEffects": false,
+	"scripts": {
+		"prepublishOnly": "tsup",
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"type:check": "tsc --noEmit"
+	},
+	"engines": { "node": ">=18" },
+	"peerDependencies": { "react": ">=18" },
+	"dependencies": {
+		"@sapanmozammel/why-render": "workspace:*",
+		"@sapanmozammel/why-render-frequency": "workspace:*",
+		"@sapanmozammel/render-trace": "workspace:*",
+		"@sapanmozammel/unstable-props-detector": "workspace:*",
+		"@sapanmozammel/memo-effect-analyzer": "workspace:*",
+		"@sapanmozammel/render-insights": "workspace:*",
+		"@sapanmozammel/render-playground": "workspace:*",
+		"@sapanmozammel/render-telemetry-core": "workspace:*",
+		"@sapanmozammel/render-replay-engine": "workspace:*",
+		"@sapanmozammel/render-core-schema": "workspace:*",
+		"@sapanmozammel/render-intelligence": "workspace:*"
+	},
+	"devDependencies": {
+		"@testing-library/react": "^16.1.0",
+		"@testing-library/user-event": "^14.6.1",
+		"@types/react": "^19.2.0",
+		"@types/react-dom": "^19.2.0",
+		"@vitest/coverage-v8": "^4.1.8",
+		"jsdom": "^25.0.1",
+		"react": "^19.2.0",
+		"react-dom": "^19.2.0",
+		"vitest": "^2.1.8"
+	}
+}
