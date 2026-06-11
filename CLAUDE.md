@@ -154,6 +154,37 @@ tests/
 dist/                                # build output (gitignored)
 ```
 
+### `packages/render-core-schema` (library — zero deps, types + guards only)
+
+```
+src/
+  version/schema-version.ts        # SchemaVersion type + CURRENT_SCHEMA_VERSION constant
+  identity/component-identity.ts   # ComponentId, SessionId, ComponentMeta
+  lifecycle/render-lifecycle.ts    # RenderPhase, RenderTrigger, InferredTrigger
+  props/prop-diff.ts               # PropRefType, PropChangeKind, PropChangeEntry, PropInstability, PropDiffSnapshot
+  analysis/frequency.ts            # FrequencyClass, FrequencyMeasurement
+  analysis/memo.ts                 # SignalKind, MemoClassification, RenderSignal, MemoSessionSummary
+  analysis/scoring.ts              # HealthGrade, ScoreBreakdown
+  events/event-types.ts            # EventType union
+  events/event-base.ts             # EventBase — shared fields for all events
+  events/event-variants.ts         # All event variants + TelemetryEvent union
+  session/session.ts               # SessionStatus, RenderSession, TelemetrySnapshot
+  transport/transport.ts           # TransportEmitFn, TelemetryTransport
+  replay/replay-ids.ts             # ReplaySessionId, ReplayFrameId, ReplayBookmarkId (string brands)
+  replay/replay-frame.ts           # ReplayFrame
+  replay/replay-session.ts         # ReplaySession, ReplaySessionStats, ReplayPruningInfo, ReplayTimeline
+  replay/replay-filter.ts          # ReplayFilter, ReplayFilterResult, ReplayFilterPreset, ReplaySource
+  replay/replay-cursor.ts          # ReplayCursor
+  replay/replay-bookmark.ts        # ReplayBookmark, ReplayBookmarkStore
+  replay/replay-navigator.ts       # ReplayNavigator
+  replay/replay-engine.ts          # ReplayEngine
+  utils/compare-versions.ts        # compareSchemaVersions, isSchemaVersionAtLeast
+  utils/type-guards.ts             # isSchemaVersion, isEventType, isHealthGrade, + 5 more guards
+  index.ts                         # public re-export
+tests/
+dist/                              # build output (gitignored)
+```
+
 ### `packages/render-replay-engine` (library)
 
 ```
@@ -214,3 +245,4 @@ types/                # TS declarations
 | `/implement render-playground`       | Execute the PRD at `.claude/plans/render-playground/prd.md` step by step       |
 | `/implement render-telemetry-core`   | Execute the PRD at `.claude/plans/render-telemetry-core/prd.md` step by step   |
 | `/implement render-replay-engine`    | Execute the PRD at `.claude/plans/render-replay-engine/prd.md` step by step    |
+| `/implement render-core-schema`      | Execute the PRD at `.claude/plans/render-core-schema/prd.md` step by step      |
