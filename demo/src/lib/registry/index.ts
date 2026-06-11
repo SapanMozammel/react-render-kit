@@ -109,6 +109,18 @@ export const TOOLS: readonly ToolMeta[] = [
 		demoImport: () =>
 			import('@/features/render-telemetry-core').then((m) => ({ default: m.RenderTelemetryCoreDemo })),
 	},
+	{
+		name: 'render-replay-engine',
+		slug: 'render-replay-engine',
+		description:
+			'Pure TypeScript replay engine for render telemetry — navigate recorded render sessions frame-by-frame with immutable cursors, filter by preset, bookmark frames, and inspect prop diffs without any React dependency.',
+		packageName: '@sapanmozammel/render-replay-engine',
+		version: '1.0.0',
+		tags: ['debugging', 'performance', 'infrastructure', 'replay'],
+		status: 'stable',
+		demoImport: () =>
+			import('@/features/render-replay-engine').then((m) => ({ default: m.RenderReplayEngineDemo })),
+	},
 ];
 
 export const getToolBySlug = (slug: string): ToolMeta | undefined =>
