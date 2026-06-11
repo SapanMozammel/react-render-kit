@@ -126,6 +126,34 @@ tests/
 dist/                               # build output (gitignored)
 ```
 
+### `packages/render-telemetry-core` (library)
+
+```
+src/
+  types/index.ts                     # all public types (no logic)
+  constants/schema-versions.ts       # CURRENT_SCHEMA_VERSION, EVENT_SCHEMA_VERSIONS
+  utils/generate-id.ts               # generateId() — crypto.randomUUID with fallback
+  session/session.ts                 # createTelemetrySession, endTelemetrySession
+  events/event-base.ts               # createEventBase (internal, not exported)
+  events/session-start-event.ts      # createSessionStartEvent
+  events/render-event.ts             # createRenderEvent
+  events/prop-change-event.ts        # createPropChangeEvent
+  events/frequency-event.ts          # createFrequencyEvent
+  events/score-event.ts              # createScoreEvent
+  events/recommendation-event.ts     # createRecommendationEvent
+  events/session-end-event.ts        # createSessionEndEvent
+  buffer/buffer.ts                   # createTelemetryBuffer (useSyncExternalStore-compatible)
+  transport/registry.ts              # registerTransport, unregisterAllTransports, emitEvents
+  transport/memory-transport.ts      # createMemoryTransport
+  transport/local-storage-transport.ts # createLocalStorageTransport
+  transport/custom-transport.ts      # createCustomTransport
+  serialization/serialize.ts         # serializeSession/Buffer, deserializeSession/Buffer
+  validation/validate-event.ts       # validateEvent, isKnownEventType
+  index.ts                           # public re-export
+tests/
+dist/                                # build output (gitignored)
+```
+
 ### `demo` (Next.js demo site — `src/` layout)
 
 ```
@@ -160,3 +188,4 @@ types/                # TS declarations
 | `/implement memo-effect-analyzer`    | Execute the PRD at `.claude/plans/memo-effect-analyzer/prd.md` step by step    |
 | `/implement render-insights`         | Execute the PRD at `.claude/plans/render-insights/prd.md` step by step         |
 | `/implement render-playground`       | Execute the PRD at `.claude/plans/render-playground/prd.md` step by step       |
+| `/implement render-telemetry-core`   | Execute the PRD at `.claude/plans/render-telemetry-core/prd.md` step by step   |

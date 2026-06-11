@@ -1,6 +1,7 @@
 # @sapanmozammel/render-playground
 
-Visual render observatory for React. Wrap any component with a real-time diagnostics panel showing health score, render timeline, prop changes, memo effectiveness, and actionable recommendations — dev-only, zero cost in production.
+Visual render observatory for React. Wrap any component with a real-time diagnostics panel showing health score, render timeline, prop changes, memo effectiveness, and actionable recommendations — dev-only, zero cost in
+production.
 
 **[Live demo →](https://react-render-kit.vercel.app/render-playground)**
 
@@ -19,16 +20,12 @@ Peer dependencies: `react >= 18`, `@sapanmozammel/render-insights >= 1.0.0`.
 Wrap your app (or a subtree) with `PlaygroundProvider`, call `useRenderPlayground` inside the component you want to observe, then drop `RenderPlaygroundPanel` anywhere in the tree.
 
 ```tsx
-import {
-  PlaygroundProvider,
-  RenderPlaygroundPanel,
-  useRenderPlayground,
-} from '@sapanmozammel/render-playground';
+import { PlaygroundProvider, RenderPlaygroundPanel, useRenderPlayground } from '@sapanmozammel/render-playground';
 
 // 1. Add the provider once near the top of your tree
 const App = () => (
   <PlaygroundProvider>
-    <UserCard id={1} name="Alice" />
+    <UserCard id={1} name='Alice' />
     <RenderPlaygroundPanel />
   </PlaygroundProvider>
 );
@@ -50,8 +47,8 @@ Provides the shared store to all descendants. Mount once near the root of the su
 
 ```tsx
 <PlaygroundProvider
-  maxEntries={50}   // max reports kept in memory (default: 50)
-  store={myStore}   // inject a custom store — useful for testing
+  maxEntries={50} // max reports kept in memory (default: 50)
+  store={myStore} // inject a custom store — useful for testing
 >
   {children}
 </PlaygroundProvider>
@@ -77,9 +74,9 @@ Renders the diagnostics panel. Place it anywhere inside `<PlaygroundProvider>`.
 
 ```tsx
 <RenderPlaygroundPanel
-  maxVisible={50}       // max timeline pills shown (default: 50)
-  onClear={() => {}}    // called after the user clears history
-  className="my-panel"  // forwarded to the outer div
+  maxVisible={50} // max timeline pills shown (default: 50)
+  onClear={() => {}} // called after the user clears history
+  className='my-panel' // forwarded to the outer div
 />
 ```
 
@@ -162,8 +159,8 @@ score = 100
       − mixed_signal_penalty(0–10)
 ```
 
-| Grade | Range |
-|-------|-------|
+| Grade | Range  |
+| ----- | ------ |
 | A     | 90–100 |
 | B     | 75–89  |
 | C     | 55–74  |
@@ -175,11 +172,7 @@ score = 100
 The scoring, breakdown, and session-analysis engines are exported for external tooling:
 
 ```ts
-import {
-  computeRecommendations,
-  computeScoreBreakdown,
-  computeSessionStats,
-} from '@sapanmozammel/render-playground';
+import { computeRecommendations, computeScoreBreakdown, computeSessionStats } from '@sapanmozammel/render-playground';
 ```
 
 These are pure functions — no React dependency — making them safe to call in non-component contexts (Node.js scripts, test assertions, Storybook decorators).
@@ -200,15 +193,7 @@ Bundlers (Vite, webpack, Rollup, Next.js) statically evaluate the `NODE_ENV` gua
 All types are exported:
 
 ```ts
-import type {
-  InsightReport,
-  PlaygroundStore,
-  RenderPlaygroundOptions,
-  CaptureOptions,
-  Recommendation,
-  ScoreBreakdown,
-  SessionStats,
-} from '@sapanmozammel/render-playground';
+import type { InsightReport, PlaygroundStore, RenderPlaygroundOptions, CaptureOptions, Recommendation, ScoreBreakdown, SessionStats } from '@sapanmozammel/render-playground';
 ```
 
 ## License
