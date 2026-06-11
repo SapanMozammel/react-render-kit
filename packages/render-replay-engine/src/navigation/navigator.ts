@@ -1,4 +1,4 @@
-import type { ReplaySession, ReplayCursor, ReplayFilter, ReplayBookmarkStore, ReplayNavigator, ReplayBookmarkId } from '../types/index.js';
+import type { ReplaySession, ReplayCursor, ReplayBookmarkStore, ReplayNavigator, ReplayBookmarkId } from '../types/index.js';
 import { createCursor } from './cursor.js';
 import { frameMatchesFilter } from '../filter/filter.js';
 
@@ -13,11 +13,7 @@ const buildRenderNumberIndex = (session: ReplaySession): ReadonlyMap<number, num
 };
 
 const buildTimestampIndex = (session: ReplaySession): readonly TimestampEntry[] => {
-	return Object.freeze(
-		[...session.frames]
-			.sort((a, b) => a.relativeMs - b.relativeMs)
-			.map((f) => ({ relativeMs: f.relativeMs, frameIndex: f.frameIndex }))
-	);
+	return Object.freeze([...session.frames].sort((a, b) => a.relativeMs - b.relativeMs).map((f) => ({ relativeMs: f.relativeMs, frameIndex: f.frameIndex })));
 };
 
 // binary search: find frame index whose relativeMs is closest to target

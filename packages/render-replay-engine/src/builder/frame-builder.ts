@@ -1,12 +1,4 @@
-import type {
-	TelemetryEvent,
-	RenderEvent,
-	PropChangeEvent,
-	FrequencyEvent,
-	ScoreEvent,
-	RecommendationEvent,
-	TelemetryRenderTrigger,
-} from '@sapanmozammel/render-telemetry-core';
+import type { TelemetryEvent, RenderEvent, PropChangeEvent, FrequencyEvent, ScoreEvent, RecommendationEvent, TelemetryRenderTrigger } from '@sapanmozammel/render-telemetry-core';
 import type { ReplayFrame, ReplaySessionId } from '../types/index.js';
 
 const mapTriggeredBy = (trigger: TelemetryRenderTrigger): 'parent' | 'props' => {
@@ -26,11 +18,7 @@ type PartialFrame = {
 };
 
 // events must be pre-sorted by sequenceNumber; all same sessionId
-export const buildFrames = (
-	events: readonly TelemetryEvent[],
-	startedAt: number,
-	sessionId: ReplaySessionId
-): readonly ReplayFrame[] => {
+export const buildFrames = (events: readonly TelemetryEvent[], startedAt: number, sessionId: ReplaySessionId): readonly ReplayFrame[] => {
 	const frameMap = new Map<number, PartialFrame>();
 	let nextFrameIndex = 0;
 

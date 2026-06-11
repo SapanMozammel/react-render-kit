@@ -17,39 +17,23 @@ import {
 	type SessionStartEvent,
 	type SessionEndEvent,
 } from '@sapanmozammel/render-telemetry-core';
-import {
-	createReplayEngine,
-	fromEvents,
-	type ReplayEngine,
-	type ReplayEngineOptions,
-} from '../src/index.js';
+import { createReplayEngine, fromEvents, type ReplayEngine, type ReplayEngineOptions } from '../src/index.js';
 
 // ── Individual event factories ────────────────────────────────────────────────
 
-export const makeSessionStartEvent = (
-	session: TelemetrySession,
-	overrides?: Partial<SessionStartEvent>
-): { event: SessionStartEvent; session: TelemetrySession } => {
+export const makeSessionStartEvent = (session: TelemetrySession, overrides?: Partial<SessionStartEvent>): { event: SessionStartEvent; session: TelemetrySession } => {
 	const result = createSessionStartEvent(session);
 	if (overrides) return { event: { ...result.event, ...overrides }, session: result.session };
 	return result;
 };
 
-export const makeRenderEvent = (
-	session: TelemetrySession,
-	renderNumber: number,
-	overrides?: Partial<RenderEvent>
-): { event: RenderEvent; session: TelemetrySession } => {
+export const makeRenderEvent = (session: TelemetrySession, renderNumber: number, overrides?: Partial<RenderEvent>): { event: RenderEvent; session: TelemetrySession } => {
 	const result = createRenderEvent(session, { renderNumber, triggeredBy: 'props' });
 	if (overrides) return { event: { ...result.event, ...overrides }, session: result.session };
 	return result;
 };
 
-export const makePropChangeEvent = (
-	session: TelemetrySession,
-	renderNumber: number,
-	overrides?: Partial<PropChangeEvent>
-): { event: PropChangeEvent; session: TelemetrySession } => {
+export const makePropChangeEvent = (session: TelemetrySession, renderNumber: number, overrides?: Partial<PropChangeEvent>): { event: PropChangeEvent; session: TelemetrySession } => {
 	const result = createPropChangeEvent(session, {
 		renderNumber,
 		changed: [],
@@ -61,11 +45,7 @@ export const makePropChangeEvent = (
 	return result;
 };
 
-export const makeFrequencyEvent = (
-	session: TelemetrySession,
-	renderNumber: number,
-	overrides?: Partial<FrequencyEvent>
-): { event: FrequencyEvent; session: TelemetrySession } => {
+export const makeFrequencyEvent = (session: TelemetrySession, renderNumber: number, overrides?: Partial<FrequencyEvent>): { event: FrequencyEvent; session: TelemetrySession } => {
 	const result = createFrequencyEvent(session, {
 		renderNumber,
 		windowMs: 10000,
@@ -78,12 +58,7 @@ export const makeFrequencyEvent = (
 	return result;
 };
 
-export const makeScoreEvent = (
-	session: TelemetrySession,
-	renderNumber: number,
-	score = 80,
-	overrides?: Partial<ScoreEvent>
-): { event: ScoreEvent; session: TelemetrySession } => {
+export const makeScoreEvent = (session: TelemetrySession, renderNumber: number, score = 80, overrides?: Partial<ScoreEvent>): { event: ScoreEvent; session: TelemetrySession } => {
 	const result = createScoreEvent(session, {
 		renderNumber,
 		score,
@@ -99,11 +74,7 @@ export const makeScoreEvent = (
 	return result;
 };
 
-export const makeRecommendationEvent = (
-	session: TelemetrySession,
-	renderNumber: number,
-	overrides?: Partial<RecommendationEvent>
-): { event: RecommendationEvent; session: TelemetrySession } => {
+export const makeRecommendationEvent = (session: TelemetrySession, renderNumber: number, overrides?: Partial<RecommendationEvent>): { event: RecommendationEvent; session: TelemetrySession } => {
 	const result = createRecommendationEvent(session, {
 		renderNumber,
 		recommendations: ['Use React.memo'],
@@ -112,11 +83,7 @@ export const makeRecommendationEvent = (
 	return result;
 };
 
-export const makeSessionEndEvent = (
-	session: TelemetrySession,
-	totalRenders: number,
-	overrides?: Partial<SessionEndEvent>
-): { event: SessionEndEvent; session: TelemetrySession } => {
+export const makeSessionEndEvent = (session: TelemetrySession, totalRenders: number, overrides?: Partial<SessionEndEvent>): { event: SessionEndEvent; session: TelemetrySession } => {
 	const result = createSessionEndEvent(session, { totalRenders, finalScore: null });
 	if (overrides) return { event: { ...result.event, ...overrides }, session: result.session };
 	return result;
@@ -137,10 +104,7 @@ type SessionEventsOptions = {
 	scoreOverrides?: Record<number, number>;
 };
 
-export const makeSessionEvents = (
-	renderCount: number,
-	opts: SessionEventsOptions = {}
-): readonly TelemetryEvent[] => {
+export const makeSessionEvents = (renderCount: number, opts: SessionEventsOptions = {}): readonly TelemetryEvent[] => {
 	const {
 		componentName = 'TestComponent',
 		includeProps = true,

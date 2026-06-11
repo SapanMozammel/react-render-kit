@@ -1,12 +1,5 @@
-import { deserializeBuffer } from '@sapanmozammel/render-telemetry-core';
-import type { TelemetryEvent } from '@sapanmozammel/render-telemetry-core';
-import type {
-	ReplaySource,
-	ReplayEngine,
-	ReplaySession,
-	ReplayEngineOptions,
-	ReplaySessionId,
-} from '../types/index.js';
+import { deserializeBuffer, type TelemetryEvent } from '@sapanmozammel/render-telemetry-core';
+import type { ReplaySource, ReplayEngine, ReplaySession, ReplayEngineOptions, ReplaySessionId } from '../types/index.js';
 import { buildSessions } from '../builder/session-builder.js';
 import { createNavigator } from '../navigation/navigator.js';
 import { createBookmarkStore } from '../bookmarks/bookmark-store.js';
@@ -39,25 +32,17 @@ const makeEngine = (session: ReplaySession): ReplayEngine => {
 		applyPreset: (preset) => applyPreset(session, preset),
 		getFrame: (frameIndex) => session.frames[frameIndex] ?? null,
 		getFrameByRenderNumber: (renderNumber) => session.frames.find((f) => f.renderNumber === renderNumber) ?? null,
-		getFrameRange: (startIndex, endIndex) =>
-			Object.freeze(session.frames.filter((f) => f.frameIndex >= startIndex && f.frameIndex <= endIndex)),
+		getFrameRange: (startIndex, endIndex) => Object.freeze(session.frames.filter((f) => f.frameIndex >= startIndex && f.frameIndex <= endIndex)),
 	};
 };
 
-export const buildReplaySessions = (
-	source: ReplaySource,
-	options: ReplayEngineOptions = {}
-): readonly ReplaySession[] => {
+export const buildReplaySessions = (source: ReplaySource, options: ReplayEngineOptions = {}): readonly ReplaySession[] => {
 	const events = extractEvents(source);
 	if (events.length === 0) throw new ReplayError('EMPTY_SOURCE', 'Source contains no events');
 	return buildSessions(events, options);
 };
 
-export const createReplayEngine = (
-	source: ReplaySource,
-	sessionId?: ReplaySessionId,
-	options: ReplayEngineOptions = {}
-): ReplayEngine => {
+export const createReplayEngine = (source: ReplaySource, sessionId?: ReplaySessionId, options: ReplayEngineOptions = {}): ReplayEngine => {
 	const events = extractEvents(source);
 	if (events.length === 0) throw new ReplayError('EMPTY_SOURCE', 'Source contains no events');
 

@@ -117,7 +117,6 @@ describe('buildFrames', () => {
 	});
 
 	it('ignores duplicate propChange events for same renderNumber (first wins)', () => {
-		const events = makeSessionEvents(1, { includeProps: false });
 		const s0 = createTelemetrySession('Test');
 		const r1 = makeRenderEvent(s0, 1);
 		const p1 = makePropChangeEvent(r1.session, 1);

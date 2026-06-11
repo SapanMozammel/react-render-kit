@@ -177,14 +177,7 @@ export type ReplayFilterResult = {
 	readonly totalFrameCount: number;
 };
 
-export type ReplayFilterPreset =
-	| 'issues-only'
-	| 'score-degradation'
-	| 'reference-instability'
-	| 'high-frequency'
-	| 'ineffective-memo'
-	| 'prop-changes-only'
-	| 'parent-triggered-only';
+export type ReplayFilterPreset = 'issues-only' | 'score-degradation' | 'reference-instability' | 'high-frequency' | 'ineffective-memo' | 'prop-changes-only' | 'parent-triggered-only';
 
 // ── Bookmarks ─────────────────────────────────────────────────────────────────
 
@@ -286,10 +279,4 @@ export type ReplayEngineOptions = {
 
 // ── Error ─────────────────────────────────────────────────────────────────────
 
-export type ReplayErrorCode =
-	| 'EMPTY_SOURCE'
-	| 'MULTIPLE_SESSIONS'
-	| 'SESSION_NOT_FOUND'
-	| 'INVALID_SERIALIZED_JSON'
-	| 'SCHEMA_VERSION_MISMATCH'
-	| 'NO_RENDER_EVENTS';
+export type ReplayErrorCode = 'EMPTY_SOURCE' | 'MULTIPLE_SESSIONS' | 'SESSION_NOT_FOUND' | 'INVALID_SERIALIZED_JSON' | 'SCHEMA_VERSION_MISMATCH' | 'NO_RENDER_EVENTS';

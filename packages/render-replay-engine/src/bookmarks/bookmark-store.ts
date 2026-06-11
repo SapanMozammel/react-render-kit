@@ -1,11 +1,4 @@
-import type {
-	ReplayBookmark,
-	ReplayBookmarkId,
-	ReplayBookmarkCreateParams,
-	ReplayBookmarkUpdate,
-	ReplayBookmarkStore,
-	ReplaySessionId,
-} from '../types/index.js';
+import type { ReplayBookmark, ReplayBookmarkId, ReplayBookmarkCreateParams, ReplayBookmarkUpdate, ReplayBookmarkStore, ReplaySessionId } from '../types/index.js';
 
 const generateId = (): string => {
 	if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -19,11 +12,9 @@ export const createBookmarkStore = (): ReplayBookmarkStore => {
 
 	const getAll = (): readonly ReplayBookmark[] => bookmarks;
 
-	const getForSession = (sessionId: ReplaySessionId): readonly ReplayBookmark[] =>
-		bookmarks.filter((b) => b.sessionId === sessionId);
+	const getForSession = (sessionId: ReplaySessionId): readonly ReplayBookmark[] => bookmarks.filter((b) => b.sessionId === sessionId);
 
-	const getForFrame = (sessionId: ReplaySessionId, frameIndex: number): readonly ReplayBookmark[] =>
-		bookmarks.filter((b) => b.sessionId === sessionId && b.frameIndex === frameIndex);
+	const getForFrame = (sessionId: ReplaySessionId, frameIndex: number): readonly ReplayBookmark[] => bookmarks.filter((b) => b.sessionId === sessionId && b.frameIndex === frameIndex);
 
 	const create = (params: ReplayBookmarkCreateParams): ReplayBookmark => {
 		const bookmark: ReplayBookmark = Object.freeze({

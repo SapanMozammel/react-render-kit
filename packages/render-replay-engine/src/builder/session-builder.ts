@@ -19,11 +19,7 @@ const partitionBySession = (events: readonly TelemetryEvent[]): Map<string, Tele
 	return map;
 };
 
-const buildOneSession = (
-	sessionId: string,
-	rawEvents: readonly TelemetryEvent[],
-	options: ReplayEngineOptions
-): ReplaySession => {
+const buildOneSession = (sessionId: string, rawEvents: readonly TelemetryEvent[], options: ReplayEngineOptions): ReplaySession => {
 	// sort by sequenceNumber (ascending)
 	const events = [...rawEvents].sort((a, b) => a.sequenceNumber - b.sequenceNumber);
 
@@ -41,9 +37,7 @@ const buildOneSession = (
 
 	// stats and timeline reflect the full (unpruned) session
 	const enableStats = options.enableStats !== false;
-	const stats = enableStats
-		? buildSessionStats(allFrames)
-		: buildSessionStats(Object.freeze([]));
+	const stats = enableStats ? buildSessionStats(allFrames) : buildSessionStats(Object.freeze([]));
 
 	const timeline = buildTimeline(sessionId, allFrames, durationMs, options);
 
@@ -64,9 +58,7 @@ const buildOneSession = (
 				return sb - sa; // highest score first
 			});
 			const kept = new Set(sorted.slice(maxFrames).map((f) => f.frameIndex));
-			finalFrames = Object.freeze(
-				[...allFrames].filter((f) => kept.has(f.frameIndex)).sort((a, b) => a.frameIndex - b.frameIndex)
-			);
+			finalFrames = Object.freeze([...allFrames].filter((f) => kept.has(f.frameIndex)).sort((a, b) => a.frameIndex - b.frameIndex));
 		} else {
 			// fifo: drop oldest (lowest frameIndex), keep the last maxFrames
 			finalFrames = Object.freeze([...allFrames].slice(allFrames.length - maxFrames));
@@ -97,14 +89,9 @@ const buildOneSession = (
 	});
 };
 
-export const buildSessions = (
-	events: readonly TelemetryEvent[],
-	options: ReplayEngineOptions
-): readonly ReplaySession[] => {
+export const buildSessions = (events: readonly TelemetryEvent[], options: ReplayEngineOptions): readonly ReplaySession[] => {
 	const partitioned = partitionBySession(events);
-	const sessions = Array.from(partitioned.entries()).map(([sessionId, sessionEvents]) =>
-		buildOneSession(sessionId, sessionEvents, options)
-	);
+	const sessions = Array.from(partitioned.entries()).map(([sessionId, sessionEvents]) => buildOneSession(sessionId, sessionEvents, options));
 	// sort by startedAt ascending
 	sessions.sort((a, b) => a.startedAt - b.startedAt);
 	return Object.freeze(sessions);

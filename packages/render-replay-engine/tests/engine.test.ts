@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { makeEngine, makeSessionEvents } from './helpers.js';
-import { createReplayEngine, fromEvents, buildReplaySessions } from '../src/index.js';
+import { fromEvents, buildReplaySessions } from '../src/index.js';
 
 describe('createReplayEngine — basic', () => {
 	it('returns engine with session', () => {

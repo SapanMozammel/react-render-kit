@@ -12,5 +12,4 @@ export class ReplayError extends Error {
 	}
 }
 
-export const createReplayError = (code: ReplayErrorCode, detail?: string): ReplayError =>
-	new ReplayError(code, detail);
+export const createReplayError = (code: ReplayErrorCode, detail?: string): ReplayError => new ReplayError(code, detail);

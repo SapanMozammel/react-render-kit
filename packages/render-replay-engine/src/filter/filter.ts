@@ -43,9 +43,7 @@ export const frameMatchesFilter = (frame: ReplayFrame, filter: ReplayFilter): bo
 };
 
 export const applyFilter = (session: ReplaySession, filter: ReplayFilter): ReplayFilterResult => {
-	const matchingFrameIndices = session.frames
-		.filter((frame) => frameMatchesFilter(frame, filter))
-		.map((frame) => frame.frameIndex);
+	const matchingFrameIndices = session.frames.filter((frame) => frameMatchesFilter(frame, filter)).map((frame) => frame.frameIndex);
 
 	return Object.freeze<ReplayFilterResult>({
 		filter,
@@ -61,38 +59,22 @@ export const mergeFilters = (a: ReplayFilter, b: ReplayFilter): ReplayFilter => 
 	const names = b.componentNames ?? a.componentNames;
 	if (names !== undefined) Object.assign(result, { componentNames: names });
 
-	const minScore =
-		b.minScore !== undefined && a.minScore !== undefined
-			? Math.max(a.minScore, b.minScore)
-			: b.minScore ?? a.minScore;
+	const minScore = b.minScore !== undefined && a.minScore !== undefined ? Math.max(a.minScore, b.minScore) : (b.minScore ?? a.minScore);
 	if (minScore !== undefined) Object.assign(result, { minScore });
 
-	const maxScore =
-		b.maxScore !== undefined && a.maxScore !== undefined
-			? Math.min(a.maxScore, b.maxScore)
-			: b.maxScore ?? a.maxScore;
+	const maxScore = b.maxScore !== undefined && a.maxScore !== undefined ? Math.min(a.maxScore, b.maxScore) : (b.maxScore ?? a.maxScore);
 	if (maxScore !== undefined) Object.assign(result, { maxScore });
 
-	const grades =
-		b.grades && a.grades ? Object.freeze([...new Set([...a.grades, ...b.grades])]) : b.grades ?? a.grades;
+	const grades = b.grades && a.grades ? Object.freeze([...new Set([...a.grades, ...b.grades])]) : (b.grades ?? a.grades);
 	if (grades !== undefined) Object.assign(result, { grades });
 
-	const memos =
-		b.memoClassifications && a.memoClassifications
-			? Object.freeze([...new Set([...a.memoClassifications, ...b.memoClassifications])])
-			: b.memoClassifications ?? a.memoClassifications;
+	const memos = b.memoClassifications && a.memoClassifications ? Object.freeze([...new Set([...a.memoClassifications, ...b.memoClassifications])]) : (b.memoClassifications ?? a.memoClassifications);
 	if (memos !== undefined) Object.assign(result, { memoClassifications: memos });
 
-	const freqs =
-		b.frequencyClasses && a.frequencyClasses
-			? Object.freeze([...new Set([...a.frequencyClasses, ...b.frequencyClasses])])
-			: b.frequencyClasses ?? a.frequencyClasses;
+	const freqs = b.frequencyClasses && a.frequencyClasses ? Object.freeze([...new Set([...a.frequencyClasses, ...b.frequencyClasses])]) : (b.frequencyClasses ?? a.frequencyClasses);
 	if (freqs !== undefined) Object.assign(result, { frequencyClasses: freqs });
 
-	const signals =
-		b.signalKinds && a.signalKinds
-			? Object.freeze([...new Set([...a.signalKinds, ...b.signalKinds])])
-			: b.signalKinds ?? a.signalKinds;
+	const signals = b.signalKinds && a.signalKinds ? Object.freeze([...new Set([...a.signalKinds, ...b.signalKinds])]) : (b.signalKinds ?? a.signalKinds);
 	if (signals !== undefined) Object.assign(result, { signalKinds: signals });
 
 	const unstable = b.hasUnstablePropsOnly ?? a.hasUnstablePropsOnly;
@@ -101,10 +83,7 @@ export const mergeFilters = (a: ReplayFilter, b: ReplayFilter): ReplayFilter => 
 	const recs = b.hasRecommendationsOnly ?? a.hasRecommendationsOnly;
 	if (recs !== undefined) Object.assign(result, { hasRecommendationsOnly: recs });
 
-	const triggered =
-		b.triggeredBy && a.triggeredBy
-			? Object.freeze([...new Set([...a.triggeredBy, ...b.triggeredBy])])
-			: b.triggeredBy ?? a.triggeredBy;
+	const triggered = b.triggeredBy && a.triggeredBy ? Object.freeze([...new Set([...a.triggeredBy, ...b.triggeredBy])]) : (b.triggeredBy ?? a.triggeredBy);
 	if (triggered !== undefined) Object.assign(result, { triggeredBy: triggered });
 
 	const fi = b.frameIndexRange ?? a.frameIndexRange;
@@ -119,5 +98,4 @@ export const mergeFilters = (a: ReplayFilter, b: ReplayFilter): ReplayFilter => 
 	return result;
 };
 
-export const withFilter = (base: ReplayFilter, addition: Partial<ReplayFilter>): ReplayFilter =>
-	mergeFilters(base, addition as ReplayFilter);
+export const withFilter = (base: ReplayFilter, addition: Partial<ReplayFilter>): ReplayFilter => mergeFilters(base, addition as ReplayFilter);

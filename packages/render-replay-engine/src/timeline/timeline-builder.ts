@@ -9,11 +9,7 @@ const toSeverity = (score: number | null): 'ok' | 'warn' | 'critical' => {
 	return 'ok';
 };
 
-const classifyTrend = (
-	firstScore: number | null,
-	lastScore: number | null,
-	scoreRange: number
-): { trend: ReplaySegment['trend']; label: string } => {
+const classifyTrend = (firstScore: number | null, lastScore: number | null, scoreRange: number): { trend: ReplaySegment['trend']; label: string } => {
 	if (firstScore === null || lastScore === null) return { trend: 'stable', label: 'Unknown' };
 	if (scoreRange > 30) return { trend: 'volatile', label: 'Volatility' };
 	const delta = lastScore - firstScore;
@@ -69,12 +65,7 @@ const buildSegments = (frames: readonly ReplayFrame[], windowSize: number): read
 	return Object.freeze(segments);
 };
 
-export const buildTimeline = (
-	sessionId: ReplaySessionId,
-	frames: readonly ReplayFrame[],
-	duration: number | null,
-	options: ReplayEngineOptions
-): ReplayTimeline => {
+export const buildTimeline = (sessionId: ReplaySessionId, frames: readonly ReplayFrame[], duration: number | null, options: ReplayEngineOptions): ReplayTimeline => {
 	const enableTimeline = options.enableTimeline !== false;
 	const enableSegments = options.enableSegments !== false;
 	const windowSize = options.segmentWindowSize ?? DEFAULT_SEGMENT_WINDOW;

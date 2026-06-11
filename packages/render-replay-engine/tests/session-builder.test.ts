@@ -91,7 +91,7 @@ describe('buildSessions — basic', () => {
 		expect(session!.frameCount).toBe(3);
 		// keeps worst (scores 40, 30, 20 = renders 4, 5, 6)
 		const scores = session!.frames.map((f) => f.score);
-		expect(Math.max(...(scores.filter((s): s is number => s !== null)))).toBeLessThanOrEqual(40);
+		expect(Math.max(...scores.filter((s): s is number => s !== null))).toBeLessThanOrEqual(40);
 	});
 
 	it('stats.totalRenders reflects original pre-prune count', () => {
