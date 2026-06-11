@@ -1,0 +1,62 @@
+{
+	"name": "@sapanmozammel/render-replay-engine",
+	"version": "1.0.0",
+	"description": "Time-travel debugging engine for React Render Kit — navigable, queryable render history from telemetry events",
+	"license": "MIT",
+	"keywords": [
+		"react",
+		"replay",
+		"devtools",
+		"time-travel",
+		"debugging",
+		"performance",
+		"telemetry"
+	],
+	"homepage": "https://react-render-kit.vercel.app/render-replay-engine",
+	"bugs": {
+		"url": "https://github.com/SapanMozammel/react-render-kit/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SapanMozammel/react-render-kit.git",
+		"directory": "packages/render-replay-engine"
+	},
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"sideEffects": false,
+	"scripts": {
+		"prepublishOnly": "tsup",
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"type:check": "tsc --noEmit"
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"peerDependencies": {
+		"@sapanmozammel/render-telemetry-core": "^1.0.0"
+	},
+	"devDependencies": {
+		"@sapanmozammel/render-telemetry-core": "workspace:*",
+		"@vitest/coverage-v8": "^2.1.9",
+		"vitest": "^2.1.8"
+	}
+}

@@ -154,6 +154,30 @@ tests/
 dist/                                # build output (gitignored)
 ```
 
+### `packages/render-replay-engine` (library)
+
+```
+src/
+  builder/frame-builder.ts     # buildFrames — groups events by renderNumber into frozen ReplayFrames
+  builder/session-builder.ts   # buildSessions — partitions by sessionId, pruning, stats, timeline
+  stats/session-stats.ts       # buildSessionStats — pure stats over frames
+  timeline/timeline-builder.ts # buildTimeline — entries + trend segments
+  sources/from-events.ts       # fromEvents source adapter
+  sources/from-buffer.ts       # fromBuffer source adapter (lazy snapshot)
+  sources/from-serialized.ts   # fromSerialized source adapter
+  navigation/cursor.ts         # createCursor — immutable ReplayCursor
+  navigation/navigator.ts      # createNavigator — O(1) navigation + binary search jumpToTimestamp
+  filter/filter.ts             # applyFilter, mergeFilters, withFilter, frameMatchesFilter
+  filter/filter-presets.ts     # applyPreset — 7 deterministic presets (issues-only uses OR semantics)
+  bookmarks/bookmark-store.ts  # createBookmarkStore — in-memory with exportBookmarks/importBookmarks
+  engine/replay-engine.ts      # createReplayEngine + buildReplaySessions factories
+  errors/replay-error.ts       # ReplayError class + createReplayError
+  types/index.ts               # all public types
+  index.ts                     # public re-export
+tests/
+dist/                          # build output (gitignored)
+```
+
 ### `demo` (Next.js demo site — `src/` layout)
 
 ```
@@ -189,3 +213,4 @@ types/                # TS declarations
 | `/implement render-insights`         | Execute the PRD at `.claude/plans/render-insights/prd.md` step by step         |
 | `/implement render-playground`       | Execute the PRD at `.claude/plans/render-playground/prd.md` step by step       |
 | `/implement render-telemetry-core`   | Execute the PRD at `.claude/plans/render-telemetry-core/prd.md` step by step   |
+| `/implement render-replay-engine`    | Execute the PRD at `.claude/plans/render-replay-engine/prd.md` step by step    |
