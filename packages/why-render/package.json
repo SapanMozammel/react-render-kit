@@ -1,6 +1,6 @@
 {
 	"name": "@sapanmozammel/why-render",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Debug why your React component re-renders",
 	"license": "MIT",
 	"keywords": [
@@ -25,9 +25,14 @@
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.cjs"
+			"import": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/index.mjs"
+			},
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.cjs"
+			}
 		}
 	},
 	"files": [
@@ -44,7 +49,11 @@
 		"dev": "tsup --watch",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"test:coverage": "vitest run --coverage"
+		"test:coverage": "vitest run --coverage",
+		"type:check": "tsc --noEmit"
+	},
+	"engines": {
+		"node": ">=18"
 	},
 	"peerDependencies": {
 		"react": ">=18"

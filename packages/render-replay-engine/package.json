@@ -1,6 +1,6 @@
 {
 	"name": "@sapanmozammel/render-replay-engine",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Time-travel debugging engine for React Render Kit — navigable, queryable render history from telemetry events",
 	"license": "MIT",
 	"keywords": [
@@ -26,9 +26,14 @@
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.cjs"
+			"import": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/index.mjs"
+			},
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.cjs"
+			}
 		}
 	},
 	"files": [
@@ -51,8 +56,8 @@
 	"engines": {
 		"node": ">=18"
 	},
-	"peerDependencies": {
-		"@sapanmozammel/render-telemetry-core": "^1.0.0"
+	"dependencies": {
+		"@sapanmozammel/render-telemetry-core": "workspace:*"
 	},
 	"devDependencies": {
 		"@sapanmozammel/render-telemetry-core": "workspace:*",

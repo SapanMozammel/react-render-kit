@@ -17,8 +17,6 @@ import {
 import type { TelemetryEvent } from '@sapanmozammel/render-telemetry-core';
 import { SCENARIOS, type Scenario, type ScenarioId } from './scenarios';
 
-// ── Synthetic event builder ────────────────────────────────────────────────────
-
 type RenderSpec = {
 	score: number;
 	triggeredBy: 'props' | 'parent' | 'state';
@@ -133,50 +131,50 @@ const buildDemoEvents = (): TelemetryEvent[] => [
 	...buildComponentEvents('Header', GOOD_COMPONENT_SPECS),
 ];
 
-// ── Severity badge ─────────────────────────────────────────────────────────────
+const BADGE_OK = 'text-[10px] font-semibold px-1.5 py-px rounded-full text-ok bg-ok-dim';
+const BADGE_WARN = 'text-[10px] font-semibold px-1.5 py-px rounded-full text-warn bg-warn-dim';
+const BADGE_NEUTRAL = 'text-[10px] font-semibold px-1.5 py-px rounded-full text-muted bg-elevated';
 
 const SEVERITY_COLORS: Record<string, string> = {
-	CRITICAL: 'console-entry__badge--warn',
-	HIGH: 'console-entry__badge--neutral',
-	MEDIUM: 'console-entry__badge--neutral',
-	LOW: 'console-entry__badge--ok',
-	INFO: 'console-entry__badge--ok',
+	CRITICAL: BADGE_WARN,
+	HIGH: BADGE_NEUTRAL,
+	MEDIUM: BADGE_NEUTRAL,
+	LOW: BADGE_OK,
+	INFO: BADGE_OK,
 };
 
 const gradeBadgeClass = (grade: string): string => {
-	if (grade === 'EXCELLENT' || grade === 'GOOD') return 'console-entry__badge--ok';
-	if (grade === 'MODERATE') return 'console-entry__badge--neutral';
-	return 'console-entry__badge--warn';
+	if (grade === 'EXCELLENT' || grade === 'GOOD') return BADGE_OK;
+	if (grade === 'MODERATE') return BADGE_NEUTRAL;
+	return BADGE_WARN;
 };
 
-// ── Scenario panels ────────────────────────────────────────────────────────────
-
 const BottleneckRankingPanel = ({ report }: { report: IntelligenceReport }) => (
-	<div className='scenario-body'>
-		<div className='demo-pane'>
-			<div className='demo-pane__header'>
-				<span className='demo-pane__title'>
+	<div className="flex flex-col gap-4">
+		<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+			<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+				<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">
 					Application Health — Score {report.applicationHealth.score} ({report.applicationHealth.grade})
 				</span>
-				<span className={`console-entry__badge ${gradeBadgeClass(report.applicationHealth.grade)}`}>
+				<span className={gradeBadgeClass(report.applicationHealth.grade)}>
 					{report.applicationHealth.healthyCount} healthy · {report.applicationHealth.degradedCount} degraded · {report.applicationHealth.criticalCount} critical
 				</span>
 			</div>
-			<div className='demo-pane__body console-panel'>
+			<div className="p-4 text-xs min-h-50">
 				{report.bottlenecks.map((b) => (
-					<div key={b.componentName} className='console-entry'>
-						<div className='console-entry__header'>
-							<span className='console-entry__title'>
+					<div key={b.componentName} className="border-b border-edge py-2.5 last:border-b-0">
+						<div className="flex items-center justify-between mb-2">
+							<span className="text-ink font-semibold">
 								#{b.rank} — {b.componentName}
 							</span>
-							<span className='console-entry__meta'>
-								<span className='console-entry__badge console-entry__badge--warn'>impact {b.impactScore}</span>
-								<span className='console-entry__render'>{b.category}</span>
+							<span className="flex items-center gap-2">
+								<span className={BADGE_WARN}>impact {b.impactScore}</span>
+								<span className="text-dim text-[11px]">{b.category}</span>
 							</span>
 						</div>
-						<div className='console-section'>
-							<div className='console-section__line'>
-								<span className='console-line__key' style={{ color: 'var(--text-muted)' }}>
+						<div className="mb-1.5">
+							<div className="flex gap-3 py-px">
+								<span className="text-muted min-w-20 shrink-0" style={{ color: 'var(--text-muted)' }}>
 									{b.description}
 								</span>
 							</div>
@@ -189,30 +187,30 @@ const BottleneckRankingPanel = ({ report }: { report: IntelligenceReport }) => (
 );
 
 const RootCausePanel = ({ report }: { report: IntelligenceReport }) => (
-	<div className='scenario-body'>
-		<div className='demo-pane'>
-			<div className='demo-pane__header'>
-				<span className='demo-pane__title'>Root Causes ({report.rootCauses.length})</span>
+	<div className="flex flex-col gap-4">
+		<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+			<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+				<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">Root Causes ({report.rootCauses.length})</span>
 			</div>
-			<div className='demo-pane__body console-panel'>
+			<div className="p-4 text-xs min-h-50">
 				{report.rootCauses.length === 0 ? (
-					<div className='console-panel__empty'>
+					<div className="py-6 text-center text-dim text-xs flex flex-col gap-1">
 						<span>No root causes detected above confidence threshold.</span>
 					</div>
 				) : (
 					report.rootCauses.map((rc, i) => (
-						<div key={i} className='console-entry'>
-							<div className='console-entry__header'>
-								<span className='console-entry__title'>{rc.componentName}</span>
-								<span className='console-entry__meta'>
-									<span className='console-entry__badge console-entry__badge--warn'>{rc.kind}</span>
-									<span className='console-entry__render'>conf: {(rc.confidence * 100).toFixed(0)}%</span>
+						<div key={i} className="border-b border-edge py-2.5 last:border-b-0">
+							<div className="flex items-center justify-between mb-2">
+								<span className="text-ink font-semibold">{rc.componentName}</span>
+								<span className="flex items-center gap-2">
+									<span className={BADGE_WARN}>{rc.kind}</span>
+									<span className="text-dim text-[11px]">conf: {(rc.confidence * 100).toFixed(0)}%</span>
 								</span>
 							</div>
-							<div className='console-section'>
+							<div className="mb-1.5">
 								{rc.causalChain.map((step, j) => (
-									<div key={j} className='console-section__line'>
-										<span className='console-line__key' style={{ color: 'var(--text-muted)', fontSize: '0.85em' }}>
+									<div key={j} className="flex gap-3 py-px">
+										<span className="text-muted shrink-0" style={{ color: 'var(--text-muted)', fontSize: '0.85em' }}>
 											{j + 1}. {step}
 										</span>
 									</div>
@@ -227,29 +225,29 @@ const RootCausePanel = ({ report }: { report: IntelligenceReport }) => (
 );
 
 const RecommendationsPanel = ({ report }: { report: IntelligenceReport }) => (
-	<div className='scenario-body'>
-		<div className='demo-pane'>
-			<div className='demo-pane__header'>
-				<span className='demo-pane__title'>Recommendations ({report.recommendations.length})</span>
+	<div className="flex flex-col gap-4">
+		<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+			<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+				<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">Recommendations ({report.recommendations.length})</span>
 			</div>
-			<div className='demo-pane__body console-panel'>
+			<div className="p-4 text-xs min-h-50">
 				{report.recommendations.map((rec, i) => (
-					<div key={i} className='console-entry'>
-						<div className='console-entry__header'>
-							<span className='console-entry__title'>{rec.title}</span>
-							<span className='console-entry__meta'>
-								<span className={`console-entry__badge ${SEVERITY_COLORS[rec.severity] ?? ''}`}>{rec.severity}</span>
-								<span className='console-entry__render'>{rec.componentName ?? 'app-level'}</span>
+					<div key={i} className="border-b border-edge py-2.5 last:border-b-0">
+						<div className="flex items-center justify-between mb-2">
+							<span className="text-ink font-semibold">{rec.title}</span>
+							<span className="flex items-center gap-2">
+								<span className={SEVERITY_COLORS[rec.severity] ?? BADGE_NEUTRAL}>{rec.severity}</span>
+								<span className="text-dim text-[11px]">{rec.componentName ?? 'app-level'}</span>
 							</span>
 						</div>
-						<div className='console-section'>
-							<div className='console-section__line'>
-								<span className='console-line__key' style={{ color: 'var(--text-muted)', fontSize: '0.85em' }}>
+						<div className="mb-1.5">
+							<div className="flex gap-3 py-px">
+								<span style={{ color: 'var(--text-muted)', fontSize: '0.85em' }}>
 									Fix: {rec.fix}
 								</span>
 							</div>
-							<div className='console-section__line'>
-								<span className='console-line__key' style={{ color: 'var(--text-muted)', fontSize: '0.85em' }}>
+							<div className="flex gap-3 py-px">
+								<span style={{ color: 'var(--text-muted)', fontSize: '0.85em' }}>
 									Impact: {rec.expectedImpact}
 								</span>
 							</div>
@@ -280,34 +278,22 @@ const JsonExplorerPanel = ({ report }: { report: IntelligenceReport }) => {
 	];
 
 	return (
-		<div className='scenario-body'>
-			<div className='demo-pane'>
-				<div className='demo-pane__header'>
-					<span className='demo-pane__title'>IntelligenceReport</span>
-					<span className='console-entry__render' style={{ fontSize: '0.8em' }}>
-						v{report.schemaVersion}
-					</span>
+		<div className="flex flex-col gap-4">
+			<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+				<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+					<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">IntelligenceReport</span>
+					<span className="text-dim text-[11px]">v{report.schemaVersion}</span>
 				</div>
-				<div className='demo-pane__body console-panel'>
+				<div className="p-4 text-xs min-h-50">
 					{sections.map(({ key, label, value }) => (
-						<div key={key} className='console-entry' style={{ cursor: 'pointer' }} onClick={() => toggle(key)}>
-							<div className='console-entry__header'>
-								<span className='console-entry__title'>
+						<div key={key} className="border-b border-edge py-2 last:border-b-0 cursor-pointer" onClick={() => toggle(key)}>
+							<div className="flex items-center justify-between">
+								<span className="text-ink font-semibold">
 									{expanded[key] ? '▼' : '▶'} {label}
 								</span>
 							</div>
 							{expanded[key] && (
-								<pre
-									style={{
-										margin: '4px 0 0',
-										padding: '8px',
-										background: 'var(--surface-raised)',
-										borderRadius: 4,
-										fontSize: '0.75em',
-										overflowX: 'auto',
-										color: 'var(--text-muted)',
-									}}
-								>
+								<pre className="mt-1 p-2 bg-elevated rounded text-[11px] overflow-x-auto text-muted leading-[1.6]">
 									{JSON.stringify(value, null, 2)}
 								</pre>
 							)}
@@ -319,18 +305,28 @@ const JsonExplorerPanel = ({ report }: { report: IntelligenceReport }) => {
 	);
 };
 
-// ── Scenario tabs ──────────────────────────────────────────────────────────────
-
 type ScenarioTabsProps = {
 	active: ScenarioId;
 	onChange: (id: ScenarioId) => void;
 };
 
 const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
-	<div className='scenario-tabs' role='tablist'>
+	<div className="flex gap-1.5 flex-wrap mb-5" role="tablist">
 		{SCENARIOS.map((s) => (
-			<button key={s.id} role='tab' className={`scenario-tab scenario-tab--${s.badge}`} aria-selected={active === s.id} onClick={() => onChange(s.id)}>
-				<span className={`scenario-tab__indicator scenario-tab__indicator--${s.badge}`}>{s.badge === 'warn' ? '⚠' : '✓'}</span>
+			<button
+				key={s.id}
+				role="tab"
+				className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs cursor-pointer transition-colors ${
+					active === s.id
+						? 'border-brand bg-brand-dim text-brand'
+						: 'border-edge bg-raised text-muted hover:border-edge-active hover:text-ink'
+				}`}
+				aria-selected={active === s.id}
+				onClick={() => onChange(s.id)}
+			>
+				<span className={s.badge === 'warn' ? 'text-warn' : 'text-ok'}>
+					{s.badge === 'warn' ? '⚠' : '✓'}
+				</span>
 				{s.label}
 			</button>
 		))}
@@ -345,8 +341,6 @@ const ScenarioPanel = ({ scenario, report }: { scenario: Scenario; report: Intel
 	return null;
 };
 
-// ── Root export ────────────────────────────────────────────────────────────────
-
 export const RenderIntelligenceDemo = () => {
 	const [activeId, setActiveId] = useState<ScenarioId>('bottleneck-ranking');
 	const activeScenario = SCENARIOS.find((s) => s.id === activeId) as Scenario;
@@ -360,17 +354,26 @@ export const RenderIntelligenceDemo = () => {
 		<>
 			<ScenarioTabs active={activeId} onChange={setActiveId} />
 
-			<div className='scenario-header'>
-				<span className={`scenario-badge scenario-badge--${activeScenario.badge}`}>{activeScenario.badge === 'warn' ? '⚠ issues detected' : '✓ clean output'}</span>
-				<p className='scenario-description'>{activeScenario.description}</p>
+			<div className="mb-5 flex flex-col gap-2.5">
+				<span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.75 rounded-full border w-fit ${
+					activeScenario.badge === 'warn'
+						? 'border-warn-dim bg-warn-dim text-warn'
+						: 'border-ok-dim bg-ok-dim text-ok'
+				}`}>
+					{activeScenario.badge === 'warn' ? '⚠ issues detected' : '✓ clean output'}
+				</span>
+				<p className="text-[13px] text-muted max-w-150 leading-[1.7]">{activeScenario.description}</p>
 			</div>
 
 			<ScenarioPanel key={activeId} scenario={activeScenario} report={report} />
 
-			<details className='code-hint code-hint--usage'>
-				<summary>How to use render-intelligence</summary>
-				<div className='code-hint__body'>
-					<pre className='code-hint__pre'>{`import { analyzeRenders } from '@sapanmozammel/render-intelligence';
+			<details className="border border-edge rounded-[10px] overflow-hidden group mt-2">
+				<summary className="px-3.5 py-2.5 cursor-pointer text-xs text-muted bg-raised border-b border-transparent group-open:border-b-edge hover:text-ink select-none list-none flex items-center gap-1.5 transition-colors">
+					<span className="text-[10px] transition-transform inline-block mr-1 group-open:rotate-90">▸</span>
+					How to use render-intelligence
+				</summary>
+				<div className="p-3.5 flex flex-col gap-2.5">
+					<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{`import { analyzeRenders } from '@sapanmozammel/render-intelligence';
 
 // Feed any telemetry source into the analysis engine
 const report = analyzeRenders({
@@ -410,7 +413,7 @@ analyzeRenders(source, {
   includeWellOptimized: false,
   plugins: [myCustomPlugin],
 });`}</pre>
-					<p className='code-hint__note'>
+					<p className="text-xs text-dim leading-[1.6]">
 						Pure TypeScript, zero runtime dependencies. Works in Node.js, browsers, and edge runtimes. Accepts live telemetry events, buffered snapshots, or replay sessions interchangeably.
 					</p>
 				</div>

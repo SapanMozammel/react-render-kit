@@ -1,6 +1,6 @@
 {
 	"name": "@sapanmozammel/render-intelligence",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Framework-agnostic analysis engine for the react-render-kit ecosystem — root-cause analysis, bottleneck rankings, cross-component correlations, and application-level health scoring",
 	"license": "MIT",
 	"keywords": [
@@ -27,9 +27,14 @@
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.cjs"
+			"import": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/index.mjs"
+			},
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.cjs"
+			}
 		}
 	},
 	"files": [
@@ -52,8 +57,8 @@
 	"engines": {
 		"node": ">=18"
 	},
-	"peerDependencies": {
-		"@sapanmozammel/render-core-schema": "^1.0.0"
+	"dependencies": {
+		"@sapanmozammel/render-core-schema": "workspace:*"
 	},
 	"devDependencies": {
 		"@sapanmozammel/render-core-schema": "workspace:*",

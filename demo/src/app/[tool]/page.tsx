@@ -3,19 +3,34 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { TOOLS, getToolBySlug } from '@/lib/registry';
+import { BASE_URL } from '@/lib/constants';
 
-type Props = {
-	params: Promise<{ tool: string }>;
-};
+type Props = { params: Promise<{ tool: string }> };
 
 export const generateStaticParams = () => TOOLS.map(({ slug }) => ({ tool: slug }));
 
 export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
 	const { tool: slug } = await params;
 	const meta = getToolBySlug(slug);
+	if (!meta) return { title: 'Not Found' };
+	const title = `${meta.name} — react-render-kit`;
+	const url = `${BASE_URL}/${slug}`;
 	return {
-		title: meta ? `${meta.name} — react-render-kit` : 'Not Found',
-		description: meta?.description,
+		title,
+		description: meta.description,
+		openGraph: {
+			type: 'website',
+			url,
+			title,
+			description: meta.description,
+			images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: title }],
+		},
+		twitter: {
+			card: 'summary_large_image',
+			title,
+			description: meta.description,
+			images: ['/twitter-image'],
+		},
 	};
 };
 
@@ -25,23 +40,44 @@ const ToolPage = async ({ params }: Props) => {
 	if (!meta) notFound();
 
 	const Demo = dynamic(meta.demoImport, {
-		loading: () => <div style={{ padding: 24, color: 'var(--text-muted)' }}>Loading demo…</div>,
+		loading: () => <div className="p-6 text-muted">Loading demo…</div>,
 	});
 
 	return (
 		<>
-			<Link href="/" className="tool-page__back">
+			{/* Back */}
+			<Link
+				href="/"
+				className="inline-flex items-center gap-1.5 text-[13px] text-muted mb-7 hover:text-ink transition-colors no-underline hover:no-underline"
+			>
 				← All tools
 			</Link>
 
-			<header className="tool-page__header">
-				<h1 className="tool-page__name">
+			{/* Page header */}
+			<header className="mb-9 pb-7 border-b border-edge">
+				<h1
+					className="font-bold text-ink mb-2 flex items-center gap-2.5"
+					style={{ fontSize: 26, letterSpacing: '-0.02em' }}
+				>
 					{meta.name}
-					<span className={`badge badge--${meta.status}`}>{meta.status}</span>
+					<span
+						className={`text-[11px] font-medium px-[9px] py-[3px] rounded-full border ${
+							meta.status === 'stable'
+								? 'text-ok border-ok-dim bg-ok-dim'
+								: 'text-warn border-warn-dim bg-warn-dim'
+						}`}
+					>
+						{meta.status}
+					</span>
 				</h1>
-				<p className="tool-page__description">{meta.description}</p>
-				<p className="tool-page__install">
-					Install: <code>pnpm add {meta.packageName}</code>
+				<p className="text-[14px] text-muted max-w-[580px] leading-relaxed mb-3">
+					{meta.description}
+				</p>
+				<p className="text-[13px] text-dim">
+					Install:{' '}
+					<code className="text-[12px] bg-raised px-1.5 py-0.5 rounded text-ink">
+						{`pnpm add ${meta.packageName}`}
+					</code>
 				</p>
 			</header>
 
