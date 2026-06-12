@@ -21,14 +21,11 @@ const OgImage = () =>
 					fontFamily: 'sans-serif',
 				}}
 			>
-				{/* Icon mark — geometric "r": stem + circle head + concave notch */}
-				<div style={{ position: 'relative', width: '90px', height: '92px', marginBottom: '48px' }}>
-					{/* stem */}
-					<div style={{ position: 'absolute', left: '0px', top: '50px', width: '24px', height: '42px', background: '#5a9cf8' }} />
-					{/* circle head (r=36, leftmost at x=0 aligned with stem left) */}
-					<div style={{ position: 'absolute', left: '0px', top: '0px', width: '72px', height: '72px', borderRadius: '50%', background: '#5a9cf8' }} />
-					{/* concave cutout — left edge tangent to stem right (x=24), carves the r counter-space */}
-					<div style={{ position: 'absolute', left: '24px', top: '40px', width: '64px', height: '64px', borderRadius: '50%', background: '#111111' }} />
+				{/* Icon mark */}
+				<div style={{ position: 'relative', width: '80px', height: '80px', borderRadius: '22px', background: '#1a3a6a', marginBottom: '48px', display: 'flex' }}>
+					<div style={{ position: 'absolute', left: '11px', top: '20px', width: '29px', height: '9px', borderRadius: '5px', background: '#5a9cf8' }} />
+					<div style={{ position: 'absolute', left: '18px', top: '35px', width: '40px', height: '9px', borderRadius: '5px', background: '#4ade80' }} />
+					<div style={{ position: 'absolute', left: '25px', top: '51px', width: '22px', height: '9px', borderRadius: '5px', background: 'rgba(90, 156, 248, 0.6)' }} />
 				</div>
 
 				{/* Package badge */}

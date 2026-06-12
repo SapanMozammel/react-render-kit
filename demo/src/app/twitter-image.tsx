@@ -21,14 +21,11 @@ const TwitterImage = () =>
 					fontFamily: 'sans-serif',
 				}}
 			>
-				{/* Icon mark — geometric "r" */}
-				<div style={{ position: 'relative', width: '82px', height: '84px', marginBottom: '40px' }}>
-					{/* stem */}
-					<div style={{ position: 'absolute', left: '0px', top: '46px', width: '22px', height: '38px', background: '#5a9cf8' }} />
-					{/* circle head (r=33, leftmost at x=0) */}
-					<div style={{ position: 'absolute', left: '0px', top: '0px', width: '66px', height: '66px', borderRadius: '50%', background: '#5a9cf8' }} />
-					{/* concave cutout — left edge tangent to stem right (x=22) */}
-					<div style={{ position: 'absolute', left: '22px', top: '36px', width: '60px', height: '60px', borderRadius: '50%', background: '#111111' }} />
+				{/* Icon mark */}
+				<div style={{ position: 'relative', width: '80px', height: '80px', borderRadius: '22px', background: '#1a3a6a', marginBottom: '40px', display: 'flex' }}>
+					<div style={{ position: 'absolute', left: '11px', top: '20px', width: '29px', height: '9px', borderRadius: '5px', background: '#5a9cf8' }} />
+					<div style={{ position: 'absolute', left: '18px', top: '35px', width: '40px', height: '9px', borderRadius: '5px', background: '#4ade80' }} />
+					<div style={{ position: 'absolute', left: '25px', top: '51px', width: '22px', height: '9px', borderRadius: '5px', background: 'rgba(90, 156, 248, 0.6)' }} />
 				</div>
 
 				{/* Title */}
