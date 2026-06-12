@@ -27,8 +27,6 @@ import type {
 } from '@sapanmozammel/render-telemetry-core';
 import { SCENARIOS, type Scenario, type ScenarioId } from './scenarios';
 
-// ── Local types ────────────────────────────────────────────────
-
 type DemoProps = {
 	title: string;
 	count: number;
@@ -41,8 +39,6 @@ type CaptureOptions = {
 	frequencyWindowMs?: number;
 };
 
-// ── Helpers ────────────────────────────────────────────────────
-
 const isRefValue = (v: unknown): boolean =>
 	typeof v === 'function' || Array.isArray(v) || (typeof v === 'object' && v !== null);
 
@@ -51,9 +47,8 @@ const inferRefType = (v: unknown): TelemetryPropRefType =>
 
 const formatTime = (ts: number): string => new Date(ts).toTimeString().slice(0, 8);
 
-// ── useTelemetryCapture ────────────────────────────────────────
-// Side-effect-only hook — emits all 7 event types into the provided buffer.
-// Computation runs in render body; push to buffer runs in useEffect.
+const BADGE_OK = 'text-[10px] font-semibold px-1.5 py-px rounded-full text-ok bg-ok-dim';
+const BADGE_WARN = 'text-[10px] font-semibold px-1.5 py-px rounded-full text-warn bg-warn-dim';
 
 const useTelemetryCapture = (
 	componentName: string,
@@ -74,10 +69,6 @@ const useTelemetryCapture = (
 	const hasStartedRef = useRef(false);
 	const unmountedRef = useRef(false);
 
-	// Flush pending events to buffer after every render.
-	// No deps — must run after every render so every re-render emits events.
-	// Safe because EventStreamPanel (not DemoTarget's parent) holds the subscription;
-	// buffer.notify() only re-renders EventStreamPanel, not this component's ancestor tree.
 	useEffect(() => {
 		const events = pendingEventsRef.current;
 		const finalSession = pendingSessionRef.current;
@@ -86,9 +77,8 @@ const useTelemetryCapture = (
 		if (finalSession) buffer.updateSession(finalSession);
 		pendingEventsRef.current = [];
 		pendingSessionRef.current = null;
-	}); // intentionally no deps — runs after every render
+	});
 
-	// Emit session-end on unmount
 	useEffect(() => {
 		unmountedRef.current = false;
 		return () => {
@@ -105,19 +95,14 @@ const useTelemetryCapture = (
 		};
 	}, [buffer]);
 
-	// ── Synchronous render-body computation ───────────────────────
-	// (Refs are updated in place; no hook rules violated — all hooks already declared above)
-
 	const now = Date.now();
 	renderCountRef.current += 1;
 	const renderNumber = renderCountRef.current;
 
-	// Init session on first render
 	if (sessionRef.current === null) {
 		sessionRef.current = createTelemetrySession(componentName);
 	}
 
-	// Frequency window
 	timestampsRef.current.push(now);
 	const windowStart = now - windowMs;
 	while (timestampsRef.current.length > 0 && (timestampsRef.current[0] ?? 0) < windowStart) {
@@ -128,7 +113,6 @@ const useTelemetryCapture = (
 	const classification: TelemetryFrequencyClass =
 		windowCount < 2 ? 'NOT_ENOUGH_DATA' : rate >= 5 ? 'HIGH' : rate >= 2 ? 'MODERATE' : 'LOW';
 
-	// Prop diff
 	const prev = prevPropsRef.current;
 	const changed: TelemetryPropChangeEntry[] = [];
 	const unstable: TelemetryPropInstability[] = [];
@@ -174,7 +158,6 @@ const useTelemetryCapture = (
 		w.push(signalKind);
 	}
 
-	// Session-level memo classification
 	const signalWindow = signalWindowRef.current;
 	let memoClassification: TelemetryMemoClassification;
 	if (signalWindow.length === 0) {
@@ -186,7 +169,6 @@ const useTelemetryCapture = (
 		else memoClassification = 'PARTIALLY_EFFECTIVE';
 	}
 
-	// Score
 	const freqPenalty =
 		classification === 'LOW' || classification === 'NOT_ENOUGH_DATA' ? 0 : classification === 'MODERATE' ? 10 : 25;
 	const instabilityPenalty = Math.min(unstable.length * 8, 30);
@@ -198,7 +180,6 @@ const useTelemetryCapture = (
 	const grade: TelemetryHealthGrade =
 		score >= 90 ? 'EXCELLENT' : score >= 70 ? 'GOOD' : score >= 50 ? 'MODERATE' : 'POOR';
 
-	// Recommendations
 	const recommendations: string[] = [];
 	if (unstable.length > 0)
 		recommendations.push('Wrap reference props with useCallback / useMemo to stabilize references.');
@@ -209,7 +190,6 @@ const useTelemetryCapture = (
 	if (memoClassification === 'PARTIALLY_EFFECTIVE')
 		recommendations.push('Mixed genuine + reference signals. Isolate reference props for full memo effectiveness.');
 
-	// Thread session through all factory calls
 	let session = sessionRef.current;
 	const newEvents: TelemetryEvent[] = [];
 
@@ -275,8 +255,6 @@ const useTelemetryCapture = (
 	prevPropsRef.current = props;
 };
 
-// ── DemoTarget ─────────────────────────────────────────────────
-
 type DemoTargetProps = DemoProps & {
 	buffer: TelemetryBuffer;
 	ignoreProps?: string[];
@@ -293,49 +271,37 @@ const DemoTarget = ({ title, count, tags, onAction, buffer, ignoreProps = [] }: 
 	renderCountRef.current += 1;
 
 	return (
-		<div className="component-preview">
-			<div className="component-preview__label">
+		<div className="bg-elevated border border-edge rounded-md overflow-hidden mb-4">
+			<div className="text-[11px] text-dim px-3 py-1.5 border-b border-edge bg-raised flex items-center justify-between">
 				&lt;DemoTarget&gt;
-				<span className="render-badge" suppressHydrationWarning>
+				<span className="inline-flex items-center gap-1 text-[11px] text-dim px-2 py-0.5 rounded-full border border-edge bg-elevated ml-2" suppressHydrationWarning>
 					render #{renderCountRef.current}
 				</span>
 			</div>
-			<div className="component-preview__body">
-				<div className="prop-row">
-					<span className="prop-row__key">title</span>
-					<span className="prop-row__value">&quot;{title}&quot;</span>
+			<div className="p-3">
+				<div className="flex gap-3 py-0.75 text-[13px]">
+					<span className="text-muted min-w-20 shrink-0">title</span>
+					<span className="text-ink break-all">&quot;{title}&quot;</span>
 				</div>
-				<div className="prop-row">
-					<span className="prop-row__key">count</span>
-					<span className="prop-row__value prop-row__value--number">{count}</span>
+				<div className="flex gap-3 py-0.75 text-[13px]">
+					<span className="text-muted min-w-20 shrink-0">count</span>
+					<span className="text-ink break-all">{count}</span>
 				</div>
 				{tags !== undefined && (
-					<div className="prop-row">
-						<span className="prop-row__key">tags</span>
-						<span className="prop-row__value prop-row__value--object">[{tags.join(', ')}]</span>
+					<div className="flex gap-3 py-0.75 text-[13px]">
+						<span className="text-muted min-w-20 shrink-0">tags</span>
+						<span className="text-purple break-all">[{tags.join(', ')}]</span>
 					</div>
 				)}
 				{onAction !== undefined && (
-					<div className="prop-row">
-						<span className="prop-row__key">onAction</span>
-						<span className="prop-row__value prop-row__value--function">[Function]</span>
+					<div className="flex gap-3 py-0.75 text-[13px]">
+						<span className="text-muted min-w-20 shrink-0">onAction</span>
+						<span className="text-brand break-all">[Function]</span>
 					</div>
 				)}
 			</div>
 		</div>
 	);
-};
-
-// ── EventStreamPanel ───────────────────────────────────────────
-
-const EVENT_TYPE_BADGE: Record<string, string> = {
-	'session-start': 'console-entry__badge--ok',
-	'session-end': 'console-entry__badge--ok',
-	render: 'console-entry__badge--ok',
-	'prop-change': 'console-entry__badge--ok',
-	frequency: 'console-entry__badge--ok',
-	score: 'console-entry__badge--ok',
-	recommendation: 'console-entry__badge--ok',
 };
 
 const EVENT_TYPE_LABEL: Record<string, string> = {
@@ -350,50 +316,46 @@ const EVENT_TYPE_LABEL: Record<string, string> = {
 
 const eventBadgeClass = (event: TelemetryEvent): string => {
 	if (event.type === 'prop-change') {
-		return event.unstable.length > 0 ? 'console-entry__badge--warn' : 'console-entry__badge--ok';
+		return event.unstable.length > 0 ? BADGE_WARN : BADGE_OK;
 	}
 	if (event.type === 'frequency') {
-		return event.classification === 'HIGH' ? 'console-entry__badge--warn' : 'console-entry__badge--ok';
+		return event.classification === 'HIGH' ? BADGE_WARN : BADGE_OK;
 	}
 	if (event.type === 'score') {
-		return event.grade === 'EXCELLENT' || event.grade === 'GOOD'
-			? 'console-entry__badge--ok'
-			: 'console-entry__badge--warn';
+		return event.grade === 'EXCELLENT' || event.grade === 'GOOD' ? BADGE_OK : BADGE_WARN;
 	}
-	return EVENT_TYPE_BADGE[event.type] ?? 'console-entry__badge--ok';
+	return BADGE_OK;
 };
 
 const renderEventDetails = (event: TelemetryEvent): ReactNode => {
 	if (event.type === 'render') {
 		return (
-			<div className="console-section">
-				<div className="console-section__label">render #{event.renderNumber}</div>
-				<div className="console-section__line console-section__line--added">
-					<span className="console-line__key">triggeredBy</span>
-					<span className="console-line__added">{event.triggeredBy}</span>
+			<div className="mb-1.5">
+				<div className="text-dim text-[11px] uppercase tracking-[0.06em] mb-0.75">render #{event.renderNumber}</div>
+				<div className="flex gap-3 py-px pl-2 border-l-2 border-ok">
+					<span className="text-muted min-w-20 shrink-0">triggeredBy</span>
+					<span className="text-ok break-all">{event.triggeredBy}</span>
 				</div>
 			</div>
 		);
 	}
 	if (event.type === 'prop-change') {
 		return (
-			<div className="console-section">
-				<div className="console-section__label">
+			<div className="mb-1.5">
+				<div className="text-dim text-[11px] uppercase tracking-[0.06em] mb-0.75">
 					render #{event.renderNumber} · {event.changed.length} changed
 					{event.unstable.length > 0 ? ` · ${event.unstable.length} unstable` : ''} ·{' '}
-					<span
-						className={event.signalKind === 'genuine' ? 'console-line__added' : 'console-line__ref'}
-					>
+					<span className={event.signalKind === 'genuine' ? 'text-ok' : 'text-warn'}>
 						{event.signalKind}
 					</span>
 				</div>
 				{event.changed.slice(0, 5).map((e, i) => (
 					<div
 						key={i}
-						className={`console-section__line ${e.kind === 'reference-changed' ? 'console-section__line--reference' : 'console-section__line--added'}`}
+						className={`flex gap-3 py-px pl-2 border-l-2 ${e.kind === 'reference-changed' ? 'border-purple' : 'border-ok'}`}
 					>
-						<span className="console-line__key">{e.key}</span>
-						<span className={e.kind === 'reference-changed' ? 'console-line__ref' : 'console-line__added'}>
+						<span className="text-muted min-w-20 shrink-0">{e.key}</span>
+						<span className={e.kind === 'reference-changed' ? 'text-warn break-all' : 'text-ok break-all'}>
 							{e.kind === 'reference-changed'
 								? `new ${e.refType} reference`
 								: e.kind === 'value-changed'
@@ -407,8 +369,8 @@ const renderEventDetails = (event: TelemetryEvent): ReactNode => {
 	}
 	if (event.type === 'frequency') {
 		return (
-			<div className="console-section">
-				<div className="console-section__label">
+			<div className="mb-1.5">
+				<div className="text-dim text-[11px] uppercase tracking-[0.06em] mb-0.75">
 					render #{event.renderNumber} · {event.classification}
 					{event.classification !== 'NOT_ENOUGH_DATA' ? ` · ${event.rate.toFixed(2)}/s` : ''}
 				</div>
@@ -417,13 +379,13 @@ const renderEventDetails = (event: TelemetryEvent): ReactNode => {
 	}
 	if (event.type === 'score') {
 		return (
-			<div className="console-section">
-				<div className="console-section__label">
+			<div className="mb-1.5">
+				<div className="text-dim text-[11px] uppercase tracking-[0.06em] mb-0.75">
 					render #{event.renderNumber} · {event.score}/100 · {event.grade}
 				</div>
-				<div className="console-section__line console-section__line--added">
-					<span className="console-line__key">memo</span>
-					<span className="console-line__added">{event.memoClassification}</span>
+				<div className="flex gap-3 py-px pl-2 border-l-2 border-ok">
+					<span className="text-muted min-w-20 shrink-0">memo</span>
+					<span className="text-ok break-all">{event.memoClassification}</span>
 				</div>
 			</div>
 		);
@@ -431,14 +393,14 @@ const renderEventDetails = (event: TelemetryEvent): ReactNode => {
 	if (event.type === 'recommendation') {
 		if (event.recommendations.length === 0) return null;
 		return (
-			<div className="console-section">
-				<div className="console-section__label">
+			<div className="mb-1.5">
+				<div className="text-dim text-[11px] uppercase tracking-[0.06em] mb-0.75">
 					render #{event.renderNumber} · {event.recommendations.length} recommendation
 					{event.recommendations.length !== 1 ? 's' : ''}
 				</div>
 				{event.recommendations.map((r, i) => (
-					<div key={i} className="console-section__line console-section__line--reference">
-						<span className="console-line__ref">{r}</span>
+					<div key={i} className="flex gap-3 py-px pl-2 border-l-2 border-purple">
+						<span className="text-warn break-all">{r}</span>
 					</div>
 				))}
 			</div>
@@ -446,8 +408,8 @@ const renderEventDetails = (event: TelemetryEvent): ReactNode => {
 	}
 	if (event.type === 'session-end') {
 		return (
-			<div className="console-section">
-				<div className="console-section__label">
+			<div className="mb-1.5">
+				<div className="text-dim text-[11px] uppercase tracking-[0.06em] mb-0.75">
 					total renders: {event.totalRenders} · duration: {event.durationMs.toFixed(0)}ms
 				</div>
 			</div>
@@ -461,13 +423,13 @@ const EventRow = ({ event }: { event: TelemetryEvent }) => {
 	const label = EVENT_TYPE_LABEL[event.type] ?? event.type;
 
 	return (
-		<div className="console-entry">
-			<div className="console-entry__header">
-				<span className="console-entry__title">[telemetry-core] &lt;DemoTarget&gt;</span>
-				<span className="console-entry__meta">
-					<span className={`console-entry__badge ${badgeClass}`}>{label}</span>
-					<span className="console-entry__render">seq #{event.sequenceNumber}</span>
-					<span className="console-entry__time">{formatTime(event.wallTimestamp)}</span>
+		<div className="border-b border-edge py-2.5 last:border-b-0">
+			<div className="flex items-center justify-between mb-2">
+				<span className="text-ink font-semibold">[telemetry-core] &lt;DemoTarget&gt;</span>
+				<span className="flex items-center gap-2">
+					<span className={badgeClass}>{label}</span>
+					<span className="text-dim text-[11px]">seq #{event.sequenceNumber}</span>
+					<span className="text-dim text-[11px]">{formatTime(event.wallTimestamp)}</span>
 				</span>
 			</div>
 			{renderEventDetails(event)}
@@ -480,9 +442,6 @@ type EventStreamPanelProps = {
 	onClear: () => void;
 };
 
-// EventStreamPanel owns the useSyncExternalStore subscription so that buffer
-// notifications only re-render this component — not ScenarioInner and not
-// DemoTarget (a sibling). This prevents the push→notify→re-render→push loop.
 const EventStreamPanel = ({ buffer, onClear }: EventStreamPanelProps) => {
 	const snapshot = useSyncExternalStore(
 		buffer.subscribe,
@@ -493,20 +452,23 @@ const EventStreamPanel = ({ buffer, onClear }: EventStreamPanelProps) => {
 	const displayed = [...snapshot.events].reverse().slice(0, 50);
 
 	return (
-		<div className="demo-pane">
-			<div className="demo-pane__header">
-				<span className="demo-pane__title">Event stream (TelemetryBuffer)</span>
+		<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+			<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+				<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">Event stream (TelemetryBuffer)</span>
 				{snapshot.events.length > 0 && (
-					<button className="btn btn--ghost btn--sm" onClick={onClear}>
+					<button
+						className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-transparent bg-transparent text-muted text-[11px] hover:text-ink hover:bg-raised cursor-pointer transition-colors"
+						onClick={onClear}
+					>
 						clear
 					</button>
 				)}
 			</div>
-			<div className="demo-pane__body console-panel">
+			<div className="p-4 text-xs min-h-50">
 				{displayed.length === 0 ? (
-					<div className="console-panel__empty">
+					<div className="py-6 text-center text-dim text-xs flex flex-col gap-1">
 						<span>Trigger an action above.</span>
-						<span className="console-panel__empty-hint">No output = no events emitted yet.</span>
+						<span className="text-[11px] opacity-70">No output = no events emitted yet.</span>
 					</div>
 				) : (
 					displayed.map((event) => <EventRow key={event.id} event={event} />)
@@ -516,24 +478,26 @@ const EventStreamPanel = ({ buffer, onClear }: EventStreamPanelProps) => {
 	);
 };
 
-// ── ScenarioTabs ───────────────────────────────────────────────
-
 type ScenarioTabsProps = {
 	active: ScenarioId;
 	onChange: (id: ScenarioId) => void;
 };
 
 const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
-	<div className="scenario-tabs" role="tablist">
+	<div className="flex gap-1.5 flex-wrap mb-5" role="tablist">
 		{SCENARIOS.map((s) => (
 			<button
 				key={s.id}
 				role="tab"
-				className={`scenario-tab scenario-tab--${s.badge}`}
+				className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs cursor-pointer transition-colors ${
+					active === s.id
+						? 'border-brand bg-brand-dim text-brand'
+						: 'border-edge bg-raised text-muted hover:border-edge-active hover:text-ink'
+				}`}
 				aria-selected={active === s.id}
 				onClick={() => onChange(s.id)}
 			>
-				<span className={`scenario-tab__indicator scenario-tab__indicator--${s.badge}`}>
+				<span className={s.badge === 'warn' ? 'text-warn' : 'text-ok'}>
 					{s.badge === 'warn' ? '⚠' : '✓'}
 				</span>
 				{s.label}
@@ -541,8 +505,6 @@ const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
 		))}
 	</div>
 );
-
-// ── ScenarioInner ──────────────────────────────────────────────
 
 type ScenarioInnerProps = {
 	scenario: Scenario;
@@ -552,15 +514,10 @@ const ScenarioInner = ({ scenario }: ScenarioInnerProps) => {
 	const [parentTick, setParentTick] = useState(0);
 	const [dataTick, setDataTick] = useState(0);
 
-	// Buffer is stable for the lifetime of this ScenarioInner instance.
-	// Re-created when scenario changes (via key prop on ScenarioInner).
-	// Subscription lives in EventStreamPanel — NOT here — so buffer notifications
-	// only re-render EventStreamPanel, not ScenarioInner (and not DemoTarget).
 	const bufferRef = useRef(createTelemetryBuffer({ maxEvents: 200 }));
 
 	const clear = useCallback(() => bufferRef.current.clear(), []);
 
-	// Unstable refs (change with parentTick — new reference, same value)
 	const unstableTags = useMemo<string[]>(() => ['admin', 'power-user'], [parentTick]);
 	const unstableOnAction = useCallback(() => {}, [parentTick]);
 
@@ -574,7 +531,6 @@ const ScenarioInner = ({ scenario }: ScenarioInnerProps) => {
 		if (scenario.id === 'reference-instability') {
 			return { title: 'Dashboard', count: 0, tags: unstableTags, onAction: unstableOnAction };
 		}
-		// full-pipeline
 		return { title: 'Dashboard', count: dataTick, tags: unstableTags, onAction: unstableOnAction };
 	}, [scenario.id, dataTick, unstableTags, unstableOnAction]);
 
@@ -585,7 +541,6 @@ const ScenarioInner = ({ scenario }: ScenarioInnerProps) => {
 		} else if (scenario.id === 'reference-instability') {
 			setParentTick((t) => t + 1);
 		} else {
-			// basic-lifecycle and prop-changes bump parentTick/dataTick respectively
 			if (scenario.id === 'prop-changes') {
 				setDataTick((t) => t + 1);
 			} else {
@@ -595,29 +550,35 @@ const ScenarioInner = ({ scenario }: ScenarioInnerProps) => {
 	}, [scenario.id, scenario.triggerBothTicks]);
 
 	return (
-		<div className="scenario-body">
-			<div className="demo-grid">
+		<div className="flex flex-col gap-4">
+			<div className="grid grid-cols-2 gap-5 items-start max-md:grid-cols-1">
 				<DemoTarget {...demoProps} buffer={bufferRef.current} />
 				<EventStreamPanel buffer={bufferRef.current} onClear={clear} />
 			</div>
 
-			<div className="scenario-controls">
-				<button className="btn btn--primary" onClick={handleTrigger}>
+			<div className="flex gap-2">
+				<button
+					className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-brand-dim bg-brand-dim text-brand text-xs hover:bg-[#1e4a7a] cursor-pointer transition-colors"
+					onClick={handleTrigger}
+				>
 					{scenario.triggerLabel}
 				</button>
 			</div>
 
-			<details className="code-hint">
-				<summary>See the code</summary>
-				<div className="code-hint__body">
+			<details className="border border-edge rounded-[10px] overflow-hidden group">
+				<summary className="px-3.5 py-2.5 cursor-pointer text-xs text-muted bg-raised border-b border-transparent group-open:border-b-edge hover:text-ink select-none list-none flex items-center gap-1.5 transition-colors">
+					<span className="text-[10px] transition-transform inline-block mr-1 group-open:rotate-90">▸</span>
+					See the code
+				</summary>
+				<div className="p-3.5 flex flex-col gap-2.5">
 					{scenario.canFix && (
-						<div className="code-hint__label code-hint__label--bad">❌ The pattern:</div>
+						<div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-error">❌ The pattern:</div>
 					)}
-					<pre className="code-hint__pre">{scenario.codeBreaking}</pre>
+					<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{scenario.codeBreaking}</pre>
 					{scenario.canFix && scenario.codeFixed && (
 						<>
-							<div className="code-hint__label code-hint__label--good">✅ The fix:</div>
-							<pre className="code-hint__pre">{scenario.codeFixed}</pre>
+							<div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-ok">✅ The fix:</div>
+							<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{scenario.codeFixed}</pre>
 						</>
 					)}
 				</div>
@@ -625,8 +586,6 @@ const ScenarioInner = ({ scenario }: ScenarioInnerProps) => {
 		</div>
 	);
 };
-
-// ── RenderTelemetryCoreDemo ────────────────────────────────────
 
 export const RenderTelemetryCoreDemo = () => {
 	const [activeId, setActiveId] = useState<ScenarioId>('basic-lifecycle');
@@ -636,19 +595,26 @@ export const RenderTelemetryCoreDemo = () => {
 		<>
 			<ScenarioTabs active={activeId} onChange={setActiveId} />
 
-			<div className="scenario-header">
-				<span className={`scenario-badge scenario-badge--${activeScenario.badge}`}>
+			<div className="mb-5 flex flex-col gap-2.5">
+				<span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.75 rounded-full border w-fit ${
+					activeScenario.badge === 'warn'
+						? 'border-warn-dim bg-warn-dim text-warn'
+						: 'border-ok-dim bg-ok-dim text-ok'
+				}`}>
 					{activeScenario.badge === 'warn' ? '⚠ health issues' : '✓ healthy'}
 				</span>
-				<p className="scenario-description">{activeScenario.description}</p>
+				<p className="text-[13px] text-muted max-w-150 leading-[1.7]">{activeScenario.description}</p>
 			</div>
 
 			<ScenarioInner key={activeId} scenario={activeScenario} />
 
-			<details className="code-hint code-hint--usage">
-				<summary>How to use render-telemetry-core</summary>
-				<div className="code-hint__body">
-					<pre className="code-hint__pre">{`import {
+			<details className="border border-edge rounded-[10px] overflow-hidden group mt-2">
+				<summary className="px-3.5 py-2.5 cursor-pointer text-xs text-muted bg-raised border-b border-transparent group-open:border-b-edge hover:text-ink select-none list-none flex items-center gap-1.5 transition-colors">
+					<span className="text-[10px] transition-transform inline-block mr-1 group-open:rotate-90">▸</span>
+					How to use render-telemetry-core
+				</summary>
+				<div className="p-3.5 flex flex-col gap-2.5">
+					<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{`import {
   createTelemetryBuffer,
   createTelemetrySession,
   createSessionStartEvent,
@@ -694,7 +660,7 @@ const snapshot = useSyncExternalStore(
 );
 // snapshot.events — live event log
 // snapshot.sessions — all active sessions`}</pre>
-					<p className="code-hint__note">
+					<p className="text-xs text-dim leading-[1.6]">
 						Zero production cost: this package has no built-in NODE_ENV guard. Only create sessions
 						where you want telemetry — your wrapper hook decides when.
 					</p>

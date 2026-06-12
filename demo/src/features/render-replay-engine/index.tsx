@@ -27,8 +27,6 @@ import {
 import type { TelemetryEvent } from '@sapanmozammel/render-telemetry-core';
 import { SCENARIOS, type Scenario, type ScenarioId } from './scenarios';
 
-// ── Synthetic event builder ────────────────────────────────────────────────────
-
 type SyntheticRender = {
 	score: number;
 	hasUnstableProps: boolean;
@@ -136,12 +134,14 @@ const buildSyntheticEvents = (componentName = 'DemoComponent'): readonly Telemet
 	return Object.freeze(events);
 };
 
-// ── Helpers ────────────────────────────────────────────────────────────────────
+const BADGE_OK = 'text-[10px] font-semibold px-1.5 py-px rounded-full text-ok bg-ok-dim';
+const BADGE_WARN = 'text-[10px] font-semibold px-1.5 py-px rounded-full text-warn bg-warn-dim';
+const BADGE_NEUTRAL = 'text-[10px] font-semibold px-1.5 py-px rounded-full text-muted bg-elevated';
 
 const scoreBadgeClass = (score: number): string => {
-	if (score >= 80) return 'console-entry__badge--ok';
-	if (score >= 50) return 'console-entry__badge--neutral';
-	return 'console-entry__badge--warn';
+	if (score >= 80) return BADGE_OK;
+	if (score >= 50) return BADGE_NEUTRAL;
+	return BADGE_WARN;
 };
 
 const getUnstableNames = (frame: ReplayFrame): readonly string[] =>
@@ -149,8 +149,6 @@ const getUnstableNames = (frame: ReplayFrame): readonly string[] =>
 
 const getChangedProps = (frame: ReplayFrame): ReadonlyArray<{ key: string; kind: string }> =>
 	frame.propChangeEvent?.changed.map((c) => ({ key: c.key, kind: c.kind })) ?? [];
-
-// ── Frame row ──────────────────────────────────────────────────────────────────
 
 type FrameRowProps = {
 	frame: ReplayFrame;
@@ -164,41 +162,37 @@ const FrameRow = ({ frame, isActive, onClick }: FrameRowProps) => {
 
 	return (
 		<div
-			className={`console-entry${isActive ? ' console-entry--active' : ''}`}
+			className={`border-b border-edge py-2.5 last:border-b-0 cursor-pointer${isActive ? ' bg-elevated' : ''}`}
 			onClick={onClick}
-			style={{ cursor: 'pointer' }}
 		>
-			<div className="console-entry__header">
-				<span className="console-entry__title">
+			<div className="flex items-center justify-between mb-2">
+				<span className="text-ink font-semibold">
 					render #{frame.renderNumber}
 					{frame.hasUnstableProps && (
-						<span className="console-entry__badge console-entry__badge--warn" style={{ marginLeft: 8 }}>
+						<span className={`${BADGE_WARN} ml-2`}>
 							unstable
 						</span>
 					)}
 				</span>
-				<span className="console-entry__meta">
-					<span className={`console-entry__badge ${scoreBadgeClass(frame.score ?? 100)}`}>
+				<span className="flex items-center gap-2">
+					<span className={scoreBadgeClass(frame.score ?? 100)}>
 						{frame.score !== null ? `${frame.score}/100` : '—'}
 					</span>
-					<span className="console-entry__render">{frame.triggeredBy}</span>
+					<span className="text-dim text-[11px]">{frame.triggeredBy}</span>
 				</span>
 			</div>
 			{(changedProps.length > 0 || unstableNames.length > 0) && (
-				<div className="console-section">
+				<div className="mb-1.5">
 					{changedProps.slice(0, 3).map((p, i) => (
-						<div
-							key={i}
-							className="console-section__line console-section__line--added"
-						>
-							<span className="console-line__key">{p.key}</span>
-							<span className="console-line__added">{p.kind}</span>
+						<div key={i} className="flex gap-3 py-px pl-2 border-l-2 border-ok">
+							<span className="text-muted min-w-20 shrink-0">{p.key}</span>
+							<span className="text-ok break-all">{p.kind}</span>
 						</div>
 					))}
 					{unstableNames.map((n, i) => (
-						<div key={i} className="console-section__line console-section__line--reference">
-							<span className="console-line__key">{n}</span>
-							<span className="console-line__ref">unstable ref</span>
+						<div key={i} className="flex gap-3 py-px pl-2 border-l-2 border-purple">
+							<span className="text-muted min-w-20 shrink-0">{n}</span>
+							<span className="text-warn break-all">unstable ref</span>
 						</div>
 					))}
 				</div>
@@ -206,8 +200,6 @@ const FrameRow = ({ frame, isActive, onClick }: FrameRowProps) => {
 		</div>
 	);
 };
-
-// ── Stats panel ────────────────────────────────────────────────────────────────
 
 type StatsPanelProps = {
 	engine: ReplayEngine;
@@ -220,57 +212,52 @@ const StatsPanel = ({ engine, cursor }: StatsPanelProps) => {
 	const unstableNames = frame ? getUnstableNames(frame) : [];
 
 	return (
-		<div className="demo-pane">
-			<div className="demo-pane__header">
-				<span className="demo-pane__title">Current Frame</span>
-				<span className="console-entry__meta">
-					<span className="console-entry__render">
-						{cursor.frameIndex + 1} / {engine.session.frameCount}
-					</span>
+		<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+			<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+				<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">Current Frame</span>
+				<span className="text-dim text-[11px]">
+					{cursor.frameIndex + 1} / {engine.session.frameCount}
 				</span>
 			</div>
-			<div
-				className="demo-pane__body"
-				style={{ padding: '12px 16px', gap: 8, display: 'flex', flexDirection: 'column' }}
-			>
+			<div className="p-3 flex flex-col gap-1.5 text-xs">
 				{frame && (
 					<>
-						<div className="prop-row">
-							<span className="prop-row__key">renderNumber</span>
-							<span className="prop-row__value prop-row__value--number">{frame.renderNumber}</span>
+						<div className="flex gap-3 py-0.75 text-[13px]">
+							<span className="text-muted min-w-20 shrink-0">renderNumber</span>
+							<span className="text-ink break-all">{frame.renderNumber}</span>
 						</div>
-						<div className="prop-row">
-							<span className="prop-row__key">score</span>
-							<span className={`prop-row__value ${scoreBadgeClass(frame.score ?? 100)}`}>
+						<div className="flex gap-3 py-0.75 text-[13px]">
+							<span className="text-muted min-w-20 shrink-0">score</span>
+							<span className={`break-all ${scoreBadgeClass(frame.score ?? 100)}`}>
 								{frame.score !== null ? frame.score : '—'}
 							</span>
 						</div>
-						<div className="prop-row">
-							<span className="prop-row__key">triggeredBy</span>
-							<span className="prop-row__value">{frame.triggeredBy}</span>
+						<div className="flex gap-3 py-0.75 text-[13px]">
+							<span className="text-muted min-w-20 shrink-0">triggeredBy</span>
+							<span className="text-ink break-all">{frame.triggeredBy}</span>
 						</div>
-						<div className="prop-row">
-							<span className="prop-row__key">unstableProps</span>
-							<span className="prop-row__value">
+						<div className="flex gap-3 py-0.75 text-[13px]">
+							<span className="text-muted min-w-20 shrink-0">unstableProps</span>
+							<span className="text-ink break-all">
 								{unstableNames.length > 0 ? unstableNames.join(', ') : 'none'}
 							</span>
 						</div>
 					</>
 				)}
-				<hr style={{ margin: '8px 0', borderColor: 'var(--border-subtle)' }} />
-				<div className="prop-row">
-					<span className="prop-row__key">avgScore</span>
-					<span className="prop-row__value prop-row__value--number">
+				<hr className="my-2 border-edge" />
+				<div className="flex gap-3 py-0.75 text-[13px]">
+					<span className="text-muted min-w-20 shrink-0">avgScore</span>
+					<span className="text-ink break-all">
 						{stats.averageScore !== null ? stats.averageScore.toFixed(1) : '—'}
 					</span>
 				</div>
-				<div className="prop-row">
-					<span className="prop-row__key">ineffective renders</span>
-					<span className="prop-row__value prop-row__value--number">{stats.ineffectiveRenderCount}</span>
+				<div className="flex gap-3 py-0.75 text-[13px]">
+					<span className="text-muted min-w-20 shrink-0">ineffective</span>
+					<span className="text-ink break-all">{stats.ineffectiveRenderCount}</span>
 				</div>
-				<div className="prop-row">
-					<span className="prop-row__key">unstable prop names</span>
-					<span className="prop-row__value">
+				<div className="flex gap-3 py-0.75 text-[13px]">
+					<span className="text-muted min-w-20 shrink-0">unstable props</span>
+					<span className="text-ink break-all">
 						{stats.unstablePropNames.length > 0 ? stats.unstablePropNames.join(', ') : 'none'}
 					</span>
 				</div>
@@ -278,8 +265,6 @@ const StatsPanel = ({ engine, cursor }: StatsPanelProps) => {
 		</div>
 	);
 };
-
-// ── Scenario panels ────────────────────────────────────────────────────────────
 
 const PRESETS: readonly ReplayFilterPreset[] = [
 	'issues-only',
@@ -310,13 +295,13 @@ const BasicReplayPanel = () => {
 	const goEnd = useCallback(() => setCursor(engine.navigate.atEnd()), [engine]);
 
 	return (
-		<div className="scenario-body">
-			<div className="demo-grid">
-				<div className="demo-pane">
-					<div className="demo-pane__header">
-						<span className="demo-pane__title">Frames ({engine.session.frameCount})</span>
+		<div className="flex flex-col gap-4">
+			<div className="grid grid-cols-2 gap-5 items-start max-md:grid-cols-1">
+				<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+					<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+						<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">Frames ({engine.session.frameCount})</span>
 					</div>
-					<div className="demo-pane__body console-panel">
+					<div className="p-4 text-xs min-h-50">
 						{engine.session.frames.map((frame) => (
 							<FrameRow
 								key={frame.frameIndex}
@@ -333,30 +318,30 @@ const BasicReplayPanel = () => {
 				<StatsPanel engine={engine} cursor={cursor} />
 			</div>
 
-			<div className="scenario-controls">
+			<div className="flex gap-2">
 				<button
-					className="btn btn--ghost btn--sm"
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-transparent bg-transparent text-muted text-[11px] hover:text-ink hover:bg-raised cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
 					onClick={goStart}
 					disabled={cursor.frameIndex === 0}
 				>
 					⏮ Start
 				</button>
 				<button
-					className="btn btn--primary"
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-brand-dim bg-brand-dim text-brand text-[11px] hover:bg-[#1e4a7a] cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
 					onClick={goPrev}
 					disabled={cursor.frameIndex === 0}
 				>
 					← Prev
 				</button>
 				<button
-					className="btn btn--primary"
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-brand-dim bg-brand-dim text-brand text-[11px] hover:bg-[#1e4a7a] cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
 					onClick={goNext}
 					disabled={cursor.frameIndex === engine.session.frameCount - 1}
 				>
 					Next →
 				</button>
 				<button
-					className="btn btn--ghost btn--sm"
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-transparent bg-transparent text-muted text-[11px] hover:text-ink hover:bg-raised cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
 					onClick={goEnd}
 					disabled={cursor.frameIndex === engine.session.frameCount - 1}
 				>
@@ -388,17 +373,17 @@ const FilterIssuesPanel = () => {
 	}, [engine, cursor]);
 
 	return (
-		<div className="scenario-body">
-			<div className="demo-grid">
-				<div className="demo-pane">
-					<div className="demo-pane__header">
-						<span className="demo-pane__title">
+		<div className="flex flex-col gap-4">
+			<div className="grid grid-cols-2 gap-5 items-start max-md:grid-cols-1">
+				<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+					<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+						<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">
 							Issues Only ({result.matchingFrameCount}/{engine.session.frameCount} frames)
 						</span>
 					</div>
-					<div className="demo-pane__body console-panel">
+					<div className="p-4 text-xs min-h-50">
 						{filteredFrames.length === 0 ? (
-							<div className="console-panel__empty">
+							<div className="py-6 text-center text-dim text-xs flex flex-col gap-1">
 								<span>No issues found.</span>
 							</div>
 						) : (
@@ -419,11 +404,17 @@ const FilterIssuesPanel = () => {
 				<StatsPanel engine={engine} cursor={cursor} />
 			</div>
 
-			<div className="scenario-controls">
-				<button className="btn btn--primary" onClick={jumpToPrevIssue}>
+			<div className="flex gap-2">
+				<button
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-brand-dim bg-brand-dim text-brand text-[11px] hover:bg-[#1e4a7a] cursor-pointer transition-colors"
+					onClick={jumpToPrevIssue}
+				>
 					← Prev issue
 				</button>
-				<button className="btn btn--primary" onClick={jumpToNextIssue}>
+				<button
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-brand-dim bg-brand-dim text-brand text-[11px] hover:bg-[#1e4a7a] cursor-pointer transition-colors"
+					onClick={jumpToNextIssue}
+				>
 					Next issue →
 				</button>
 			</div>
@@ -482,13 +473,13 @@ const BookmarksPanel = () => {
 	}, [engine, refreshBookmarks]);
 
 	return (
-		<div className="scenario-body">
-			<div className="demo-grid">
-				<div className="demo-pane">
-					<div className="demo-pane__header">
-						<span className="demo-pane__title">Frames</span>
+		<div className="flex flex-col gap-4">
+			<div className="grid grid-cols-2 gap-5 items-start max-md:grid-cols-1">
+				<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+					<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+						<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">Frames</span>
 					</div>
-					<div className="demo-pane__body console-panel">
+					<div className="p-4 text-xs min-h-50">
 						{engine.session.frames.map((frame) => (
 							<FrameRow
 								key={frame.frameIndex}
@@ -502,61 +493,62 @@ const BookmarksPanel = () => {
 						))}
 					</div>
 				</div>
-				<div className="demo-pane">
-					<div className="demo-pane__header">
-						<span className="demo-pane__title">Bookmarks ({bookmarks.length})</span>
+				<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+					<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+						<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">Bookmarks ({bookmarks.length})</span>
 					</div>
-					<div className="demo-pane__body console-panel">
-						{bookmarks.length === 0 ? (
-							<div className="console-panel__empty">
+					<div className="p-4 text-xs min-h-50">
+						{bookmarks.length === 0 && log.length === 0 ? (
+							<div className="py-6 text-center text-dim text-xs flex flex-col gap-1">
 								<span>No bookmarks yet.</span>
-								<span className="console-panel__empty-hint">
-									Select a frame and click &quot;Bookmark&quot;.
-								</span>
+								<span className="text-[11px] opacity-70">Select a frame and click &quot;Bookmark&quot;.</span>
 							</div>
 						) : (
-							bookmarks.map((bm) => (
-								<div key={bm.id} className="console-entry">
-									<div className="console-entry__header">
-										<span className="console-entry__title">{bm.label}</span>
-										<span className="console-entry__render">frame {bm.frameIndex}</span>
+							<>
+								{bookmarks.map((bm) => (
+									<div key={bm.id} className="border-b border-edge py-2.5 last:border-b-0">
+										<div className="flex items-center justify-between">
+											<span className="text-ink font-semibold">{bm.label}</span>
+											<span className="text-dim text-[11px]">frame {bm.frameIndex}</span>
+										</div>
 									</div>
-								</div>
-							))
+								))}
+								{log.map((entry, i) => (
+									<div key={i} className="border-b border-edge py-2 last:border-b-0">
+										<div className="flex gap-3 py-px pl-2 border-l-2 border-ok">
+											<span className="text-ok break-all">{entry}</span>
+										</div>
+									</div>
+								))}
+							</>
 						)}
-						{log.map((entry, i) => (
-							<div key={i} className="console-entry">
-								<div className="console-section">
-									<div className="console-section__line console-section__line--added">
-										<span className="console-line__added">{entry}</span>
-									</div>
-								</div>
-							</div>
-						))}
 					</div>
 				</div>
 			</div>
 
-			<div className="scenario-controls">
-				<button className="btn btn--primary" onClick={addBookmark}>
+			<div className="flex gap-2 flex-wrap">
+				<button
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-brand-dim bg-brand-dim text-brand text-[11px] hover:bg-[#1e4a7a] cursor-pointer transition-colors"
+					onClick={addBookmark}
+				>
 					Bookmark frame {cursor.frameIndex}
 				</button>
 				<button
-					className="btn btn--ghost btn--sm"
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-transparent bg-transparent text-muted text-[11px] hover:text-ink hover:bg-raised cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
 					onClick={updateBookmark}
 					disabled={bookmarkIdRef.current === null}
 				>
 					Update label
 				</button>
 				<button
-					className="btn btn--ghost btn--sm"
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-transparent bg-transparent text-muted text-[11px] hover:text-ink hover:bg-raised cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
 					onClick={jumpToBookmark}
 					disabled={bookmarkIdRef.current === null}
 				>
 					Jump to bookmark
 				</button>
 				<button
-					className="btn btn--ghost btn--sm"
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-transparent bg-transparent text-muted text-[11px] hover:text-ink hover:bg-raised cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
 					onClick={removeBookmark}
 					disabled={bookmarkIdRef.current === null}
 				>
@@ -581,24 +573,20 @@ const PresetExplorerPanel = () => {
 	);
 
 	return (
-		<div className="scenario-body">
-			<div className="demo-pane">
-				<div className="demo-pane__header">
-					<span className="demo-pane__title">
+		<div className="flex flex-col gap-4">
+			<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+				<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+					<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">
 						Preset Results ({engine.session.frameCount} total frames)
 					</span>
 				</div>
-				<div className="demo-pane__body console-panel">
+				<div className="p-4 text-xs min-h-50">
 					{presetResults.map(({ preset, count }) => (
-						<div key={preset} className="console-entry">
-							<div className="console-entry__header">
-								<span className="console-entry__title">{preset}</span>
-								<span className="console-entry__meta">
-									<span
-										className={`console-entry__badge ${count > 0 ? 'console-entry__badge--warn' : 'console-entry__badge--ok'}`}
-									>
-										{count} frame{count !== 1 ? 's' : ''}
-									</span>
+						<div key={preset} className="border-b border-edge py-2.5 last:border-b-0">
+							<div className="flex items-center justify-between">
+								<span className="text-ink font-semibold">{preset}</span>
+								<span className={count > 0 ? BADGE_WARN : BADGE_OK}>
+									{count} frame{count !== 1 ? 's' : ''}
 								</span>
 							</div>
 						</div>
@@ -627,48 +615,41 @@ const MultiSessionPanel = () => {
 	);
 
 	return (
-		<div className="scenario-body">
-			<div className="demo-grid">
+		<div className="flex flex-col gap-4">
+			<div className="grid grid-cols-2 gap-5 items-start max-md:grid-cols-1">
 				{[engineA, engineB].map((engine, idx) => (
-					<div key={idx} className="demo-pane">
-						<div className="demo-pane__header">
-							<span className="demo-pane__title">
+					<div key={idx} className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+						<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+							<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">
 								Session {idx + 1} — {engine.session.componentName}
 							</span>
 						</div>
-						<div
-							className="demo-pane__body"
-							style={{ padding: '12px 16px', gap: 8, display: 'flex', flexDirection: 'column' }}
-						>
-							<div className="prop-row">
-								<span className="prop-row__key">frameCount</span>
-								<span className="prop-row__value prop-row__value--number">
-									{engine.session.frameCount}
-								</span>
+						<div className="p-3 flex flex-col gap-1.5 text-xs">
+							<div className="flex gap-3 py-0.75 text-[13px]">
+								<span className="text-muted min-w-20 shrink-0">frameCount</span>
+								<span className="text-ink break-all">{engine.session.frameCount}</span>
 							</div>
-							<div className="prop-row">
-								<span className="prop-row__key">avgScore</span>
-								<span className="prop-row__value prop-row__value--number">
+							<div className="flex gap-3 py-0.75 text-[13px]">
+								<span className="text-muted min-w-20 shrink-0">avgScore</span>
+								<span className="text-ink break-all">
 									{engine.session.stats.averageScore !== null
 										? engine.session.stats.averageScore.toFixed(1)
 										: '—'}
 								</span>
 							</div>
-							<div className="prop-row">
-								<span className="prop-row__key">ineffective renders</span>
-								<span className="prop-row__value prop-row__value--number">
-									{engine.session.stats.ineffectiveRenderCount}
-								</span>
+							<div className="flex gap-3 py-0.75 text-[13px]">
+								<span className="text-muted min-w-20 shrink-0">ineffective</span>
+								<span className="text-ink break-all">{engine.session.stats.ineffectiveRenderCount}</span>
 							</div>
-							<div className="prop-row">
-								<span className="prop-row__key">unstable props</span>
-								<span className="prop-row__value">
+							<div className="flex gap-3 py-0.75 text-[13px]">
+								<span className="text-muted min-w-20 shrink-0">unstable props</span>
+								<span className="text-ink break-all">
 									{engine.session.stats.unstablePropNames.join(', ') || 'none'}
 								</span>
 							</div>
-							<div className="prop-row">
-								<span className="prop-row__key">issues-only frames</span>
-								<span className="prop-row__value prop-row__value--number">
+							<div className="flex gap-3 py-0.75 text-[13px]">
+								<span className="text-muted min-w-20 shrink-0">issues-only</span>
+								<span className="text-ink break-all">
 									{engine.applyPreset('issues-only').matchingFrameCount}
 								</span>
 							</div>
@@ -680,24 +661,26 @@ const MultiSessionPanel = () => {
 	);
 };
 
-// ── Scenario tabs ──────────────────────────────────────────────────────────────
-
 type ScenarioTabsProps = {
 	active: ScenarioId;
 	onChange: (id: ScenarioId) => void;
 };
 
 const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
-	<div className="scenario-tabs" role="tablist">
+	<div className="flex gap-1.5 flex-wrap mb-5" role="tablist">
 		{SCENARIOS.map((s) => (
 			<button
 				key={s.id}
 				role="tab"
-				className={`scenario-tab scenario-tab--${s.badge}`}
+				className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs cursor-pointer transition-colors ${
+					active === s.id
+						? 'border-brand bg-brand-dim text-brand'
+						: 'border-edge bg-raised text-muted hover:border-edge-active hover:text-ink'
+				}`}
 				aria-selected={active === s.id}
 				onClick={() => onChange(s.id)}
 			>
-				<span className={`scenario-tab__indicator scenario-tab__indicator--${s.badge}`}>
+				<span className={s.badge === 'warn' ? 'text-warn' : 'text-ok'}>
 					{s.badge === 'warn' ? '⚠' : '✓'}
 				</span>
 				{s.label}
@@ -715,8 +698,6 @@ const ScenarioPanel = ({ scenario }: { scenario: Scenario }) => {
 	return null;
 };
 
-// ── Root export ────────────────────────────────────────────────────────────────
-
 export const RenderReplayEngineDemo = () => {
 	const [activeId, setActiveId] = useState<ScenarioId>('basic-replay');
 	const activeScenario = SCENARIOS.find((s) => s.id === activeId) as Scenario;
@@ -725,19 +706,26 @@ export const RenderReplayEngineDemo = () => {
 		<>
 			<ScenarioTabs active={activeId} onChange={setActiveId} />
 
-			<div className="scenario-header">
-				<span className={`scenario-badge scenario-badge--${activeScenario.badge}`}>
+			<div className="mb-5 flex flex-col gap-2.5">
+				<span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.75 rounded-full border w-fit ${
+					activeScenario.badge === 'warn'
+						? 'border-warn-dim bg-warn-dim text-warn'
+						: 'border-ok-dim bg-ok-dim text-ok'
+				}`}>
 					{activeScenario.badge === 'warn' ? '⚠ issues visible' : '✓ healthy'}
 				</span>
-				<p className="scenario-description">{activeScenario.description}</p>
+				<p className="text-[13px] text-muted max-w-150 leading-[1.7]">{activeScenario.description}</p>
 			</div>
 
 			<ScenarioPanel key={activeId} scenario={activeScenario} />
 
-			<details className="code-hint code-hint--usage">
-				<summary>How to use render-replay-engine</summary>
-				<div className="code-hint__body">
-					<pre className="code-hint__pre">{`import {
+			<details className="border border-edge rounded-[10px] overflow-hidden group mt-2">
+				<summary className="px-3.5 py-2.5 cursor-pointer text-xs text-muted bg-raised border-b border-transparent group-open:border-b-edge hover:text-ink select-none list-none flex items-center gap-1.5 transition-colors">
+					<span className="text-[10px] transition-transform inline-block mr-1 group-open:rotate-90">▸</span>
+					How to use render-replay-engine
+				</summary>
+				<div className="p-3.5 flex flex-col gap-2.5">
+					<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{`import {
   createReplayEngine,
   buildReplaySessions,
   fromEvents,
@@ -776,7 +764,7 @@ engine.navigate.jumpToBookmark(bm.id);
 // 6. Multi-session: inspect all sessions, then pick one
 const sessions = buildReplaySessions(fromBuffer(buffer));
 const engine2 = createReplayEngine(fromBuffer(buffer), sessions[0].id);`}</pre>
-					<p className="code-hint__note">
+					<p className="text-xs text-dim leading-[1.6]">
 						Pure TypeScript, zero runtime dependencies. Works in any environment — no React peer
 						dependency. Pair with render-telemetry-core to capture events from live components.
 					</p>

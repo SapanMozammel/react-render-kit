@@ -65,10 +65,19 @@ export {
 	createMemoryTransport,
 	createLocalStorageTransport,
 	createCustomTransport,
+	registerTransport,
+	unregisterAllTransports,
+	emitEvents,
+	createSessionStartEvent,
+	createSessionEndEvent,
 	serializeBuffer,
 	deserializeBuffer,
+	serializeSession,
+	deserializeSession,
 	validateEvent,
+	isKnownEventType,
 	CURRENT_SCHEMA_VERSION,
+	EVENT_SCHEMA_VERSIONS,
 	createRenderEvent,
 	createPropChangeEvent,
 	createFrequencyEvent,
@@ -96,7 +105,7 @@ export type {
 } from '@sapanmozammel/render-telemetry-core';
 
 // render-replay-engine
-export { createReplayEngine, buildReplaySessions, applyFilter, mergeFilters, withFilter, applyPreset, createBookmarkStore, ReplayError } from '@sapanmozammel/render-replay-engine';
+export { createReplayEngine, buildReplaySessions, fromEvents, fromBuffer, fromSerialized, applyFilter, mergeFilters, withFilter, applyPreset, createBookmarkStore, ReplayError } from '@sapanmozammel/render-replay-engine';
 export type {
 	ReplaySessionId,
 	ReplayFrameId,
@@ -118,7 +127,7 @@ export type {
 } from '@sapanmozammel/render-replay-engine';
 
 // render-intelligence
-export { analyzeRenders, createPlugin, IntelligenceError } from '@sapanmozammel/render-intelligence';
+export { analyzeRenders, analyzeComponents, rankBottlenecks, createPlugin, IntelligenceError } from '@sapanmozammel/render-intelligence';
 export type {
 	IntelligenceSource,
 	IntelligenceOptions,

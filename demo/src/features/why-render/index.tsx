@@ -6,8 +6,6 @@ import ConsolePanel from '@/components/console-panel';
 import { usePropLog } from '@/hooks/use-prop-log';
 import { SCENARIOS, type Scenario, type ScenarioId } from './scenarios';
 
-// ── Types ────────────────────────────────────────────────────
-
 type User = { id: number; role: string };
 
 type DemoProps = {
@@ -17,8 +15,6 @@ type DemoProps = {
 	onSave: () => void;
 };
 
-// ── Toggle ───────────────────────────────────────────────────
-
 type ToggleProps = {
 	checked: boolean;
 	onChange: (v: boolean) => void;
@@ -26,21 +22,19 @@ type ToggleProps = {
 };
 
 const Toggle = ({ checked, onChange, label }: ToggleProps) => (
-	<label className="toggle">
+	<label className="flex items-center gap-2 cursor-pointer text-xs text-muted select-none">
 		<input
 			type="checkbox"
 			checked={checked}
 			onChange={(e) => onChange(e.target.checked)}
-			style={{ position: 'absolute', opacity: 0, width: 1, height: 1, margin: 0 }}
+			className="absolute opacity-0 w-px h-px m-0"
 		/>
-		<span className={`toggle__track${checked ? ' toggle__track--on' : ''}`}>
-			<span className="toggle__thumb" />
+		<span className={`w-8 h-4.5 rounded-[9px] border relative transition-all duration-150 shrink-0 ${checked ? 'bg-brand-dim border-brand' : 'bg-elevated border-edge'}`}>
+			<span className={`w-3 h-3 rounded-full absolute top-0.75 left-0.75 transition-all duration-150 ${checked ? 'translate-x-3.5 bg-brand' : 'bg-dim'}`} />
 		</span>
 		{label}
 	</label>
 );
-
-// ── Scenario tabs ─────────────────────────────────────────────
 
 type ScenarioTabsProps = {
 	active: ScenarioId;
@@ -48,16 +42,20 @@ type ScenarioTabsProps = {
 };
 
 const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
-	<div className="scenario-tabs" role="tablist">
+	<div className="flex gap-1.5 flex-wrap mb-5" role="tablist">
 		{SCENARIOS.map((s) => (
 			<button
 				key={s.id}
 				role="tab"
-				className={`scenario-tab scenario-tab--${s.badge}`}
+				className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs cursor-pointer transition-colors ${
+					active === s.id
+						? 'border-brand bg-brand-dim text-brand'
+						: 'border-edge bg-raised text-muted hover:border-edge-active hover:text-ink'
+				}`}
 				aria-selected={active === s.id}
 				onClick={() => onChange(s.id)}
 			>
-				<span className={`scenario-tab__indicator scenario-tab__indicator--${s.badge}`}>
+				<span className={s.badge === 'warn' ? 'text-warn' : 'text-ok'}>
 					{s.badge === 'warn' ? '⚠' : '✓'}
 				</span>
 				{s.label}
@@ -65,9 +63,6 @@ const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
 		))}
 	</div>
 );
-
-// ── DemoTarget ───────────────────────────────────────────────
-// The component being "debugged". useWhyRender logs to the real console.
 
 type DemoTargetProps = DemoProps & {
 	changedKeys: ReadonlySet<string>;
@@ -85,34 +80,34 @@ const DemoTarget = ({ changedKeys, latestRenderNumber, ...props }: DemoTargetPro
 		return (
 			<div
 				key={changed ? `${key}-${latestRenderNumber}` : key}
-				className={`prop-row${changed ? ' prop-row--changed' : ''}`}
+				className={`flex gap-3 py-0.75 text-[13px]${changed ? ' animate-[prop-flash_0.7s_ease-out]' : ''}`}
 			>
-				<span className="prop-row__key">{key}</span>
+				<span className="text-muted min-w-20 shrink-0">{key}</span>
 				{valueNode}
 			</div>
 		);
 	};
 
 	return (
-		<div className="component-preview">
-			<div className="component-preview__label">
+		<div className="bg-elevated border border-edge rounded-md overflow-hidden mb-4">
+			<div className="text-[11px] text-dim px-3 py-1.5 border-b border-edge bg-raised flex items-center justify-between">
 				&lt;UserCard&gt;
-				<span className="render-badge" suppressHydrationWarning>
+				<span className="inline-flex items-center gap-1 text-[11px] text-dim px-2 py-0.5 rounded-full border border-edge bg-elevated ml-2" suppressHydrationWarning>
 					render #{renderCountRef.current}
 				</span>
 			</div>
-			<div className="component-preview__body">
-				{propRow('name', <span className="prop-row__value">&quot;{name}&quot;</span>)}
-				{propRow('age', <span className="prop-row__value">{age}</span>)}
+			<div className="p-3">
+				{propRow('name', <span className="text-ink break-all">&quot;{name}&quot;</span>)}
+				{propRow('age', <span className="text-ink break-all">{age}</span>)}
 				{propRow(
 					'user',
-					<span className="prop-row__value prop-row__value--object">
+					<span className="text-purple break-all">
 						{'{'}id:{user.id}, role:&quot;{user.role}&quot;{'}'}
 					</span>,
 				)}
 				{propRow(
 					'onSave',
-					<span className="prop-row__value prop-row__value--function">
+					<span className="text-brand break-all">
 						[Function: {(onSave as { name?: string }).name || 'anonymous'}]
 					</span>,
 				)}
@@ -120,9 +115,6 @@ const DemoTarget = ({ changedKeys, latestRenderNumber, ...props }: DemoTargetPro
 		</div>
 	);
 };
-
-// ── ScenarioInner ─────────────────────────────────────────────
-// Remounts when (scenarioId + fixed) key changes, ensuring clean state.
 
 type ScenarioInnerProps = {
 	scenario: Scenario;
@@ -133,16 +125,12 @@ const ScenarioInner = ({ scenario, fixed }: ScenarioInnerProps) => {
 	const [parentTick, setParentTick] = useState(0);
 	const [nameFlip, setNameFlip] = useState(false);
 
-	// Stable references — never change across renders
 	const stableUser = useMemo<User>(() => ({ id: 1, role: 'admin' }), []);
 	const stableOnSave = useCallback(() => {}, []);
 
-	// Unstable references — new reference every time parentTick increments
-	// These simulate a parent passing inline object/callback literals
 	const unstableUser = useMemo<User>(() => ({ id: 1, role: 'admin' }), [parentTick]);
 	const unstableOnSave = useCallback(() => {}, [parentTick]);
 
-	// Derive actual props based on scenario + fixed mode
 	const user = scenario.id === 'inline-object' && !fixed ? unstableUser : stableUser;
 	const onSave = scenario.id === 'inline-callback' && !fixed ? unstableOnSave : stableOnSave;
 	const name = scenario.id === 'real-change' && nameFlip ? 'Bob' : 'Alice';
@@ -154,7 +142,6 @@ const ScenarioInner = ({ scenario, fixed }: ScenarioInnerProps) => {
 
 	const { entries, clear } = usePropLog('UserCard', demoProps as Record<string, unknown>);
 
-	// Derive changed keys from the latest entry — no state, no effects
 	const changedKeys = useMemo<ReadonlySet<string>>(
 		() => new Set(entries[0]?.changes.map((c) => c.key) ?? []),
 		[entries],
@@ -170,40 +157,43 @@ const ScenarioInner = ({ scenario, fixed }: ScenarioInnerProps) => {
 	};
 
 	return (
-		<div className="scenario-body">
-			<div className="demo-grid">
-				{/* Left pane — component preview */}
+		<div className="flex flex-col gap-4">
+			<div className="grid grid-cols-2 gap-5 items-start max-md:grid-cols-1">
 				<DemoTarget
 					{...demoProps}
 					changedKeys={changedKeys}
 					latestRenderNumber={latestRenderNumber}
 				/>
-
-				{/* Right pane — hook output */}
 				<ConsolePanel entries={entries} onClear={clear} />
 			</div>
 
-			<div className="scenario-controls">
-				<button className="btn btn--primary" onClick={handleTrigger}>
+			<div className="flex gap-2">
+				<button
+					className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-brand-dim bg-brand-dim text-brand text-xs hover:bg-[#1e4a7a] cursor-pointer transition-colors"
+					onClick={handleTrigger}
+				>
 					{scenario.triggerLabel}
 				</button>
 			</div>
 
-			<details className="code-hint">
-				<summary>See the code</summary>
-				<div className="code-hint__body">
+			<details className="border border-edge rounded-[10px] overflow-hidden group">
+				<summary className="px-3.5 py-2.5 cursor-pointer text-xs text-muted bg-raised border-b border-transparent group-open:border-b-edge hover:text-ink select-none list-none flex items-center gap-1.5 transition-colors">
+					<span className="text-[10px] transition-transform inline-block mr-1 group-open:rotate-90">▸</span>
+					See the code
+				</summary>
+				<div className="p-3.5 flex flex-col gap-2.5">
 					{scenario.canFix && (
-						<div className="code-hint__label code-hint__label--bad">
+						<div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-error">
 							{fixed ? 'The bug (before fix):' : '❌ The bug:'}
 						</div>
 					)}
-					<pre className="code-hint__pre">{scenario.codeBreaking}</pre>
+					<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{scenario.codeBreaking}</pre>
 					{scenario.canFix && scenario.codeFixed && (
 						<>
-							<div className="code-hint__label code-hint__label--good">
+							<div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-ok">
 								{fixed ? '✅ The fix (applied):' : '✅ The fix:'}
 							</div>
-							<pre className="code-hint__pre">{scenario.codeFixed}</pre>
+							<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{scenario.codeFixed}</pre>
 						</>
 					)}
 				</div>
@@ -211,8 +201,6 @@ const ScenarioInner = ({ scenario, fixed }: ScenarioInnerProps) => {
 		</div>
 	);
 };
-
-// ── WhyRenderDemo ─────────────────────────────────────────────
 
 export const WhyRenderDemo = () => {
 	const [activeId, setActiveId] = useState<ScenarioId>('inline-object');
@@ -229,16 +217,20 @@ export const WhyRenderDemo = () => {
 		<>
 			<ScenarioTabs active={activeId} onChange={handleScenarioChange} />
 
-			<div className="scenario-header">
-				<span className={`scenario-badge scenario-badge--${activeScenario.badge}`}>
+			<div className="mb-5 flex flex-col gap-2.5">
+				<span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.75 rounded-full border w-fit ${
+					activeScenario.badge === 'warn'
+						? 'border-warn-dim bg-warn-dim text-warn'
+						: 'border-ok-dim bg-ok-dim text-ok'
+				}`}>
 					{activeScenario.badge === 'warn' ? '⚠ unnecessary re-render' : '✓ expected behavior'}
 				</span>
-				<p className="scenario-description">{activeScenario.description}</p>
+				<p className="text-[13px] text-muted max-w-150 leading-[1.7]">{activeScenario.description}</p>
 				{activeScenario.canFix && (
-					<div className="scenario-fix-row">
+					<div className="flex items-center gap-3.5 flex-wrap">
 						<Toggle checked={fixed} onChange={setFixed} label="Show fix" />
 						{fixed && activeScenario.fixDescription && (
-							<span className="scenario-fix-note">{activeScenario.fixDescription}</span>
+							<span className="text-xs text-ok max-w-120 leading-[1.6]">{activeScenario.fixDescription}</span>
 						)}
 					</div>
 				)}
@@ -250,16 +242,19 @@ export const WhyRenderDemo = () => {
 				fixed={fixed}
 			/>
 
-			<details className="code-hint code-hint--usage">
-				<summary>How to add this to your component</summary>
-				<div className="code-hint__body">
-					<pre className="code-hint__pre">{`import { useWhyRender } from '@sapanmozammel/why-render';
+			<details className="border border-edge rounded-[10px] overflow-hidden group mt-2">
+				<summary className="px-3.5 py-2.5 cursor-pointer text-xs text-muted bg-raised border-b border-transparent group-open:border-b-edge hover:text-ink select-none list-none flex items-center gap-1.5 transition-colors">
+					<span className="text-[10px] transition-transform inline-block mr-1 group-open:rotate-90">▸</span>
+					How to add this to your component
+				</summary>
+				<div className="p-3.5 flex flex-col gap-2.5">
+					<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{`import { useWhyRender } from '@sapanmozammel/why-render';
 
 const UserCard = (props: UserCardProps) => {
   useWhyRender('UserCard', props);
   // rest of your component...
 };`}</pre>
-					<p className="code-hint__note">
+					<p className="text-xs text-dim leading-[1.6]">
 						No-op in production. Open DevTools console to see output alongside this panel.
 					</p>
 				</div>

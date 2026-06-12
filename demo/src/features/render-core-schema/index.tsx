@@ -17,8 +17,6 @@ import {
 import type { SchemaVersion } from '@sapanmozammel/render-core-schema';
 import { SCENARIOS, type ScenarioId, type Scenario } from './scenarios';
 
-// ── Guard definitions ──────────────────────────────────────────────────────────
-
 type GuardEntry = {
 	readonly name: string;
 	readonly typeName: string;
@@ -76,8 +74,6 @@ const GUARDS: readonly GuardEntry[] = [
 		validExamples: ['no-prop-change', 'genuine-prop-change', 'reference-instability', 'mixed'],
 	},
 ];
-
-// ── Event schema reference ────────────────────────────────────────────────────
 
 type FieldRow = { field: string; type: string; note?: string };
 type EventEntry = { name: string; fields: readonly FieldRow[] };
@@ -146,8 +142,6 @@ const EVENT_ENTRIES: readonly EventEntry[] = [
 		],
 	},
 ];
-
-// ── Replay schema reference ───────────────────────────────────────────────────
 
 type SchemaSection = { title: string; shape: string };
 
@@ -231,7 +225,7 @@ type ReplayFilterPreset =
 	},
 ];
 
-// ── TypeGuardPlayground ────────────────────────────────────────────────────────
+const BADGE_OK = 'text-[10px] font-semibold px-1.5 py-px rounded-full text-ok bg-ok-dim';
 
 const TypeGuardPlayground = () => {
 	const [input, setInput] = useState('1.0.0');
@@ -246,77 +240,58 @@ const TypeGuardPlayground = () => {
 	const matching = results.filter((r) => r.result);
 
 	return (
-		<div className="demo-grid demo-grid--single">
-			<div className="demo-pane">
-				<div className="demo-pane__header">
-					<span className="demo-pane__title">Type guard playground</span>
+		<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+			<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+				<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">Type guard playground</span>
+			</div>
+			<div className="p-4 flex flex-col gap-4 text-xs">
+				<div className="flex flex-col gap-1.5">
+					<label className="text-[11px] text-dim">Input value (string)</label>
+					<input
+						value={input}
+						onChange={(e) => setInput(e.target.value)}
+						placeholder="Type a value to test..."
+						className="w-full px-3 py-2 bg-raised border border-edge rounded-md text-ink text-[13px] outline-none transition-colors focus:border-brand font-mono"
+					/>
 				</div>
-				<div className="demo-pane__body" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-						<label style={{ fontSize: '0.75rem', color: 'var(--color-text-muted, #888)' }}>
-							Input value (string)
-						</label>
-						<input
-							value={input}
-							onChange={(e) => setInput(e.target.value)}
-							placeholder="Type a value to test..."
-							style={{
-								padding: '0.5rem 0.75rem',
-								background: 'var(--color-surface-2, #1e1e1e)',
-								border: '1px solid var(--color-border, #333)',
-								borderRadius: '4px',
-								color: 'inherit',
-								fontSize: '0.875rem',
-								fontFamily: 'monospace',
-								width: '100%',
-							}}
-						/>
-					</div>
 
-					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-						{results.map((r) => (
-							<div
-								key={r.name}
-								className="console-entry"
-								style={{ borderLeft: `3px solid ${r.result ? 'var(--color-ok, #22c55e)' : 'var(--color-border, #333)'}` }}
-							>
-								<div className="console-entry__header">
-									<span className="console-entry__title" style={{ fontFamily: 'monospace' }}>
-										{r.name}(
-										<span style={{ color: 'var(--color-accent, #60a5fa)' }}>&quot;{input}&quot;</span>)
-									</span>
-									<span className={`console-entry__badge ${r.result ? 'console-entry__badge--ok' : ''}`}
-										style={!r.result ? { background: 'var(--color-surface-3, #2a2a2a)', color: 'var(--color-text-muted, #888)' } : {}}>
-										{r.result ? 'true ✓' : 'false'}
-									</span>
-								</div>
-								{r.result && (
-									<div className="console-section">
-										<div className="console-section__line console-section__line--added">
-											<span className="console-line__key">narrows to</span>
-											<span className="console-line__added" style={{ fontFamily: 'monospace' }}>{r.typeName}</span>
-										</div>
-									</div>
-								)}
+				<div className="flex flex-col gap-1">
+					{results.map((r) => (
+						<div
+							key={r.name}
+							className={`border-b border-edge py-2 last:border-b-0 pl-2 border-l-2 ${r.result ? 'border-l-ok' : 'border-l-edge'}`}
+						>
+							<div className="flex items-center justify-between">
+								<span className="text-ink font-mono text-xs">
+									{r.name}(
+									<span className="text-brand">&quot;{input}&quot;</span>)
+								</span>
+								<span className={r.result ? BADGE_OK : 'text-[10px] font-semibold px-1.5 py-px rounded-full text-muted bg-elevated'}>
+									{r.result ? 'true ✓' : 'false'}
+								</span>
 							</div>
-						))}
-					</div>
-
-					{matching.length === 0 && (
-						<div className="console-panel__empty">
-							<span>No type matched &quot;{input}&quot;</span>
-							<span className="console-panel__empty-hint">
-								Try: 1.0.0 · render · EXCELLENT · HIGH · genuine · props · no-prop-change
-							</span>
+							{r.result && (
+								<div className="flex gap-3 py-px mt-0.5">
+									<span className="text-muted min-w-20 shrink-0">narrows to</span>
+									<span className="text-ok font-mono break-all">{r.typeName}</span>
+								</div>
+							)}
 						</div>
-					)}
+					))}
 				</div>
+
+				{matching.length === 0 && (
+					<div className="py-4 text-center text-dim text-xs flex flex-col gap-1">
+						<span>No type matched &quot;{input}&quot;</span>
+						<span className="text-[11px] opacity-70">
+							Try: 1.0.0 · render · EXCELLENT · HIGH · genuine · props · no-prop-change
+						</span>
+					</div>
+				)}
 			</div>
 		</div>
 	);
 };
-
-// ── VersionUtils ──────────────────────────────────────────────────────────────
 
 const VersionUtils = () => {
 	const [vA, setVA] = useState('1.2.0');
@@ -332,85 +307,69 @@ const VersionUtils = () => {
 		comparison === null ? '—' : comparison === 1 ? `"${vA}" > "${vB}"` : comparison === -1 ? `"${vA}" < "${vB}"` : `"${vA}" === "${vB}"`;
 
 	return (
-		<div className="demo-grid demo-grid--single">
-			<div className="demo-pane">
-				<div className="demo-pane__header">
-					<span className="demo-pane__title">Version comparison utilities</span>
-					<span className="console-entry__badge console-entry__badge--ok" style={{ fontSize: '0.7rem' }}>
-						CURRENT: {CURRENT_SCHEMA_VERSION}
-					</span>
-				</div>
-				<div className="demo-pane__body" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-					<div style={{ display: 'flex', gap: '1rem' }}>
-						{([['Version A', vA, setVA] as const, ['Version B (minimum)', vB, setVB] as const]).map(([label, val, setter]) => (
-							<div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-								<label style={{ fontSize: '0.75rem', color: 'var(--color-text-muted, #888)' }}>{label}</label>
-								<input
-									value={val}
-									onChange={(e) => setter(e.target.value)}
-									style={{
-										padding: '0.5rem 0.75rem',
-										background: 'var(--color-surface-2, #1e1e1e)',
-										border: `1px solid ${isSchemaVersion(val) ? 'var(--color-ok, #22c55e)' : 'var(--color-warn, #f59e0b)'}`,
-										borderRadius: '4px',
-										color: 'inherit',
-										fontSize: '0.875rem',
-										fontFamily: 'monospace',
-									}}
-								/>
-								{!isSchemaVersion(val) && (
-									<span style={{ fontSize: '0.7rem', color: 'var(--color-warn, #f59e0b)' }}>
-										invalid — use x.y.z
-									</span>
-								)}
-							</div>
-						))}
-					</div>
-
-					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-						<div className="console-entry">
-							<div className="console-entry__header">
-								<span className="console-entry__title" style={{ fontFamily: 'monospace' }}>
-									compareSchemaVersions(a, b)
-								</span>
-								<span className={`console-entry__badge ${comparison !== null ? 'console-entry__badge--ok' : ''}`}>
-									{comparison === null ? '—' : String(comparison)}
-								</span>
-							</div>
-							<div className="console-section">
-								<div className="console-section__line console-section__line--added">
-									<span className="console-line__added">{compLabel}</span>
-								</div>
-							</div>
-						</div>
-
-						<div className="console-entry">
-							<div className="console-entry__header">
-								<span className="console-entry__title" style={{ fontFamily: 'monospace' }}>
-									isSchemaVersionAtLeast(a, b)
-								</span>
-								<span className={`console-entry__badge ${atLeast === true ? 'console-entry__badge--ok' : atLeast === false ? 'console-entry__badge--warn' : ''}`}>
-									{atLeast === null ? '—' : String(atLeast)}
-								</span>
-							</div>
-							{atLeast !== null && (
-								<div className="console-section">
-									<div className="console-section__line console-section__line--added">
-										<span className="console-line__added">
-											{atLeast
-												? `"${vA}" meets minimum requirement "${vB}"`
-												: `"${vA}" is below minimum "${vB}" — migration required`}
-										</span>
-									</div>
-								</div>
+		<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+			<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+				<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">Version comparison utilities</span>
+				<span className={`${BADGE_OK} text-[0.7rem]`}>CURRENT: {CURRENT_SCHEMA_VERSION}</span>
+			</div>
+			<div className="p-4 flex flex-col gap-4 text-xs">
+				<div className="flex gap-4">
+					{([['Version A', vA, setVA] as const, ['Version B (minimum)', vB, setVB] as const]).map(([label, val, setter]) => (
+						<div key={label} className="flex-1 flex flex-col gap-1.5">
+							<label className="text-[11px] text-dim">{label}</label>
+							<input
+								value={val}
+								onChange={(e) => setter(e.target.value)}
+								className={`w-full px-3 py-2 bg-raised border rounded-md text-ink text-[13px] outline-none transition-colors font-mono ${
+									isSchemaVersion(val) ? 'border-ok' : 'border-warn'
+								}`}
+							/>
+							{!isSchemaVersion(val) && (
+								<span className="text-[11px] text-warn">invalid — use x.y.z</span>
 							)}
 						</div>
+					))}
+				</div>
+
+				<div className="flex flex-col gap-2">
+					<div className="border-b border-edge py-2 last:border-b-0">
+						<div className="flex items-center justify-between mb-1">
+							<span className="text-ink font-mono text-xs">compareSchemaVersions(a, b)</span>
+							<span className={comparison !== null ? BADGE_OK : 'text-[10px] font-semibold px-1.5 py-px rounded-full text-muted bg-elevated'}>
+								{comparison === null ? '—' : String(comparison)}
+							</span>
+						</div>
+						<div className="flex gap-3 py-px pl-2 border-l-2 border-ok">
+							<span className="text-ok break-all">{compLabel}</span>
+						</div>
 					</div>
 
-					<details className="code-hint" style={{ marginTop: '0.5rem' }}>
-						<summary>Typical usage</summary>
-						<div className="code-hint__body">
-							<pre className="code-hint__pre">{`import {
+					<div className="border-b border-edge py-2 last:border-b-0">
+						<div className="flex items-center justify-between mb-1">
+							<span className="text-ink font-mono text-xs">isSchemaVersionAtLeast(a, b)</span>
+							<span className={atLeast === true ? BADGE_OK : atLeast === false ? 'text-[10px] font-semibold px-1.5 py-px rounded-full text-warn bg-warn-dim' : 'text-[10px] font-semibold px-1.5 py-px rounded-full text-muted bg-elevated'}>
+								{atLeast === null ? '—' : String(atLeast)}
+							</span>
+						</div>
+						{atLeast !== null && (
+							<div className="flex gap-3 py-px pl-2 border-l-2 border-ok">
+								<span className="text-ok break-all">
+									{atLeast
+										? `"${vA}" meets minimum requirement "${vB}"`
+										: `"${vA}" is below minimum "${vB}" — migration required`}
+								</span>
+							</div>
+						)}
+					</div>
+				</div>
+
+				<details className="border border-edge rounded-[10px] overflow-hidden group">
+					<summary className="px-3.5 py-2.5 cursor-pointer text-xs text-muted bg-raised border-b border-transparent group-open:border-b-edge hover:text-ink select-none list-none flex items-center gap-1.5 transition-colors">
+						<span className="text-[10px] transition-transform inline-block mr-1 group-open:rotate-90">▸</span>
+						Typical usage
+					</summary>
+					<div className="p-3.5 flex flex-col gap-2.5">
+						<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{`import {
   isSchemaVersion,
   isSchemaVersionAtLeast,
   CURRENT_SCHEMA_VERSION,
@@ -423,39 +382,28 @@ if (!isSchemaVersionAtLeast(raw.schemaVersion, '1.0.0')) {
   return migrate(raw); // handle old payloads
 }
 // raw.schemaVersion is now narrowed to SchemaVersion`}</pre>
-						</div>
-					</details>
-				</div>
+					</div>
+				</details>
 			</div>
 		</div>
 	);
 };
 
-// ── EventSchema ───────────────────────────────────────────────────────────────
-
 const FieldTable = ({ fields }: { fields: readonly FieldRow[] }) => (
-	<table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
+	<table className="w-full border-collapse text-[0.8rem]">
 		<thead>
-			<tr style={{ borderBottom: '1px solid var(--color-border, #333)' }}>
+			<tr className="border-b border-edge">
 				{(['field', 'type', 'note'] as const).map((h) => (
-					<th key={h} style={{ textAlign: 'left', padding: '0.25rem 0.5rem', color: 'var(--color-text-muted, #888)', fontWeight: 500 }}>
-						{h}
-					</th>
+					<th key={h} className="text-left px-2 py-1 text-muted font-medium">{h}</th>
 				))}
 			</tr>
 		</thead>
 		<tbody>
 			{fields.map((f, i) => (
-				<tr key={`${f.field}-${i}`} style={{ borderBottom: '1px solid var(--color-border-subtle, #222)' }}>
-					<td style={{ padding: '0.25rem 0.5rem', fontFamily: 'monospace', color: 'var(--color-accent, #60a5fa)' }}>
-						{f.field}
-					</td>
-					<td style={{ padding: '0.25rem 0.5rem', fontFamily: 'monospace', color: 'var(--color-ok, #86efac)' }}>
-						{f.type}
-					</td>
-					<td style={{ padding: '0.25rem 0.5rem', color: 'var(--color-text-muted, #888)', fontSize: '0.75rem' }}>
-						{f.note ?? ''}
-					</td>
+				<tr key={`${f.field}-${i}`} className="border-b border-edge last:border-b-0">
+					<td className="px-2 py-1 font-mono text-brand">{f.field}</td>
+					<td className="px-2 py-1 font-mono text-ok">{f.type}</td>
+					<td className="px-2 py-1 text-muted text-[0.75rem]">{f.note ?? ''}</td>
 				</tr>
 			))}
 		</tbody>
@@ -468,125 +416,109 @@ const EventSchema = () => {
 	const entry = EVENT_ENTRIES.find((e) => e.name === active) ?? EVENT_ENTRIES[0]!;
 
 	return (
-		<div className="demo-grid demo-grid--single">
-			<div className="demo-pane">
-				<div className="demo-pane__header">
-					<span className="demo-pane__title">TelemetryEvent union — {EVENT_ENTRIES.length} variants</span>
+		<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+			<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+				<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">TelemetryEvent union — {EVENT_ENTRIES.length} variants</span>
+			</div>
+			<div className="p-4 flex flex-col gap-4 text-xs">
+				<div className="flex flex-wrap gap-1.5">
+					{EVENT_ENTRIES.map((e) => (
+						<button
+							key={e.name}
+							onClick={() => setActive(e.name)}
+							className={`px-2 py-1 rounded text-xs font-mono border cursor-pointer transition-colors ${
+								active === e.name
+									? 'border-edge bg-elevated text-brand'
+									: 'border-edge bg-transparent text-muted hover:text-ink hover:border-edge-active'
+							}`}
+						>
+							{e.name}
+						</button>
+					))}
 				</div>
-				<div className="demo-pane__body" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-					<div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-						{EVENT_ENTRIES.map((e) => (
-							<button
-								key={e.name}
-								onClick={() => setActive(e.name)}
-								style={{
-									padding: '0.25rem 0.6rem',
-									borderRadius: '4px',
-									fontSize: '0.75rem',
-									fontFamily: 'monospace',
-									border: '1px solid var(--color-border, #333)',
-									background: active === e.name ? 'var(--color-surface-3, #2a2a2a)' : 'transparent',
-									color: active === e.name ? 'var(--color-accent, #60a5fa)' : 'inherit',
-									cursor: 'pointer',
-								}}
-							>
-								{e.name}
-							</button>
-						))}
-					</div>
 
-					<div className="console-entry" style={{ padding: 0 }}>
-						<div className="console-entry__header" style={{ padding: '0.5rem 0.75rem' }}>
-							<span className="console-entry__title" style={{ fontFamily: 'monospace' }}>{entry.name}</span>
-							<span className="console-entry__badge console-entry__badge--ok">{entry.fields.length} fields (incl. base)</span>
-						</div>
-						<FieldTable fields={entry.fields} />
+				<div className="border border-edge rounded-md overflow-hidden">
+					<div className="flex items-center justify-between px-3 py-2 border-b border-edge bg-raised">
+						<span className="text-ink font-mono text-xs font-semibold">{entry.name}</span>
+						<span className={BADGE_OK}>{entry.fields.length} fields (incl. base)</span>
 					</div>
-
-					<p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted, #888)', margin: 0 }}>
-						All events extend <code>EventBase</code> via intersection. The <code>type</code> discriminant narrows
-						the union — TypeScript exhaustiveness checks work automatically.
-					</p>
+					<FieldTable fields={entry.fields} />
 				</div>
+
+				<p className="text-[11px] text-dim leading-[1.6]">
+					All events extend <code>EventBase</code> via intersection. The <code>type</code> discriminant narrows
+					the union — TypeScript exhaustiveness checks work automatically.
+				</p>
 			</div>
 		</div>
 	);
 };
-
-// ── ReplaySchema ──────────────────────────────────────────────────────────────
 
 const ReplaySchema = () => {
 	const [active, setActive] = useState(0);
 	const section = REPLAY_SECTIONS[active]!;
 
 	return (
-		<div className="demo-grid demo-grid--single">
-			<div className="demo-pane">
-				<div className="demo-pane__header">
-					<span className="demo-pane__title">Replay type hierarchy</span>
+		<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+			<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+				<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">Replay type hierarchy</span>
+			</div>
+			<div className="p-4 flex flex-col gap-4 text-xs">
+				<div className="flex flex-col gap-1">
+					{REPLAY_SECTIONS.map((s, i) => (
+						<button
+							key={i}
+							onClick={() => setActive(i)}
+							className={`px-3 py-1.5 rounded text-xs border cursor-pointer text-left transition-colors ${
+								active === i
+									? 'border-edge bg-elevated text-brand'
+									: 'border-edge bg-transparent text-muted hover:text-ink hover:border-edge-active'
+							}`}
+						>
+							{s.title}
+						</button>
+					))}
 				</div>
-				<div className="demo-pane__body" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-					<div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-						{REPLAY_SECTIONS.map((s, i) => (
-							<button
-								key={i}
-								onClick={() => setActive(i)}
-								style={{
-									padding: '0.4rem 0.75rem',
-									borderRadius: '4px',
-									fontSize: '0.8rem',
-									border: '1px solid var(--color-border, #333)',
-									background: active === i ? 'var(--color-surface-3, #2a2a2a)' : 'transparent',
-									color: active === i ? 'var(--color-accent, #60a5fa)' : 'inherit',
-									cursor: 'pointer',
-									textAlign: 'left',
-								}}
-							>
-								{s.title}
-							</button>
-						))}
-					</div>
 
-					<div className="console-entry" style={{ padding: '0.75rem' }}>
-						<pre style={{ margin: 0, fontSize: '0.78rem', lineHeight: 1.6, color: 'var(--color-ok, #86efac)', whiteSpace: 'pre-wrap' }}>
-							{section.shape}
-						</pre>
-					</div>
-
-					<p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted, #888)', margin: 0 }}>
-						All fields are <code>readonly</code>. Types are structural — any compatible implementation
-						satisfies the contract without importing from this package.
-					</p>
+				<div className="border border-edge rounded-md p-3">
+					<pre className="text-ok text-[0.78rem] leading-[1.6] whitespace-pre-wrap">
+						{section.shape}
+					</pre>
 				</div>
+
+				<p className="text-[11px] text-dim leading-[1.6]">
+					All fields are <code>readonly</code>. Types are structural — any compatible implementation
+					satisfies the contract without importing from this package.
+				</p>
 			</div>
 		</div>
 	);
 };
 
-// ── ScenarioTabs ──────────────────────────────────────────────────────────────
-
 type ScenarioTabsProps = { active: ScenarioId; onChange: (id: ScenarioId) => void };
 
 const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
-	<div className="scenario-tabs" role="tablist">
+	<div className="flex gap-1.5 flex-wrap mb-5" role="tablist">
 		{SCENARIOS.map((s) => (
 			<button
 				key={s.id}
 				role="tab"
-				className={`scenario-tab scenario-tab--${s.badge}`}
+				className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs cursor-pointer transition-colors ${
+					active === s.id
+						? 'border-brand bg-brand-dim text-brand'
+						: 'border-edge bg-raised text-muted hover:border-edge-active hover:text-ink'
+				}`}
 				aria-selected={active === s.id}
 				onClick={() => onChange(s.id)}
 			>
-				<span className={`scenario-tab__indicator scenario-tab__indicator--${s.badge}`}>
-					{s.badge === 'ok' ? '✓' : 'i'}
+				<span className={s.badge === 'ok' ? 'text-ok' : 'text-muted'}>
+					{s.badge === 'ok' ? '✓' : 'ⓘ'}
 				</span>
 				{s.label}
 			</button>
 		))}
 	</div>
 );
-
-// ── RenderCoreSchemaDemo ──────────────────────────────────────────────────────
 
 export const RenderCoreSchemaDemo = () => {
 	const [activeId, setActiveId] = useState<ScenarioId>('type-guards');
@@ -596,11 +528,15 @@ export const RenderCoreSchemaDemo = () => {
 		<>
 			<ScenarioTabs active={activeId} onChange={setActiveId} />
 
-			<div className="scenario-header">
-				<span className={`scenario-badge scenario-badge--${activeScenario.badge}`}>
+			<div className="mb-5 flex flex-col gap-2.5">
+				<span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.75 rounded-full border w-fit ${
+					activeScenario.badge === 'ok'
+						? 'border-ok-dim bg-ok-dim text-ok'
+						: 'border-edge bg-elevated text-muted'
+				}`}>
 					{activeScenario.badge === 'ok' ? '✓ utility' : 'ⓘ reference'}
 				</span>
-				<p className="scenario-description">{activeScenario.description}</p>
+				<p className="text-[13px] text-muted max-w-150 leading-[1.7]">{activeScenario.description}</p>
 			</div>
 
 			{activeId === 'type-guards' && <TypeGuardPlayground />}
@@ -608,10 +544,13 @@ export const RenderCoreSchemaDemo = () => {
 			{activeId === 'event-schema' && <EventSchema />}
 			{activeId === 'replay-schema' && <ReplaySchema />}
 
-			<details className="code-hint code-hint--usage">
-				<summary>How to use render-core-schema</summary>
-				<div className="code-hint__body">
-					<pre className="code-hint__pre">{`import type {
+			<details className="border border-edge rounded-[10px] overflow-hidden group mt-2">
+				<summary className="px-3.5 py-2.5 cursor-pointer text-xs text-muted bg-raised border-b border-transparent group-open:border-b-edge hover:text-ink select-none list-none flex items-center gap-1.5 transition-colors">
+					<span className="text-[10px] transition-transform inline-block mr-1 group-open:rotate-90">▸</span>
+					How to use render-core-schema
+				</summary>
+				<div className="p-3.5 flex flex-col gap-2.5">
+					<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{`import type {
   TelemetryEvent, RenderEvent, PropChangeEvent, ScoreEvent,
   HealthGrade, MemoClassification, FrequencyClass, SignalKind,
   ReplayEngine, ReplayFrame, ReplayFilter, ReplayCursor,
@@ -650,7 +589,7 @@ const handleEvent = (event: TelemetryEvent): void => {
     // No default needed — TypeScript knows all cases are covered
   }
 };`}</pre>
-					<p className="code-hint__note">
+					<p className="text-xs text-dim leading-[1.6]">
 						Zero runtime dependencies. No React peer dep. Safe to import in Node.js workers, serverless
 						functions, CLI tools, and browser contexts alike.
 					</p>

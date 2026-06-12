@@ -4,24 +4,26 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { useRenderFrequency } from '@sapanmozammel/why-render-frequency';
 import { SCENARIOS, type Scenario, type ScenarioId } from './scenarios';
 
-// ── Scenario tabs ─────────────────────────────────────────────
-
 type ScenarioTabsProps = {
 	active: ScenarioId;
 	onChange: (id: ScenarioId) => void;
 };
 
 const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
-	<div className="scenario-tabs" role="tablist">
+	<div className="flex gap-1.5 flex-wrap mb-5" role="tablist">
 		{SCENARIOS.map((s) => (
 			<button
 				key={s.id}
 				role="tab"
-				className={`scenario-tab scenario-tab--${s.badge}`}
+				className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs cursor-pointer transition-colors ${
+					active === s.id
+						? 'border-brand bg-brand-dim text-brand'
+						: 'border-edge bg-raised text-muted hover:border-edge-active hover:text-ink'
+				}`}
 				aria-selected={active === s.id}
 				onClick={() => onChange(s.id)}
 			>
-				<span className={`scenario-tab__indicator scenario-tab__indicator--${s.badge}`}>
+				<span className={s.badge === 'warn' ? 'text-warn' : 'text-ok'}>
 					{s.badge === 'warn' ? '⚠' : '✓'}
 				</span>
 				{s.label}
@@ -30,12 +32,6 @@ const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
 	</div>
 );
 
-// ── RenderBox ─────────────────────────────────────────────────
-// Visual card for a monitored component. `count` comes from a
-// useRef.current that increments in the caller's render body.
-// Passing count as key remounts the flash overlay and badge,
-// replaying their CSS animations on every render.
-
 type RenderBoxProps = {
 	label: string;
 	count: number;
@@ -43,20 +39,17 @@ type RenderBoxProps = {
 };
 
 const RenderBox = ({ label, count, extra }: RenderBoxProps) => (
-	<div className="freq-card">
-		{/* Remounted via key on every render to replay the flash animation */}
-		<div key={count} className="freq-flash" aria-hidden="true" />
-		<div className="freq-card__header">
-			<span className="freq-card__label">&lt;{label}&gt;</span>
-			<span key={count} className="render-badge render-badge--pulse" suppressHydrationWarning>
+	<div className="relative bg-surface border border-edge rounded-md overflow-hidden">
+		<div key={count} className="absolute inset-0 pointer-events-none rounded-md animate-[freq-flash_0.45s_ease-out_forwards] z-0" aria-hidden="true" />
+		<div className="relative z-10 flex items-center justify-between px-3 py-2 bg-raised border-b border-edge">
+			<span className="text-xs font-semibold text-muted">&lt;{label}&gt;</span>
+			<span key={count} className="inline-flex items-center gap-1 text-[11px] text-dim px-2 py-0.5 rounded-full border border-edge bg-elevated animate-[pulse-border_0.3s_ease]" suppressHydrationWarning>
 				render #{count}
 			</span>
 		</div>
-		{extra !== undefined && <div className="freq-card__body">{extra}</div>}
+		{extra !== undefined && <div className="relative z-10 px-3 py-2.5">{extra}</div>}
 	</div>
 );
-
-// ── Scenario 1: Typing Stress Test ────────────────────────────
 
 const SearchResultsChild = ({ text }: { text: string }) => {
 	useRenderFrequency('SearchResults', { sampleEvery: 1 });
@@ -68,9 +61,9 @@ const SearchResultsChild = ({ text }: { text: string }) => {
 			label="SearchResults"
 			count={renderCount.current}
 			extra={
-				<div className="freq-prop-row">
-					<span className="freq-prop-key">text</span>
-					<span className="freq-prop-value">&quot;{text}&quot;</span>
+				<div className="flex items-baseline gap-2 text-xs">
+					<span className="text-dim min-w-11 shrink-0">text</span>
+					<span className="text-muted break-all">&quot;{text}&quot;</span>
 				</div>
 			}
 		/>
@@ -81,10 +74,10 @@ const TypingScenario = () => {
 	const [text, setText] = useState('');
 
 	return (
-		<div className="scenario-body">
-			<div className="freq-input-row">
+		<div className="flex flex-col gap-4">
+			<div className="flex flex-col">
 				<input
-					className="freq-input"
+					className="w-full px-3 py-2 bg-raised border border-edge rounded-md text-ink text-[13px] outline-none transition-colors focus:border-brand"
 					value={text}
 					onChange={(e) => setText(e.target.value)}
 					placeholder="Type here to trigger re-renders…"
@@ -95,8 +88,6 @@ const TypingScenario = () => {
 		</div>
 	);
 };
-
-// ── Scenario 2: Render Loop Simulator ────────────────────────
 
 const RenderLoopScenario = () => {
 	const [running, setRunning] = useState(false);
@@ -113,22 +104,26 @@ const RenderLoopScenario = () => {
 	}, [running]);
 
 	return (
-		<div className="scenario-body">
+		<div className="flex flex-col gap-4">
 			<RenderBox
 				label="LoopComponent"
 				count={renderCount.current}
 				extra={
-					<div className="freq-prop-row">
-						<span className="freq-prop-key">status</span>
-						<span className={`freq-prop-value freq-prop-value--${running ? 'warn' : 'muted'}`}>
+					<div className="flex items-baseline gap-2 text-xs">
+						<span className="text-dim min-w-11 shrink-0">status</span>
+						<span className={running ? 'text-warn break-all' : 'text-dim break-all'}>
 							{running ? `running — tick ${tick}` : 'idle'}
 						</span>
 					</div>
 				}
 			/>
-			<div className="scenario-controls">
+			<div className="flex gap-2">
 				<button
-					className={`btn ${running ? 'btn--ghost' : 'btn--primary'} btn--sm`}
+					className={`inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border text-[11px] cursor-pointer transition-colors ${
+						running
+							? 'border-transparent bg-transparent text-muted hover:text-ink hover:bg-raised'
+							: 'border-brand-dim bg-brand-dim text-brand hover:bg-[#1e4a7a]'
+					}`}
 					onClick={() => setRunning((r) => !r)}
 				>
 					{running ? '⏹ Stop loop' : '▶ Start loop'}
@@ -137,8 +132,6 @@ const RenderLoopScenario = () => {
 		</div>
 	);
 };
-
-// ── Scenario 3: Parent State Storm ────────────────────────────
 
 const ChildObserver = ({ tick }: { tick: number }) => {
 	useRenderFrequency('ChildObserver', { sampleEvery: 1 });
@@ -150,9 +143,9 @@ const ChildObserver = ({ tick }: { tick: number }) => {
 			label="ChildObserver"
 			count={renderCount.current}
 			extra={
-				<div className="freq-prop-row">
-					<span className="freq-prop-key">tick</span>
-					<span className="freq-prop-value">{tick}</span>
+				<div className="flex items-baseline gap-2 text-xs">
+					<span className="text-dim min-w-11 shrink-0">tick</span>
+					<span className="text-muted break-all">{tick}</span>
 				</div>
 			}
 		/>
@@ -167,30 +160,31 @@ const ParentStormScenario = () => {
 	renderCount.current += 1;
 
 	return (
-		<div className="scenario-body">
-			<div className="freq-grid">
+		<div className="flex flex-col gap-4">
+			<div className="grid grid-cols-2 gap-3 max-[600px]:grid-cols-1">
 				<RenderBox
 					label="ParentComponent"
 					count={renderCount.current}
 					extra={
-						<div className="freq-prop-row">
-							<span className="freq-prop-key">state</span>
-							<span className="freq-prop-value">tick = {tick}</span>
+						<div className="flex items-baseline gap-2 text-xs">
+							<span className="text-dim min-w-11 shrink-0">state</span>
+							<span className="text-muted break-all">tick = {tick}</span>
 						</div>
 					}
 				/>
 				<ChildObserver tick={tick} />
 			</div>
-			<div className="scenario-controls">
-				<button className="btn btn--primary btn--sm" onClick={() => setTick((t) => t + 1)}>
+			<div className="flex gap-2">
+				<button
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-brand-dim bg-brand-dim text-brand text-[11px] hover:bg-[#1e4a7a] cursor-pointer transition-colors"
+					onClick={() => setTick((t) => t + 1)}
+				>
 					Update parent state
 				</button>
 			</div>
 		</div>
 	);
 };
-
-// ── Scenario 4: Memoized vs Non-Memoized ─────────────────────
 
 const PlainChild = () => {
 	useRenderFrequency('PlainComponent', { sampleEvery: 1 });
@@ -201,7 +195,9 @@ const PlainChild = () => {
 		<RenderBox
 			label="PlainComponent"
 			count={renderCount.current}
-			extra={<span className="freq-tag freq-tag--warn">no memo</span>}
+			extra={
+				<span className="inline-flex items-center text-[10px] font-semibold px-1.75 py-0.5 rounded-full text-warn bg-warn-dim">no memo</span>
+			}
 		/>
 	);
 };
@@ -215,7 +211,9 @@ const MemoizedChild = memo(() => {
 		<RenderBox
 			label="MemoizedComponent"
 			count={renderCount.current}
-			extra={<span className="freq-tag freq-tag--ok">React.memo</span>}
+			extra={
+				<span className="inline-flex items-center text-[10px] font-semibold px-1.75 py-0.5 rounded-full text-ok bg-ok-dim">React.memo</span>
+			}
 		/>
 	);
 });
@@ -226,21 +224,22 @@ const MemoScenario = () => {
 	const [tick, setTick] = useState(0);
 
 	return (
-		<div className="scenario-body">
-			<div className="freq-grid">
+		<div className="flex flex-col gap-4">
+			<div className="grid grid-cols-2 gap-3 max-[600px]:grid-cols-1">
 				<PlainChild />
 				<MemoizedChild />
 			</div>
-			<div className="scenario-controls">
-				<button className="btn btn--primary btn--sm" onClick={() => setTick((t) => t + 1)}>
+			<div className="flex gap-2">
+				<button
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-brand-dim bg-brand-dim text-brand text-[11px] hover:bg-[#1e4a7a] cursor-pointer transition-colors"
+					onClick={() => setTick((t) => t + 1)}
+				>
 					Trigger parent update (tick: {tick})
 				</button>
 			</div>
 		</div>
 	);
 };
-
-// ── WhyRenderFrequencyDemo ────────────────────────────────────
 
 export const WhyRenderFrequencyDemo = () => {
 	const [activeId, setActiveId] = useState<ScenarioId>('typing');
@@ -259,16 +258,23 @@ export const WhyRenderFrequencyDemo = () => {
 		<>
 			<ScenarioTabs active={activeId} onChange={handleScenarioChange} />
 
-			<div className="scenario-header">
-				<div className="freq-header-row">
-					<span className={`scenario-badge scenario-badge--${activeScenario.badge}`}>
+			<div className="mb-5 flex flex-col gap-2.5">
+				<div className="flex items-center gap-2.5 flex-wrap">
+					<span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.75 rounded-full border w-fit ${
+						activeScenario.badge === 'warn'
+							? 'border-warn-dim bg-warn-dim text-warn'
+							: 'border-ok-dim bg-ok-dim text-ok'
+					}`}>
 						{activeScenario.badge === 'warn' ? '⚠ excessive renders' : '✓ controlled renders'}
 					</span>
-					<button className="btn btn--ghost btn--sm" onClick={handleReset}>
+					<button
+						className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-transparent bg-transparent text-muted text-[11px] hover:text-ink hover:bg-raised cursor-pointer transition-colors"
+						onClick={handleReset}
+					>
 						↺ Reset
 					</button>
 				</div>
-				<p className="scenario-description">{activeScenario.description}</p>
+				<p className="text-[13px] text-muted max-w-150 leading-[1.7]">{activeScenario.description}</p>
 			</div>
 
 			<div key={`${activeId}-${resetKey}`}>
@@ -278,16 +284,19 @@ export const WhyRenderFrequencyDemo = () => {
 				{activeId === 'memo-comparison' && <MemoScenario />}
 			</div>
 
-			<details className="code-hint code-hint--usage">
-				<summary>How to add this to your component</summary>
-				<div className="code-hint__body">
-					<pre className="code-hint__pre">{`import { useRenderFrequency } from '@sapanmozammel/why-render-frequency';
+			<details className="border border-edge rounded-[10px] overflow-hidden group mt-2">
+				<summary className="px-3.5 py-2.5 cursor-pointer text-xs text-muted bg-raised border-b border-transparent group-open:border-b-edge hover:text-ink select-none list-none flex items-center gap-1.5 transition-colors">
+					<span className="text-[10px] transition-transform inline-block mr-1 group-open:rotate-90">▸</span>
+					How to add this to your component
+				</summary>
+				<div className="p-3.5 flex flex-col gap-2.5">
+					<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{`import { useRenderFrequency } from '@sapanmozammel/why-render-frequency';
 
 const UserCard = (props: UserCardProps) => {
   useRenderFrequency('UserCard');
   return <div>{props.user.name}</div>;
 };`}</pre>
-					<p className="code-hint__note">
+					<p className="text-xs text-dim leading-[1.6]">
 						No-op in production. Open DevTools console to see grouped output — one entry every 10
 						renders by default. Set{' '}
 						<code>{'{ sampleEvery: 1 }'}</code> to log on every render.

@@ -28,13 +28,59 @@ const UserCard = React.memo((props: UserCardProps) => {
 | `maxReports`       | `number`   | `10`    | Maximum grouped console entries per instance     |
 | `logOnEveryRender` | `boolean`  | `false` | Emit a single `console.log` on stable re-renders |
 
-## Session classifications
+## Session classifications (`MemoClassification`)
 
-| Classification        | Meaning                                                                         |
-| --------------------- | ------------------------------------------------------------------------------- |
-| `EFFECTIVE`           | All observed re-renders were data-driven; props are compatible with memoization |
-| `INEFFECTIVE`         | Under current prop stability, React.memo would not skip these re-renders        |
-| `PARTIALLY_EFFECTIVE` | Mix of genuine data changes and reference instability                           |
-| `NOT_APPLICABLE`      | No re-renders observed yet                                                      |
+| Classification | Meaning |
+|---|---|
+| `EFFECTIVE` | All observed re-renders were data-driven; props are compatible with memoization |
+| `INEFFECTIVE` | Under current prop stability, `React.memo` would not skip these re-renders |
+| `PARTIALLY_EFFECTIVE` | Mix of genuine data changes and reference instability |
+| `NOT_APPLICABLE` | No re-renders observed yet |
 
-Zero production bundle cost — the hook is a no-op when `NODE_ENV !== 'development'`.
+## Per-render signal (`SignalKind`)
+
+Each render produces a `RenderSignal` describing what changed:
+
+| `SignalKind` | Meaning |
+|---|---|
+| `genuine` | Props changed by value — `React.memo` correctly triggered a re-render |
+| `reference-only` | Only reference identity changed, values are equivalent — memo was bypassed unnecessarily |
+| `mixed` | Some props changed by value, others only by reference |
+
+`RenderSignal` shape:
+
+```ts
+type RenderSignal = {
+  kind: SignalKind;           // 'genuine' | 'reference-only' | 'mixed'
+  genuineKeys: string[];      // prop names with real value changes
+  unstableProps: PropInstability[]; // props with reference-only churn
+};
+```
+
+## Extended example
+
+```tsx
+import React from 'react';
+import { useMemoEffectAnalyzer } from '@sapanmozammel/memo-effect-analyzer';
+
+const ProductCard = React.memo((props: ProductCardProps) => {
+  useMemoEffectAnalyzer('ProductCard', props as Record<string, unknown>, {
+    ignoreProps: ['style'],   // exclude stable layout props
+    maxReports: 20,
+  });
+  return <div>{props.name}</div>;
+});
+```
+
+Console output after 10 renders:
+
+```
+▶ [memo-effect-analyzer] <ProductCard> — PARTIALLY_EFFECTIVE (10 renders)
+
+  Genuine changes (6):  name, price
+  Reference-only (4):   onAddToCart, tags
+```
+
+## Zero production cost
+
+The hook is a no-op when `NODE_ENV !== 'development'`.

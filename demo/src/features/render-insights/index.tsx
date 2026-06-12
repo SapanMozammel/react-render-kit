@@ -4,8 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRenderInsights } from '@sapanmozammel/render-insights';
 import { SCENARIOS, type Scenario, type ScenarioId } from './scenarios';
 
-// ── Types ──────────────────────────────────────────────────────
-
 type DashboardProps = {
 	onClick: () => void;
 	onHover?: () => void;
@@ -37,17 +35,39 @@ type InsightEntry = {
 
 type ScenarioCfg = DashboardProps & { ignoreProps: string[] };
 
-// ── Helpers ────────────────────────────────────────────────────
-
 const formatTime = (d: Date): string => d.toTimeString().slice(0, 8);
 
-const gradeColor = (g: HealthGrade): string => {
-	if (g === 'EXCELLENT') return 'console-entry__badge--ok';
-	if (g === 'GOOD') return 'console-entry__badge--ok';
-	return 'console-entry__badge--warn';
+const BADGE_OK = 'text-[10px] font-semibold px-1.5 py-px rounded-full text-ok bg-ok-dim';
+const BADGE_WARN = 'text-[10px] font-semibold px-1.5 py-px rounded-full text-warn bg-warn-dim';
+
+const gradeColor = (g: HealthGrade): string =>
+	g === 'EXCELLENT' || g === 'GOOD' ? BADGE_OK : BADGE_WARN;
+
+const SIGNAL_LABEL: Record<SignalKind, string> = {
+	genuine: '✓ genuine',
+	'reference-only': '⚠ reference-only',
+	mixed: '⚡ mixed',
 };
 
-// ── Capture hook (mirrors aggregator logic for the visual panel) ─
+const SIGNAL_BADGE: Record<SignalKind, string> = {
+	genuine: BADGE_OK,
+	'reference-only': BADGE_WARN,
+	mixed: BADGE_WARN,
+};
+
+const SESSION_LABEL: Record<MemoClassification, string> = {
+	NOT_APPLICABLE: 'NOT_APPLICABLE',
+	EFFECTIVE: 'EFFECTIVE',
+	INEFFECTIVE: 'INEFFECTIVE',
+	PARTIALLY_EFFECTIVE: 'PARTIALLY_EFFECTIVE',
+};
+
+const SESSION_BADGE: Record<MemoClassification, string> = {
+	NOT_APPLICABLE: BADGE_OK,
+	EFFECTIVE: BADGE_OK,
+	INEFFECTIVE: BADGE_WARN,
+	PARTIALLY_EFFECTIVE: BADGE_WARN,
+};
 
 const isRefType = (v: unknown): boolean =>
 	typeof v === 'function' || Array.isArray(v) || (typeof v === 'object' && v !== null);
@@ -165,24 +185,26 @@ const useInsightsCapture = (
 	return { entries, clear };
 };
 
-// ── ScenarioTabs ───────────────────────────────────────────────
-
 type ScenarioTabsProps = {
 	active: ScenarioId;
 	onChange: (id: ScenarioId) => void;
 };
 
 const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
-	<div className="scenario-tabs" role="tablist">
+	<div className="flex gap-1.5 flex-wrap mb-5" role="tablist">
 		{SCENARIOS.map((s) => (
 			<button
 				key={s.id}
 				role="tab"
-				className={`scenario-tab scenario-tab--${s.badge}`}
+				className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs cursor-pointer transition-colors ${
+					active === s.id
+						? 'border-brand bg-brand-dim text-brand'
+						: 'border-edge bg-raised text-muted hover:border-edge-active hover:text-ink'
+				}`}
 				aria-selected={active === s.id}
 				onClick={() => onChange(s.id)}
 			>
-				<span className={`scenario-tab__indicator scenario-tab__indicator--${s.badge}`}>
+				<span className={s.badge === 'warn' ? 'text-warn' : 'text-ok'}>
 					{s.badge === 'warn' ? '⚠' : '✓'}
 				</span>
 				{s.label}
@@ -191,81 +213,56 @@ const ScenarioTabs = ({ active, onChange }: ScenarioTabsProps) => (
 	</div>
 );
 
-// ── InsightsPanel ──────────────────────────────────────────────
-
-const SIGNAL_LABEL: Record<SignalKind, string> = {
-	genuine: '✓ genuine',
-	'reference-only': '⚠ reference-only',
-	mixed: '⚡ mixed',
-};
-
-const SIGNAL_BADGE: Record<SignalKind, string> = {
-	genuine: 'console-entry__badge--ok',
-	'reference-only': 'console-entry__badge--warn',
-	mixed: 'console-entry__badge--warn',
-};
-
-const SESSION_LABEL: Record<MemoClassification, string> = {
-	NOT_APPLICABLE: 'NOT_APPLICABLE',
-	EFFECTIVE: 'EFFECTIVE',
-	INEFFECTIVE: 'INEFFECTIVE',
-	PARTIALLY_EFFECTIVE: 'PARTIALLY_EFFECTIVE',
-};
-
-const SESSION_BADGE: Record<MemoClassification, string> = {
-	NOT_APPLICABLE: 'console-entry__badge--ok',
-	EFFECTIVE: 'console-entry__badge--ok',
-	INEFFECTIVE: 'console-entry__badge--warn',
-	PARTIALLY_EFFECTIVE: 'console-entry__badge--warn',
-};
-
 const InsightsPanel = ({ entries, onClear }: { entries: InsightEntry[]; onClear: () => void }) => (
-	<div className="demo-pane">
-		<div className="demo-pane__header">
-			<span className="demo-pane__title">useRenderInsights output</span>
+	<div className="bg-surface border border-edge rounded-[10px] overflow-hidden">
+		<div className="flex items-center justify-between px-3.5 py-2.5 border-b border-edge bg-raised">
+			<span className="text-[11px] text-muted uppercase tracking-[0.08em] font-semibold">useRenderInsights output</span>
 			{entries.length > 0 && (
-				<button className="btn btn--ghost btn--sm" onClick={onClear}>
+				<button
+					className="inline-flex items-center gap-1.5 px-2 py-0.75 rounded-md border border-transparent bg-transparent text-muted text-[11px] hover:text-ink hover:bg-raised cursor-pointer transition-colors"
+					onClick={onClear}
+				>
 					clear
 				</button>
 			)}
 		</div>
-		<div className="demo-pane__body console-panel">
+		<div className="p-4 text-xs min-h-50">
 			{entries.length === 0 ? (
-				<div className="console-panel__empty">
+				<div className="py-6 text-center text-dim text-xs flex flex-col gap-1">
 					<span>Trigger an action above.</span>
-					<span className="console-panel__empty-hint">No output = hook stayed silent.</span>
+					<span className="text-[11px] opacity-70">No output = hook stayed silent.</span>
 				</div>
 			) : (
 				entries.map((entry) => (
-					<div key={entry.id} className="console-entry">
-						<div className="console-entry__header">
-							<span className="console-entry__title">[render-insights] &lt;Dashboard&gt;</span>
-							<span className="console-entry__meta">
-								<span className={`console-entry__badge ${gradeColor(entry.grade)}`}>
+					<div key={entry.id} className="border-b border-edge py-2.5 last:border-b-0">
+						<div className="flex items-center justify-between mb-2">
+							<span className="text-ink font-semibold">[render-insights] &lt;Dashboard&gt;</span>
+							<span className="flex items-center gap-2">
+								<span className={gradeColor(entry.grade)}>
 									{entry.score} / 100 · {entry.grade}
 								</span>
 								{entry.signalKind !== null && (
-									<span className={`console-entry__badge ${SIGNAL_BADGE[entry.signalKind]}`}>
+									<span className={SIGNAL_BADGE[entry.signalKind]}>
 										{SIGNAL_LABEL[entry.signalKind]}
 									</span>
 								)}
-								<span className={`console-entry__badge ${SESSION_BADGE[entry.sessionClass]}`}>
+								<span className={SESSION_BADGE[entry.sessionClass]}>
 									{SESSION_LABEL[entry.sessionClass]}
 								</span>
-								<span className="console-entry__render">render #{entry.renderNumber}</span>
-								<span className="console-entry__time">{formatTime(entry.at)}</span>
+								<span className="text-dim text-[11px]">render #{entry.renderNumber}</span>
+								<span className="text-dim text-[11px]">{formatTime(entry.at)}</span>
 							</span>
 						</div>
 						{entry.changedKeys.length > 0 && (
-							<div className="console-section">
-								<div className="console-section__label">Changed Props</div>
+							<div className="mb-1.5">
+								<div className="text-dim text-[11px] uppercase tracking-[0.06em] mb-0.75">Changed Props</div>
 								{entry.changedKeys.map((k) => (
 									<div
 										key={k}
-										className={`console-section__line ${entry.unstableNames.includes(k) ? 'console-section__line--reference' : 'console-section__line--added'}`}
+										className={`flex gap-3 py-px pl-2 border-l-2 ${entry.unstableNames.includes(k) ? 'border-purple' : 'border-ok'}`}
 									>
-										<span className="console-line__key">{k}</span>
-										<span className={entry.unstableNames.includes(k) ? 'console-line__ref' : 'console-line__added'}>
+										<span className="text-muted min-w-20 shrink-0">{k}</span>
+										<span className={entry.unstableNames.includes(k) ? 'text-warn break-all' : 'text-ok break-all'}>
 											{entry.unstableNames.includes(k) ? 'new reference' : 'data changed'}
 										</span>
 									</div>
@@ -273,12 +270,12 @@ const InsightsPanel = ({ entries, onClear }: { entries: InsightEntry[]; onClear:
 							</div>
 						)}
 						{entry.unstableNames.length > 0 && (
-							<div className="console-section">
-								<div className="console-section__label">Unstable Props</div>
+							<div className="mb-1.5">
+								<div className="text-dim text-[11px] uppercase tracking-[0.06em] mb-0.75">Unstable Props</div>
 								{entry.unstableNames.map((n) => (
-									<div key={n} className="console-section__line console-section__line--reference">
-										<span className="console-line__key">{n}</span>
-										<span className="console-line__ref">reference instability</span>
+									<div key={n} className="flex gap-3 py-px pl-2 border-l-2 border-purple">
+										<span className="text-muted min-w-20 shrink-0">{n}</span>
+										<span className="text-warn break-all">reference instability</span>
 									</div>
 								))}
 							</div>
@@ -290,8 +287,6 @@ const InsightsPanel = ({ entries, onClear }: { entries: InsightEntry[]; onClear:
 	</div>
 );
 
-// ── DemoTarget ─────────────────────────────────────────────────
-
 const DemoTarget = ({ onClick, onHover, onDismiss, config, tags, items, title, ignoreProps }: ScenarioCfg) => {
 	const props: Record<string, unknown> = { onClick, onHover, onDismiss, config, tags, items, title };
 	useRenderInsights('Dashboard', props, { ignoreProps });
@@ -299,40 +294,38 @@ const DemoTarget = ({ onClick, onHover, onDismiss, config, tags, items, title, i
 	renderCountRef.current += 1;
 
 	return (
-		<div className="component-preview">
-			<div className="component-preview__label">
+		<div className="bg-elevated border border-edge rounded-md overflow-hidden mb-4">
+			<div className="text-[11px] text-dim px-3 py-1.5 border-b border-edge bg-raised flex items-center justify-between">
 				&lt;Dashboard&gt;
-				<span className="render-badge" suppressHydrationWarning>
+				<span className="inline-flex items-center gap-1 text-[11px] text-dim px-2 py-0.5 rounded-full border border-edge bg-elevated ml-2" suppressHydrationWarning>
 					render #{renderCountRef.current}
 				</span>
 			</div>
-			<div className="component-preview__body">
-				<div className="prop-row">
-					<span className="prop-row__key">onClick</span>
-					<span className="prop-row__value prop-row__value--function">[Function]</span>
+			<div className="p-3">
+				<div className="flex gap-3 py-0.75 text-[13px]">
+					<span className="text-muted min-w-20 shrink-0">onClick</span>
+					<span className="text-brand break-all">[Function]</span>
 				</div>
-				<div className="prop-row">
-					<span className="prop-row__key">config</span>
-					<span className="prop-row__value prop-row__value--object">
+				<div className="flex gap-3 py-0.75 text-[13px]">
+					<span className="text-muted min-w-20 shrink-0">config</span>
+					<span className="text-purple break-all">
 						{'{'}theme:&quot;{config.theme}&quot;{config.density ? `, density:"${config.density}"` : ''}{'}'}
 					</span>
 				</div>
 				{tags && (
-					<div className="prop-row">
-						<span className="prop-row__key">tags</span>
-						<span className="prop-row__value prop-row__value--object">[{tags.join(', ')}]</span>
+					<div className="flex gap-3 py-0.75 text-[13px]">
+						<span className="text-muted min-w-20 shrink-0">tags</span>
+						<span className="text-purple break-all">[{tags.join(', ')}]</span>
 					</div>
 				)}
-				<div className="prop-row">
-					<span className="prop-row__key">title</span>
-					<span className="prop-row__value">&quot;{title}&quot;</span>
+				<div className="flex gap-3 py-0.75 text-[13px]">
+					<span className="text-muted min-w-20 shrink-0">title</span>
+					<span className="text-ink break-all">&quot;{title}&quot;</span>
 				</div>
 			</div>
 		</div>
 	);
 };
-
-// ── ScenarioInner ──────────────────────────────────────────────
 
 const ScenarioInner = ({ scenario }: { scenario: Scenario }) => {
 	const [parentTick, setParentTick] = useState(0);
@@ -376,7 +369,6 @@ const ScenarioInner = ({ scenario }: { scenario: Scenario }) => {
 			return { onClick: unstableOnClick, config: stableConfig, title, ignoreProps: [] };
 		if (scenario.id === 'high-frequency')
 			return { onClick: stableOnClick, config: stableConfig, title, ignoreProps: [] };
-		// deep-cascade
 		return { onClick: unstableOnClick, config: unstableConfig, title, ignoreProps: [] };
 	}, [
 		scenario.id,
@@ -402,7 +394,6 @@ const ScenarioInner = ({ scenario }: { scenario: Scenario }) => {
 
 	const handleTrigger = useCallback(() => {
 		if (scenario.id === 'high-frequency') {
-			// fire 8 rapid increments to push frequency to HIGH
 			for (let i = 0; i < 8; i++) {
 				setTimeout(() => setDataTick((t) => t + 1), i * 40);
 			}
@@ -421,29 +412,35 @@ const ScenarioInner = ({ scenario }: { scenario: Scenario }) => {
 	}, [scenario.id, scenario.triggerBothTicks]);
 
 	return (
-		<div className="scenario-body">
-			<div className="demo-grid">
+		<div className="flex flex-col gap-4">
+			<div className="grid grid-cols-2 gap-5 items-start max-md:grid-cols-1">
 				<DemoTarget {...cfg} />
 				<InsightsPanel entries={entries} onClear={clear} />
 			</div>
 
-			<div className="scenario-controls">
-				<button className="btn btn--primary" onClick={handleTrigger}>
+			<div className="flex gap-2">
+				<button
+					className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-brand-dim bg-brand-dim text-brand text-xs hover:bg-[#1e4a7a] cursor-pointer transition-colors"
+					onClick={handleTrigger}
+				>
 					{scenario.triggerLabel}
 				</button>
 			</div>
 
-			<details className="code-hint">
-				<summary>See the code</summary>
-				<div className="code-hint__body">
+			<details className="border border-edge rounded-[10px] overflow-hidden group">
+				<summary className="px-3.5 py-2.5 cursor-pointer text-xs text-muted bg-raised border-b border-transparent group-open:border-b-edge hover:text-ink select-none list-none flex items-center gap-1.5 transition-colors">
+					<span className="text-[10px] transition-transform inline-block mr-1 group-open:rotate-90">▸</span>
+					See the code
+				</summary>
+				<div className="p-3.5 flex flex-col gap-2.5">
 					{scenario.canFix && (
-						<div className="code-hint__label code-hint__label--bad">❌ The pattern:</div>
+						<div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-error">❌ The pattern:</div>
 					)}
-					<pre className="code-hint__pre">{scenario.codeBreaking}</pre>
+					<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{scenario.codeBreaking}</pre>
 					{scenario.canFix && scenario.codeFixed && (
 						<>
-							<div className="code-hint__label code-hint__label--good">✅ The fix:</div>
-							<pre className="code-hint__pre">{scenario.codeFixed}</pre>
+							<div className="text-[11px] font-semibold uppercase tracking-[0.06em] text-ok">✅ The fix:</div>
+							<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{scenario.codeFixed}</pre>
 						</>
 					)}
 				</div>
@@ -451,8 +448,6 @@ const ScenarioInner = ({ scenario }: { scenario: Scenario }) => {
 		</div>
 	);
 };
-
-// ── RenderInsightsDemo ─────────────────────────────────────────
 
 export const RenderInsightsDemo = () => {
 	const [activeId, setActiveId] = useState<ScenarioId>('perfectly-optimized');
@@ -462,25 +457,32 @@ export const RenderInsightsDemo = () => {
 		<>
 			<ScenarioTabs active={activeId} onChange={setActiveId} />
 
-			<div className="scenario-header">
-				<span className={`scenario-badge scenario-badge--${activeScenario.badge}`}>
+			<div className="mb-5 flex flex-col gap-2.5">
+				<span className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.75 rounded-full border w-fit ${
+					activeScenario.badge === 'warn'
+						? 'border-warn-dim bg-warn-dim text-warn'
+						: 'border-ok-dim bg-ok-dim text-ok'
+				}`}>
 					{activeScenario.badge === 'warn' ? '⚠ health issues' : '✓ healthy'}
 				</span>
-				<p className="scenario-description">{activeScenario.description}</p>
+				<p className="text-[13px] text-muted max-w-150 leading-[1.7]">{activeScenario.description}</p>
 			</div>
 
 			<ScenarioInner key={activeId} scenario={activeScenario} />
 
-			<details className="code-hint code-hint--usage">
-				<summary>How to add this to your component</summary>
-				<div className="code-hint__body">
-					<pre className="code-hint__pre">{`import { useRenderInsights } from '@sapanmozammel/render-insights';
+			<details className="border border-edge rounded-[10px] overflow-hidden group mt-2">
+				<summary className="px-3.5 py-2.5 cursor-pointer text-xs text-muted bg-raised border-b border-transparent group-open:border-b-edge hover:text-ink select-none list-none flex items-center gap-1.5 transition-colors">
+					<span className="text-[10px] transition-transform inline-block mr-1 group-open:rotate-90">▸</span>
+					How to add this to your component
+				</summary>
+				<div className="p-3.5 flex flex-col gap-2.5">
+					<pre className="bg-elevated border border-edge rounded-md px-3.5 py-3 text-xs leading-[1.7] overflow-x-auto whitespace-pre">{`import { useRenderInsights } from '@sapanmozammel/render-insights';
 
 const Dashboard = React.memo((props: DashboardProps) => {
   useRenderInsights('Dashboard', props as Record<string, unknown>);
   // rest of your component...
 });`}</pre>
-					<p className="code-hint__note">
+					<p className="text-xs text-dim leading-[1.6]">
 						No-op in production. Open DevTools console to see the grouped report alongside this
 						panel. Correlates prop changes, frequency, memo effectiveness, score, and
 						recommendations in a single report.
