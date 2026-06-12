@@ -33,19 +33,19 @@ const UserCard = (props: UserCardProps) => {
 
 ## `createRenderKit(config?)`
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `enabled` | `boolean` | `NODE_ENV !== 'production'` | Master on/off switch |
-| `telemetry.maxEvents` | `number` | `1000` | Buffer ring size |
-| `telemetry.transports` | `TelemetryTransport[]` | `[]` | Initial transports |
-| `replay.maxFrames` | `number` | `100` | Max frames per session |
-| `replay.pruningStrategy` | `'fifo'` | `'fifo'` | Frame eviction strategy |
-| `intelligence.maxBottlenecks` | `number` | `10` | Bottlenecks returned |
-| `intelligence.maxRecommendations` | `number` | `20` | Recommendations returned |
-| `intelligence.confidenceThreshold` | `number` | `0.3` | Min root-cause confidence (0–1) |
-| `intelligence.correlationWindowMs` | `number` | `16` | Co-render detection window |
-| `intelligence.includeWellOptimized` | `boolean` | `false` | Include healthy components |
-| `plugins` | `RenderKitPlugin[]` | `[]` | Plugin lifecycle hooks |
+| Option                              | Type                   | Default                     | Description                     |
+| ----------------------------------- | ---------------------- | --------------------------- | ------------------------------- |
+| `enabled`                           | `boolean`              | `NODE_ENV !== 'production'` | Master on/off switch            |
+| `telemetry.maxEvents`               | `number`               | `1000`                      | Buffer ring size                |
+| `telemetry.transports`              | `TelemetryTransport[]` | `[]`                        | Initial transports              |
+| `replay.maxFrames`                  | `number`               | `100`                       | Max frames per session          |
+| `replay.pruningStrategy`            | `'fifo'`               | `'fifo'`                    | Frame eviction strategy         |
+| `intelligence.maxBottlenecks`       | `number`               | `10`                        | Bottlenecks returned            |
+| `intelligence.maxRecommendations`   | `number`               | `20`                        | Recommendations returned        |
+| `intelligence.confidenceThreshold`  | `number`               | `0.3`                       | Min root-cause confidence (0–1) |
+| `intelligence.correlationWindowMs`  | `number`               | `16`                        | Co-render detection window      |
+| `intelligence.includeWellOptimized` | `boolean`              | `false`                     | Include healthy components      |
+| `plugins`                           | `RenderKitPlugin[]`    | `[]`                        | Plugin lifecycle hooks          |
 
 ## `RenderKit` instance
 
@@ -98,11 +98,7 @@ function MyComponent() {
 ## Telemetry transports
 
 ```ts
-import {
-  createMemoryTransport,
-  createLocalStorageTransport,
-  createCustomTransport,
-} from '@sapanmozammel/render-kit';
+import { createMemoryTransport, createLocalStorageTransport, createCustomTransport } from '@sapanmozammel/render-kit';
 
 kit.telemetry.registerTransport(createMemoryTransport());
 kit.telemetry.registerTransport(createLocalStorageTransport('rk-events'));
@@ -136,8 +132,12 @@ const plugin: RenderKitPlugin = {
   id: 'my-plugin',
   name: 'My Plugin',
   version: '1.0.0',
-  onInit: (kit) => { /* called during createRenderKit() */ },
-  onDestroy: (kit) => { /* called during kit.destroy() */ },
+  onInit: (kit) => {
+    /* called during createRenderKit() */
+  },
+  onDestroy: (kit) => {
+    /* called during kit.destroy() */
+  },
   analysisPlugin: {
     id: 'my-analysis',
     name: 'My Analysis',
@@ -151,13 +151,13 @@ const kit = createRenderKit({ plugins: [plugin] });
 
 ## Error codes
 
-| Code | Thrown by | Condition |
-|---|---|---|
-| `CONTEXT_MISSING` | `useRenderKit()` | No `RenderKitProvider` in ancestor tree |
-| `DISABLED` | `kit.analyze()`, `kit.replay.engine()` | Kit created with `enabled: false` |
-| `ANALYSIS_FAILED` | `kit.analyze()` | Empty source or internal analysis error |
-| `REPLAY_FAILED` | `kit.replay.*` | Empty source, decode error |
-| `INIT_FAILED` | `createRenderKit()` | Factory init failure |
+| Code              | Thrown by                              | Condition                               |
+| ----------------- | -------------------------------------- | --------------------------------------- |
+| `CONTEXT_MISSING` | `useRenderKit()`                       | No `RenderKitProvider` in ancestor tree |
+| `DISABLED`        | `kit.analyze()`, `kit.replay.engine()` | Kit created with `enabled: false`       |
+| `ANALYSIS_FAILED` | `kit.analyze()`                        | Empty source or internal analysis error |
+| `REPLAY_FAILED`   | `kit.replay.*`                         | Empty source, decode error              |
+| `INIT_FAILED`     | `createRenderKit()`                    | Factory init failure                    |
 
 ## Re-exports
 

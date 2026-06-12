@@ -14,50 +14,37 @@ No peer dependencies. No runtime dependencies.
 
 ## Type groups
 
-| Group | Key types |
-|---|---|
-| Identity | `ComponentId`, `SessionId`, `ComponentMeta` |
-| Lifecycle | `RenderPhase`, `RenderTrigger`, `InferredTrigger` |
-| Props | `PropRefType`, `PropChangeKind`, `PropChangeEntry`, `PropInstability`, `PropDiffSnapshot` |
-| Frequency | `FrequencyClass`, `FrequencyMeasurement` |
-| Memo | `SignalKind`, `MemoClassification`, `RenderSignal`, `MemoSessionSummary` |
-| Scoring | `HealthGrade`, `ScoreBreakdown` |
-| Events | `TelemetryEvent`, `EventBase`, all 7 event variants |
-| Session | `SessionStatus`, `RenderSession`, `TelemetrySnapshot` |
-| Replay | `ReplayFrame`, `ReplaySession`, `ReplayCursor`, `ReplayNavigator`, `ReplayEngine`, `ReplayFilter`, `ReplayBookmark` |
-| Transport | `TransportEmitFn`, `TelemetryTransport` |
+| Group     | Key types                                                                                                           |
+| --------- | ------------------------------------------------------------------------------------------------------------------- |
+| Identity  | `ComponentId`, `SessionId`, `ComponentMeta`                                                                         |
+| Lifecycle | `RenderPhase`, `RenderTrigger`, `InferredTrigger`                                                                   |
+| Props     | `PropRefType`, `PropChangeKind`, `PropChangeEntry`, `PropInstability`, `PropDiffSnapshot`                           |
+| Frequency | `FrequencyClass`, `FrequencyMeasurement`                                                                            |
+| Memo      | `SignalKind`, `MemoClassification`, `RenderSignal`, `MemoSessionSummary`                                            |
+| Scoring   | `HealthGrade`, `ScoreBreakdown`                                                                                     |
+| Events    | `TelemetryEvent`, `EventBase`, all 7 event variants                                                                 |
+| Session   | `SessionStatus`, `RenderSession`, `TelemetrySnapshot`                                                               |
+| Replay    | `ReplayFrame`, `ReplaySession`, `ReplayCursor`, `ReplayNavigator`, `ReplayEngine`, `ReplayFilter`, `ReplayBookmark` |
+| Transport | `TransportEmitFn`, `TelemetryTransport`                                                                             |
 
 ## Type guards
 
 ```ts
-import {
-  isSchemaVersion,
-  isEventType,
-  isHealthGrade,
-  isFrequencyClass,
-  isMemoClassification,
-  isSignalKind,
-  isRenderTrigger,
-  isInferredTrigger,
-} from '@sapanmozammel/render-core-schema';
+import { isSchemaVersion, isEventType, isHealthGrade, isFrequencyClass, isMemoClassification, isSignalKind, isRenderTrigger, isInferredTrigger } from '@sapanmozammel/render-core-schema';
 
-isHealthGrade('EXCELLENT')     // true
-isHealthGrade('unknown')       // false
-isEventType('render')          // true
+isHealthGrade('EXCELLENT'); // true
+isHealthGrade('unknown'); // false
+isEventType('render'); // true
 ```
 
 ## Version utilities
 
 ```ts
-import {
-  compareSchemaVersions,
-  isSchemaVersionAtLeast,
-  CURRENT_SCHEMA_VERSION,
-} from '@sapanmozammel/render-core-schema';
+import { compareSchemaVersions, isSchemaVersionAtLeast, CURRENT_SCHEMA_VERSION } from '@sapanmozammel/render-core-schema';
 
-CURRENT_SCHEMA_VERSION         // '1.0.0'
-isSchemaVersionAtLeast('1.0.0', '1.0.0')  // true
-compareSchemaVersions('1.1.0', '1.0.0')   // 1  (positive = first is newer)
+CURRENT_SCHEMA_VERSION; // '1.0.0'
+isSchemaVersionAtLeast('1.0.0', '1.0.0'); // true
+compareSchemaVersions('1.1.0', '1.0.0'); // 1  (positive = first is newer)
 ```
 
 ## Usage pattern

@@ -30,29 +30,29 @@ const UserCard = React.memo((props: UserCardProps) => {
 
 ## Session classifications (`MemoClassification`)
 
-| Classification | Meaning |
-|---|---|
-| `EFFECTIVE` | All observed re-renders were data-driven; props are compatible with memoization |
-| `INEFFECTIVE` | Under current prop stability, `React.memo` would not skip these re-renders |
-| `PARTIALLY_EFFECTIVE` | Mix of genuine data changes and reference instability |
-| `NOT_APPLICABLE` | No re-renders observed yet |
+| Classification        | Meaning                                                                         |
+| --------------------- | ------------------------------------------------------------------------------- |
+| `EFFECTIVE`           | All observed re-renders were data-driven; props are compatible with memoization |
+| `INEFFECTIVE`         | Under current prop stability, `React.memo` would not skip these re-renders      |
+| `PARTIALLY_EFFECTIVE` | Mix of genuine data changes and reference instability                           |
+| `NOT_APPLICABLE`      | No re-renders observed yet                                                      |
 
 ## Per-render signal (`SignalKind`)
 
 Each render produces a `RenderSignal` describing what changed:
 
-| `SignalKind` | Meaning |
-|---|---|
-| `genuine` | Props changed by value — `React.memo` correctly triggered a re-render |
+| `SignalKind`     | Meaning                                                                                  |
+| ---------------- | ---------------------------------------------------------------------------------------- |
+| `genuine`        | Props changed by value — `React.memo` correctly triggered a re-render                    |
 | `reference-only` | Only reference identity changed, values are equivalent — memo was bypassed unnecessarily |
-| `mixed` | Some props changed by value, others only by reference |
+| `mixed`          | Some props changed by value, others only by reference                                    |
 
 `RenderSignal` shape:
 
 ```ts
 type RenderSignal = {
-  kind: SignalKind;           // 'genuine' | 'reference-only' | 'mixed'
-  genuineKeys: string[];      // prop names with real value changes
+  kind: SignalKind; // 'genuine' | 'reference-only' | 'mixed'
+  genuineKeys: string[]; // prop names with real value changes
   unstableProps: PropInstability[]; // props with reference-only churn
 };
 ```
@@ -65,7 +65,7 @@ import { useMemoEffectAnalyzer } from '@sapanmozammel/memo-effect-analyzer';
 
 const ProductCard = React.memo((props: ProductCardProps) => {
   useMemoEffectAnalyzer('ProductCard', props as Record<string, unknown>, {
-    ignoreProps: ['style'],   // exclude stable layout props
+    ignoreProps: ['style'], // exclude stable layout props
     maxReports: 20,
   });
   return <div>{props.name}</div>;
